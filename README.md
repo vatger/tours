@@ -17,7 +17,13 @@ To install the starter kit, run the following command:
 
 1. git clone https://github.com/laravel/vue-starter-kit
 2. cd vue-starter-kit
-3. composer run dev
+3. copy .env.example .env
+4. install dependencies `npm install && composer install`
+5. run migrations `php artisan migrate`
+6. add encryption key `php artisan key:generate`
+7. start the asset watcher `npm run dev`
+
+Visit the URL for your app and you're good to go!
 
 ## Icons
 
