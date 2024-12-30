@@ -2,32 +2,33 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vue-tsc && vite build",
+        "build": "vite build",
         "dev": "vite"
     },
     "devDependencies": {
         "@inertiajs/vue3": "^2.0.0-beta.3",
         "@tailwindcss/forms": "^0.5.3",
+        "@types/node": "^22.10.2",
         "@vitejs/plugin-vue": "^5.2.1",
         "autoprefixer": "^10.4.20",
         "axios": "^1.7.4",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^1.0",
-        "tailwindcss": "^4.0.0-beta.6",
+        "postcss": "^8.4.49",
+        "tailwindcss": "^3.4.1",
         "typescript": "^5.2.2",
         "vite": "^6.0.3",
         "vue": "^3.5.13",
         "vue-tsc": "^2.1.10"
     },
     "dependencies": {
-        "@tailwindcss/postcss": "^0.0.0-development.1",
-        "@tailwindcss/vite": "^4.0.0-beta.6",
         "@vueuse/core": "^12.0.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "lucide": "^0.468.0",
         "lucide-vue-next": "^0.468.0",
         "radix-vue": "^1.9.11",
-        "tailwind-merge": "^2.5.5"
+        "tailwind-merge": "^2.5.5",
+        "tailwindcss-animate": "^1.0.7"
     }
 }
