@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue'
-import SettingsLayout from './layout.vue'
+import SettingsLayout from './Layout.vue'
 import InputError from '@/components/InputError.vue'
 import { TransitionRoot } from '@headlessui/vue'
 import { useForm, Head } from '@inertiajs/vue3'

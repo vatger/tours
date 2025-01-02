@@ -6,7 +6,7 @@ import SettingsHeading from "@/components/settings/Heading.vue"
 import { Label } from "@/components/ui/label"
 
 import AppLayout from '@/layouts/AppLayout.vue'
-import SettingsLayout from './layout.vue'
+import SettingsLayout from './Layout.vue'
 
 interface BreadcrumbItem {
     title: string
