@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,12 +20,7 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
-
-        return Inertia::render('Auth/Register', [
-            'name' => config('app.name'),
-            'quote' => ['message' => trim($message), 'author' => trim($author)],
-        ]);
+        return Inertia::render('Auth/Register');
     }
 
     /**

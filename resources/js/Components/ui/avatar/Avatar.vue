@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
-import { cn } from '@/utils.ts'
+import { cn } from '@/lib/utils'
 import { AvatarRoot } from 'radix-vue'
 import { avatarVariant, type AvatarVariants } from '.'
 

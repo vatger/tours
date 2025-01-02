@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import AuthLayout from '@/Layouts/AuthLayout.vue';
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import InputError from '@/Components/InputError.vue';
-import { Label } from '@/components/ui/label'
-import { cn } from '@/utils'
-import { ref } from 'vue'
+import { useForm, Link, Head } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import { LoaderCircle } from 'lucide-vue-next';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import AuthBase from '@/Layouts/Auth/AuthBase.vue';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import InputError from '@/Components/InputError.vue';
 
 const form = useForm({
     name: '',
@@ -16,121 +15,88 @@ const form = useForm({
     password_confirmation: '',
 });
 
-defineProps<{
-    name?: string;
-    quote?: object;
-}>();
-
-async function submit(event: Event) {
+const submit = () => {
     form.post(route('register'), {
-        onFinish: () => {
-            form.reset('password', 'password_confirmation');
-        },
+        onFinish: () => form.reset('password', 'password_confirmation'),
     });
-}
+};
 </script>
 
 <template>
-    <AuthLayout :name="name" :quote="quote">
+    <AuthBase 
+        title="Create an account"
+        description="Enter your information below to create your account"
+    >
         <Head title="Register" />
-        <template v-slot:topRight>
-            <Button variant="ghost" as-child>
-                <Link :href="route('login')">
-                    Login
-                </Link>
-            </Button>
-            
-        </template>
-        <div class="flex flex-col items-center space-y-2 text-center">
-            <h1 class="text-2xl font-semibold tracking-tight">
-                Create an account
-            </h1>
-            <p class="text-sm text-muted-foreground">
-                Enter your name, email and password below.
-            </p>
-        </div>
-        <div :class="cn('grid gap-6', $attrs.class ?? '')">
-            <form @submit.prevent="submit">
-                <div class="grid gap-3">
-                    
-                    <div>
-                        <Input
-                            id="name"
-                            type="text"
-                            v-model="form.name"
-                            placeholder="Name"
-                            required
-                            autofocus
-                            autocomplete="name"
-                            :disabled="form.processing"
-                        />
-                        <InputError class="mt-2" :message="form.errors.name" />
-                    </div>
 
-                    <div>
-                        <Input
-                            id="email"
-                            type="email"
-                            v-model="form.email"
-                            placeholder="Email Address"
-                            required
-                            autocomplete="email"
-                            :disabled="form.processing"
-                        />
-
-                        <InputError class="mt-2" :message="form.errors.email" />
-                    </div>
-
-                    <div>
-                        <Input
-                            id="password"
-                            type="password"
-                            class="mt-1 block w-full"
-                            v-model="form.password"
-                            placeholder="Password"
-                            required
-                            autocomplete="new-password"
-                            :disabled="form.processing"
-                        />
-                        <InputError class="mt-2" :message="form.errors.password" />
-                    </div>
-
-                    <div>
-                        <Input
-                            id="password_confirmation"
-                            type="password"
-                            v-model="form.password_confirmation"
-                            placeholder="Confirm Password"
-                            required
-                            autocomplete="new-password"
-                            :disabled="form.processing"
-                        />
-                        <InputError class="mt-2" :message="form.errors.password_confirmation" />
-                    </div>
-                    
-                    <Button :disabled="form.processing">
-                        <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                        Register
-                    </Button>
+        <form @submit.prevent="submit" class="flex flex-col gap-6">
+            <div class="grid gap-6">
+                <div class="grid gap-2">
+                    <Label for="name">Name</Label>
+                    <Input
+                        id="name"
+                        type="text"
+                        required
+                        autofocus
+                        v-model="form.name"
+                    />
+                    <InputError :message="form.errors.name" />
                 </div>
-            </form>
-            <div class="relative">
-                <div class="absolute inset-0 flex items-center">
-                    <span class="w-full border-t border-gray-200" />
+
+                <div class="grid gap-2">
+                    <Label for="email">Email Address</Label>
+                    <Input
+                        id="email"
+                        type="email"
+                        required
+                        v-model="form.email"
+                    />
+                    <InputError :message="form.errors.email" />
                 </div>
-                <div class="relative flex justify-center text-xs uppercase">
-                    <span class="bg-background hidden px-2 text-muted-foreground">
-                        Forgot Password
-                    </span>
+
+                <div class="grid gap-2">
+                    <Label for="password">Password</Label>
+                    <Input
+                        id="password"
+                        type="password"
+                        required
+                        v-model="form.password"
+                    />
+                    <InputError :message="form.errors.password" />
                 </div>
+
+                <div class="grid gap-2">
+                    <Label for="password_confirmation">Confirm Password</Label>
+                    <Input
+                        id="password_confirmation"
+                        type="password"
+                        required
+                        v-model="form.password_confirmation"
+                    />
+                    <InputError :message="form.errors.password_confirmation" />
+                </div>
+
+                <Button 
+                    type="submit" 
+                    class="w-full" 
+                    :disabled="form.processing"
+                >
+                    <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
+                    Create Account
+                </Button>
+
+                <hr />
             </div>
-        </div>
-        <p class="px-8 text-center text-sm text-muted-foreground whitespace-nowrap">
-            Already Registered?
-            <Link
-                :href="route('login')"
-                class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >Login here</Link>
-        </p>
-    </AuthLayout>
+
+            <div class="text-center text-sm">
+                Already have an account? 
+                <Link 
+                    :href="route('login')" 
+                    class="underline underline-offset-4"
+                >
+                    Log in
+                </Link>
+            </div>
+        </form>
+    </AuthBase>
 </template>

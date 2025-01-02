@@ -10,12 +10,12 @@
         "cssVariables": true,
         "prefix": ""
     },
+    "framework": "laravel",
     "aliases": {
-        "components": "@/Components",
+        "components": "resources/js/Components",
         "utils": "@/lib/utils",
-        "ui": "@/Components/ui",
+        "ui": "resources/js/Components/ui",
         "lib": "@/lib",
         "hooks": "@/hooks"
-    },
-    "iconLibrary": "lucide"
+    }
 }

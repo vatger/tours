@@ -1,50 +1,76 @@
 <script setup lang="ts">
-const props = defineProps(['name'])
-import AppSidebar from '@/Components/sidebar/SideBar.vue'
+import { ref } from 'vue';
+import AppSidebar from '@/Components/AppSidebar.vue';
+import { 
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from '@/Components/ui/breadcrumb';
+import { Separator } from '@/Components/ui/separator';
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
-import { Separator } from '@/components/ui/separator'
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from '@/components/ui/sidebar'
+    SidebarInset,
+    SidebarProvider,
+    SidebarTrigger,
+} from '@/Components/ui/sidebar';
+
+interface BreadcrumbItem {
+    title: string;
+    href: string;
+}
+
+interface Props {
+    breadcrumbItems?: BreadcrumbItem[];
+}
+
+const props = withDefaults(defineProps<Props>(), {
+    breadcrumbItems: () => [],
+});
+
+const isOpen = ref(localStorage.getItem('sidebar') === 'true' ?? true);
+
+const handleSidebarChange = (open: boolean) => {
+    isOpen.value = open;
+    localStorage.setItem('sidebar', String(open));
+};
 </script>
 
 <template>
-    <div class="bg-neutral-100">
-        <SidebarProvider>
-            <AppSidebar :name="name" />
-            <SidebarInset>
-                <header class="flex h-16 shrink-0 items-center gap-2">
-                <div class="flex items-center gap-2 px-4">
+    <SidebarProvider 
+        :default-open="isOpen" 
+        :open="isOpen"
+        @update:open="handleSidebarChange"
+    >
+        <AppSidebar />
+        <SidebarInset>
+            <header class="flex h-16 shrink-0 items-center w-full justify-between gap-2 border-b px-4">
+                <div class="flex items-center gap-2">
                     <SidebarTrigger class="-ml-1" />
-                    <Separator orientation="vertical" class="mr-2 h-4" />
-                    <Breadcrumb>
-                    <BreadcrumbList>
-                        <BreadcrumbItem class="hidden md:block">
-                        <BreadcrumbLink href="#">
-                            Dashboard
-                        </BreadcrumbLink>
-                        </BreadcrumbItem>
-                        <BreadcrumbSeparator class="hidden md:block" />
-                        <BreadcrumbItem>
-                        <BreadcrumbPage>Learn</BreadcrumbPage>
-                        </BreadcrumbItem>
-                    </BreadcrumbList>
-                    </Breadcrumb>
+                    <template v-if="breadcrumbItems.length > 0">
+                        <Separator orientation="vertical" class="mr-2 h-4" />
+                        <Breadcrumb>
+                            <BreadcrumbList>
+                                <template v-for="(item, index) in breadcrumbItems" :key="index">
+                                    <BreadcrumbItem>
+                                        <template v-if="index === breadcrumbItems.length - 1">
+                                            <BreadcrumbPage>{{ item.title }}</BreadcrumbPage>
+                                        </template>
+                                        <template v-else>
+                                            <BreadcrumbLink :href="item.href">
+                                                {{ item.title }}
+                                            </BreadcrumbLink>
+                                        </template>
+                                    </BreadcrumbItem>
+                                    <BreadcrumbSeparator v-if="index !== breadcrumbItems.length - 1" />
+                                </template>
+                            </BreadcrumbList>
+                        </Breadcrumb>
+                    </template>
                 </div>
-                </header>
-                <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
-                    <slot />
-                </div>
-            </SidebarInset>
-        </SidebarProvider>
-    </div>
-  </template>
+            </header>
+            <slot />
+        </SidebarInset>
+    </SidebarProvider>
+</template>
