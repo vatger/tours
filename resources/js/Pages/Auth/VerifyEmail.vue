@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { LoaderCircle } from 'lucide-vue-next';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/Components/ui/button';
 import AuthLayout from '@/Layouts/Auth/AuthBase.vue';
 
 defineProps<{

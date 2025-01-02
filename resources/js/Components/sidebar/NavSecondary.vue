@@ -6,7 +6,7 @@
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-  } from '@/components/ui/sidebar'
+  } from '@/Components/ui/sidebar'
   
   interface NavItem {
     title: string

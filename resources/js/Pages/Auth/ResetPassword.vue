@@ -2,9 +2,9 @@
 import { LoaderCircle } from 'lucide-vue-next';
 import { Head, useForm } from '@inertiajs/vue3';
 import InputError from '@/Components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/Components/ui/button';
+import { Input } from '@/Components/ui/input';
+import { Label } from '@/Components/ui/label';
 import AuthLayout from '@/Layouts/Auth/AuthBase.vue';
 
 interface Props {

@@ -12,7 +12,7 @@
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-  } from '@/components/ui/dropdown-menu'
+  } from '@/Components/ui/dropdown-menu'
   import {
     SidebarGroup,
     SidebarGroupLabel,
@@ -21,7 +21,7 @@
     SidebarMenuButton,
     SidebarMenuItem,
     useSidebar,
-  } from '@/components/ui/sidebar'
+  } from '@/Components/ui/sidebar'
   
   interface Project {
     name: string
