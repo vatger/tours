@@ -2,7 +2,7 @@
 import { useForm, Link, Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { LoaderCircle } from 'lucide-vue-next';
-import AuthBase from '@/@/components/settings/AuthBase.vue';
+import AuthBase from '@/layouts/auth/AuthBase.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

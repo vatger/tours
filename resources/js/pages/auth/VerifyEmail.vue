@@ -2,7 +2,7 @@
 import { LoaderCircle } from 'lucide-vue-next';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
-import AuthLayout from '@/@/components/settings/AuthBase.vue';
+import AuthLayout from '@/layouts/auth/AuthBase.vue';
 
 defineProps<{
     status?: string;

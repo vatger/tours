@@ -5,7 +5,7 @@ import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import AuthLayout from '@/@/components/settings/AuthBase.vue';
+import AuthLayout from '@/layouts/auth/AuthBase.vue';
 
 defineProps<{
     status?: string;
