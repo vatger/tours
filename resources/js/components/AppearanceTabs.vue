@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Sun, Moon, Monitor } from 'lucide-vue-next'
-import { useAppearance } from '@/Composables/useAppearance'
+import { useAppearance } from '@/composables/useAppearance'
 
 interface Props {
   class?: string
