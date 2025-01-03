@@ -36,7 +36,7 @@ This Starter Kit includes the following features:
 
 ## Front-end App Structure
 
-The majority of the front-end code is located in the `resources/js` folder. We follow Vue.js best practices and conventions for organizing the files and folders inside this folder. The structure follows these naming conventions:
+The majority of the front-end code is located in the `resources/js` folder. We follow Vue.js best practices and conventions for organizing these files and folders. The structure follows these naming conventions:
 
 **Folders**: Use kebab-case
 ```
