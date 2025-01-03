@@ -26,6 +26,36 @@ To install the starter kit, run the following command:
 
 Visit the URL for your app and you're good to go!
 
+## JS Folder Structure
+
+We follow Vue.js best practices and conventions for organizing the files and folders inside the `resources/js` directory. The structure follows these naming conventions:
+
+- **Folders**: Use kebab-case
+  ```
+  resources/js/
+  ├── components/     # Reusable Vue components
+  ├── composables/    # Vue composables/hooks
+  ├── layouts/        # Application layouts
+  ├── pages/         # Page components
+  └── lib/           # Utility functions and configurations
+  ```
+
+- **Components**: Use PascalCase for component files
+  ```
+  components/
+  └── AppearanceTabs.vue
+  └── NavigationBar.vue
+  ```
+
+- **Composables/Utilities**: Use camelCase for utility files and composables
+  ```
+  composables/
+  └── useAuth.ts
+  └── useSettings.ts
+  ```
+
+This structure aligns more with the default Vue convention.
+
 ## Icons
 
 This starter kit leverages the [Lucide Vue Library](https://lucide.dev/guide/packages/lucide-vue-next), which provides you with a collection of over 1000 icons. View the full list of icons [here](https://lucide.dev/icons).
@@ -45,4 +75,3 @@ Here's a quick example of using an icon in one of your Vue Components:
         <span class="text-lg font-medium">Vue Starter Kit</span>
     </p>
 </template>
-```
