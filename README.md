@@ -26,35 +26,43 @@ To install the starter kit, run the following command:
 
 Visit the URL for your app and you're good to go!
 
-## JS Folder Structure
+## Features
 
-We follow Vue.js best practices and conventions for organizing the files and folders inside the `resources/js` directory. The structure follows these naming conventions:
+This Starter Kit includes the following features:
 
-- **Folders**: Use kebab-case
-  ```
-  resources/js/
-  ├── components/     # Reusable Vue components
-  ├── composables/    # Vue composables/hooks
-  ├── layouts/        # Application layouts
-  ├── pages/         # Page components
-  └── lib/           # Utility functions and configurations
-  ```
+ - **User Authentication** (login, register, password reset, email verify, and password confirmation)
+ - **Dashboard Page** (Auth Protected User Dashboard Page)
+ - **Settings Page** (Profile Update/Delete, Password Update, Appearance)
 
-- **Components**: Use PascalCase for component files
-  ```
-  components/
-  └── AppearanceTabs.vue
-  └── NavigationBar.vue
-  ```
+## Front-end App Structure
 
-- **Composables/Utilities**: Use camelCase for utility files and composables
-  ```
-  composables/
-  └── useAuth.ts
-  └── useSettings.ts
-  ```
+The majority of the front-end code is located in the `resources/js` folder. We follow Vue.js best practices and conventions for organizing the files and folders inside this folder. The structure follows these naming conventions:
 
-This structure aligns more with the default Vue convention.
+**Folders**: Use kebab-case
+```
+resources/js/
+├── components/     # Reusable Vue components
+├── composables/    # Vue composables/hooks
+├── layouts/        # Application layouts
+├── pages/         # Page components
+└── lib/           # Utility functions and configurations
+```
+
+**Components**: Use PascalCase for component files
+```
+components/
+└── AppearanceTabs.vue
+└── NavigationBar.vue
+```
+
+**Composables/Utilities**: Use camelCase for utility files and composables
+```
+composables/
+└── useAuth.ts
+└── useSettings.ts
+```
+
+This structure aligns more with the default Vue conventions.
 
 ## Icons
 
