@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import { type BreadcrumbItemType } from '@/types'
 import { Head } from '@inertiajs/vue3';
 
 interface BreadcrumbItem {
@@ -7,7 +8,7 @@ interface BreadcrumbItem {
     href: string;
 }
 
-const breadcrumbItems: BreadcrumbItem[] = [
+const breadcrumbs: BreadcrumbItemType[] = [
     {
         title: 'Dashboard',
         href: '/dashboard'
@@ -22,7 +23,7 @@ defineProps<{
 <template>
     <Head title="Dashboard" />
 
-    <AppLayout :breadcrumb-items="breadcrumbItems">
+    <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-1 flex-col gap-4 p-4">
             <div class="grid auto-rows-min gap-4 md:grid-cols-3">
                 <div class="aspect-video rounded-xl bg-muted/50" />
