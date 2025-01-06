@@ -45,9 +45,9 @@ const submit = () => {
                         id="email"
                         type="email"
                         name="email"
+                        autocomplete="email"
                         v-model="form.email"
                         class="mt-1 block w-full"
-                        autocomplete="username"
                         readonly
                     />
                     <InputError :message="form.errors.email" class="mt-2" />
@@ -59,9 +59,9 @@ const submit = () => {
                         id="password"
                         type="password"
                         name="password"
+                        autocomplete="new-password"
                         v-model="form.password"
                         class="mt-1 block w-full"
-                        autocomplete="new-password"
                         autofocus
                     />
                     <InputError :message="form.errors.password" class="mt-2" />
@@ -75,9 +75,9 @@ const submit = () => {
                         id="password_confirmation"
                         type="password"
                         name="password_confirmation"
+                        autocomplete="new-password"
                         v-model="form.password_confirmation"
                         class="mt-1 block w-full"
-                        autocomplete="new-password"
                     />
                     <InputError :message="form.errors.password_confirmation" class="mt-2" />
                 </div>

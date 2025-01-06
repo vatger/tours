@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { Github, BookOpenText } from 'lucide-vue-next';
+import { BookOpenText, FolderGit2, LayoutDashboard } from 'lucide-vue-next';
 import NavMain from '@/components/NavMain.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavUser from '@/components/NavUser.vue';
+import { type NavItemType } from '@/types'
 import {
     Sidebar,
     SidebarContent,
@@ -14,17 +15,19 @@ import {
 } from '@/components/ui/sidebar';
 import ApplicationLogo from './ApplicationLogo.vue';
 
-interface NavItem {
-    title: string;
-    url: string;
-    icon: any; // Using any for now since Vue's type system handles components differently
-}
+const mainNavItems: NavItemType[] = [
+    {
+        title: "Dashboard",
+        url: "/dashboard",
+        icon: LayoutDashboard,
+    },
+]
 
-const footerNavItems: NavItem[] = [
+const footerNavItems: NavItemType[] = [
     {
         title: 'Github Repo',
         url: 'https://github.com/laravel/vue-starter-kit',
-        icon: Github,
+        icon: FolderGit2,
     },
     {
         title: 'Documentation',
@@ -55,7 +58,7 @@ const footerNavItems: NavItem[] = [
         </SidebarHeader>
 
         <SidebarContent>
-            <NavMain />
+            <NavMain :items="mainNavItems" />
         </SidebarContent>
 
         <SidebarFooter>

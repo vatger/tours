@@ -39,6 +39,7 @@ const submit = () => {
                         id="email"
                         type="email"
                         name="email"
+                        autocomplete="off"
                         v-model="form.email"
                         autofocus
                     />

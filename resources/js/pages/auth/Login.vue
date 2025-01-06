@@ -46,6 +46,8 @@ const submit = () => {
                         type="email"
                         required
                         autofocus
+                        tabindex="1"
+                        autocomplete="email"
                         v-model="form.email"
                     />
                     <InputError :message="form.errors.email" />
@@ -58,6 +60,7 @@ const submit = () => {
                             v-if="canResetPassword"
                             :href="route('password.request')"
                             class="text-sm underline-offset-4 hover:underline"
+                            tabindex="5"
                         >
                             Forgot your password?
                         </Link>
@@ -66,6 +69,8 @@ const submit = () => {
                         id="password"
                         type="password"
                         required
+                        tabindex="2"
+                        autocomplete="current-password"
                         v-model="form.password"
                     />
                     <InputError :message="form.errors.password" />
@@ -73,7 +78,8 @@ const submit = () => {
 
                 <Button 
                     type="submit" 
-                    class="w-full" 
+                    class="w-full"
+                    tabindex="3"
                     :disabled="form.processing"
                 >
                     <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
@@ -88,6 +94,7 @@ const submit = () => {
                 <Link 
                     :href="route('register')" 
                     class="underline underline-offset-4"
+                    tabindex="4"
                 >
                     Sign up
                 </Link>

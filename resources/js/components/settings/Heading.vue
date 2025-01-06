@@ -12,7 +12,7 @@ defineProps<Props>()
 <template>
   <div>
     <header>
-      <h3 class="text-lg font-medium">{{ title }}</h3>
+      <h3 class="text-lg font-medium mb-1">{{ title }}</h3>
       <p v-if="description" class="text-sm text-muted-foreground">
         {{ description }}
       </p>

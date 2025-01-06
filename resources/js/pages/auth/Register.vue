@@ -38,6 +38,8 @@ const submit = () => {
                         type="text"
                         required
                         autofocus
+                        tabindex="1"
+                        autocomplete="name"
                         v-model="form.name"
                     />
                     <InputError :message="form.errors.name" />
@@ -49,6 +51,8 @@ const submit = () => {
                         id="email"
                         type="email"
                         required
+                        tabindex="2"
+                        autocomplete="email"
                         v-model="form.email"
                     />
                     <InputError :message="form.errors.email" />
@@ -60,6 +64,8 @@ const submit = () => {
                         id="password"
                         type="password"
                         required
+                        tabindex="3"
+                        autocomplete="new-password"
                         v-model="form.password"
                     />
                     <InputError :message="form.errors.password" />
@@ -71,6 +77,8 @@ const submit = () => {
                         id="password_confirmation"
                         type="password"
                         required
+                        tabindex="4"
+                        autocomplete="new-password"
                         v-model="form.password_confirmation"
                     />
                     <InputError :message="form.errors.password_confirmation" />
@@ -78,7 +86,8 @@ const submit = () => {
 
                 <Button 
                     type="submit" 
-                    class="w-full" 
+                    class="w-full"
+                    tabindex="5"
                     :disabled="form.processing"
                 >
                     <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
@@ -93,6 +102,7 @@ const submit = () => {
                 <Link 
                     :href="route('login')" 
                     class="underline underline-offset-4"
+                    tabindex="6"
                 >
                     Log in
                 </Link>

@@ -1,23 +1,18 @@
 <script setup lang="ts">
-import { LayoutDashboard, type LucideIcon } from 'lucide-vue-next';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
+import { type NavItemType } from '@/types'
 import {
     SidebarGroup,
     SidebarMenu,
-    SidebarMenuButton,
     SidebarMenuItem,
+    SidebarMenuButton,
 } from '@/components/ui/sidebar';
 
-interface NavItem {
-    title: string;
-    url: string;
-    icon: any; // Using any for now since Vue's type system handles components differently
-    isActive?: boolean;
+interface Props {
+    items?: NavItemType[];
 }
 
-interface Props {
-    items?: NavItem[];
-}
+const page = usePage();
 
 withDefaults(defineProps<Props>(), {
     items: () => [],
@@ -27,16 +22,8 @@ withDefaults(defineProps<Props>(), {
 <template>
     <SidebarGroup>
         <SidebarMenu>
-            <SidebarMenuItem>
-                <SidebarMenuButton as-child :is-active="true">
-                    <Link :href="route('dashboard')">
-                        <LayoutDashboard />
-                        <span>Dashboard</span>
-                    </Link>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
             <SidebarMenuItem v-for="item in items" :key="item.title">
-                <SidebarMenuButton as-child :is-active="item.isActive">
+                <SidebarMenuButton as-child :is-active="item.url === page.url">
                     <Link :href="item.url">
                         <component :is="item.icon" />
                         <span>{{ item.title }}</span>
