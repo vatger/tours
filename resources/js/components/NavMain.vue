@@ -8,15 +8,11 @@ import {
     SidebarMenuButton,
 } from '@/components/ui/sidebar';
 
-interface Props {
+const props = defineProps<{
     items?: NavItemType[];
-}
+}>();
 
 const page = usePage();
-
-withDefaults(defineProps<Props>(), {
-    items: () => [],
-});
 </script>
 
 <template>

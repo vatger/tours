@@ -30,11 +30,17 @@ const props = withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
 });
 
-const isOpen = ref(localStorage.getItem('sidebar') === 'true');
+const isOpen = ref(
+    typeof window !== 'undefined' 
+        ? localStorage.getItem('sidebar') !== 'false'
+        : true
+);
 
 const handleSidebarChange = (open: boolean) => {
     isOpen.value = open;
-    localStorage.setItem('sidebar', String(open));
+    if (typeof window !== 'undefined') {
+        localStorage.setItem('sidebar', String(open));
+    }
 };
 </script>
 

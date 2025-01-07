@@ -42,12 +42,12 @@ const currentItem = sidebarNavItems.find(item => currentPath === item.href)
                     <Button 
                         v-for="item in sidebarNavItems"
                         :key="item.href"
-                        size="sm" 
                         variant="ghost" 
                         :class="[
                             'w-full justify-center justify-start',
                             currentPath === item.href ? 'bg-muted' : 'hover:underline'
                         ]"
+                        as-child
                     > 
                         <Link :href="item.href">
                             {{ item.title }}
