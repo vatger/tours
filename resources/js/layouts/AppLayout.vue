@@ -17,11 +17,6 @@ import {
     SidebarTrigger,
 } from '@/components/ui/sidebar';
 
-interface BreadcrumbItem {
-    title: string;
-    href: string;
-}
-
 interface Props {
     breadcrumbs?: BreadcrumbItemType[];
 }

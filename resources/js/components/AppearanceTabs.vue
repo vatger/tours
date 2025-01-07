@@ -13,9 +13,9 @@ const props = withDefaults(defineProps<Props>(), {
 const { appearance, updateAppearance } = useAppearance()
 
 const tabs = [
-  { value: 'light', icon: Sun, label: 'Light' },
-  { value: 'dark', icon: Moon, label: 'Dark' },
-  { value: 'system', icon: Monitor, label: 'System' }
+  { value: 'light', Icon: Sun, label: 'Light' },
+  { value: 'dark', Icon: Moon, label: 'Dark' },
+  { value: 'system', Icon: Monitor, label: 'System' }
 ] as const
 </script>
 
@@ -27,7 +27,7 @@ const tabs = [
     ]"
   >
     <button
-      v-for="{ value, icon: Icon, label } in tabs"
+      v-for="{ value, Icon, label } in tabs"
       :key="value"
       @click="updateAppearance(value)"
       :class="[
@@ -37,7 +37,7 @@ const tabs = [
           : 'hover:bg-neutral-200/60 text-neutral-500 hover:text-black dark:hover:bg-neutral-700/60 dark:text-neutral-400'
       ]"
     >
-      <Icon class="h-4 w-4 -ml-1" />
+      <component :is="Icon" class="h-4 w-4 -ml-1" />
       <span class="ml-1.5 text-sm">{{ label }}</span>
     </button>
   </div>

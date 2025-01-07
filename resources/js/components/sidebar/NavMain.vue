@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { ChevronRight } from 'lucide-vue-next'
   import type { Component } from 'vue'
+  import { type NavItemType } from '@/types'
   import {
     Collapsible,
     CollapsibleContent,
@@ -23,16 +24,8 @@
     url: string
   }
   
-  interface NavItem {
-    title: string
-    url: string
-    icon: Component
-    isActive?: boolean
-    items?: SubItem[]
-  }
-  
   defineProps<{
-    items: NavItem[]
+    items: NavItemType[]
   }>()
   </script>
 

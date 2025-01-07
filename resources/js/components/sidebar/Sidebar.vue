@@ -18,6 +18,7 @@ const props = defineProps(['name'])
   import NavProjects from '@/components/sidebar/NavProjects.vue'
   import NavSecondary from '@/components/sidebar/NavSecondary.vue'
   import NavUser from '@/components/sidebar/NavUser.vue'
+  import { type NavItemType } from '@/types'
   import {
     Sidebar,
     SidebarContent,
@@ -27,14 +28,6 @@ const props = defineProps(['name'])
     SidebarMenuButton,
     SidebarMenuItem,
   } from '@/components/ui/sidebar'
-  
-  interface NavItem {
-    title: string
-    url: string
-    icon?: any
-    isActive?: boolean
-    items?: { title: string; url: string }[]
-  }
   
   interface Project {
     name: string
@@ -140,7 +133,7 @@ const props = defineProps(['name'])
           },
         ],
       },
-    ] as NavItem[],
+    ] as NavItemType[],
     navSecondary: [
       {
         title: 'Support',
@@ -152,7 +145,7 @@ const props = defineProps(['name'])
         url: '#',
         icon: Send,
       },
-    ] as NavItem[],
+    ] as NavItemType[],
     projects: [
       {
         name: 'Design Engineering',

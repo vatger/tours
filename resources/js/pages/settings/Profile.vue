@@ -12,6 +12,7 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import SettingsLayout from './Layout.vue'
 import { Separator } from "@/components/ui/separator"
 import SettingsHeading from "@/components/settings/Heading.vue"
+import { type BreadcrumbItemType } from '@/types'
 
 interface Props {
     mustVerifyEmail: boolean
@@ -21,12 +22,7 @@ interface Props {
 
 defineProps<Props>()
 
-interface BreadcrumbItem {
-    title: string
-    href: string
-}
-
-const breadcrumbItems: BreadcrumbItem[] = [
+const breadcrumbs: BreadcrumbItemType[] = [
     {
         title: 'Profile Settings',
         href: '/settings/profile'
@@ -47,7 +43,7 @@ const submit = () => {
 </script>
 
 <template>
-    <AppLayout :breadcrumb-items="breadcrumbItems">
+    <AppLayout :breadcrumbs="breadcrumbs">
         <Head title="Profile Settings" />
 
         <SettingsLayout>

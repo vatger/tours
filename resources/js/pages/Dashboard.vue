@@ -3,11 +3,6 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItemType } from '@/types'
 import { Head } from '@inertiajs/vue3';
 
-interface BreadcrumbItem {
-    title: string;
-    href: string;
-}
-
 const breadcrumbs: BreadcrumbItemType[] = [
     {
         title: 'Dashboard',

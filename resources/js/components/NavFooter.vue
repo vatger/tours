@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { type LucideIcon, ExternalLink } from 'lucide-vue-next';
+import { type NavItemType } from '@/types'
 import {
     SidebarGroup,
     SidebarGroupContent,
@@ -9,14 +10,8 @@ import {
     SidebarMenuAction
 } from '@/components/ui/sidebar';
 
-interface NavItem {
-    title: string;
-    url: string;
-    icon: any; // Using any for now since Vue's type system handles components differently
-}
-
 interface Props {
-    items: NavItem[];
+    items: NavItemType[];
     class?: string;
 }
 

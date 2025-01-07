@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import type { Component } from 'vue'
+  import { type NavItemType } from '@/types'
   import {
     SidebarGroup,
     SidebarGroupContent,
@@ -8,14 +9,8 @@
     SidebarMenuItem,
   } from '@/components/ui/sidebar'
   
-  interface NavItem {
-    title: string
-    url: string
-    icon: Component
-  }
-  
   defineProps<{
-    items: NavItem[]
+    items: NavItemType[]
   }>()
   </script>
 

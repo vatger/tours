@@ -49,7 +49,7 @@ const user = page.props.auth.user as User;
                         class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                     >
                         <Avatar class="h-8 w-8 rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
-                            <AvatarImage :src="user.avatar" :alt="user.name" />
+                            <AvatarImage v-if="user.avatar" :src="user.avatar" :alt="user.name" />
                             <AvatarFallback class="rounded-md">
                                 {{ getInitials(user.name) }}
                             </AvatarFallback>
@@ -70,7 +70,7 @@ const user = page.props.auth.user as User;
                     <DropdownMenuLabel class="p-0 font-normal">
                         <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                             <Avatar class="h-8 w-8 rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
-                                <AvatarImage :src="user.avatar" :alt="user.name" />
+                                <AvatarImage v-if="user.avatar" :src="user.avatar" :alt="user.name" />
                                 <AvatarFallback class="rounded-md">{{ getInitials(user.name) }}</AvatarFallback>
                             </Avatar>
                             <div class="grid flex-1 text-left text-sm leading-tight">

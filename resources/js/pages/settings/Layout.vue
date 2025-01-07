@@ -4,13 +4,9 @@ import { Button } from "@/components/ui/button"
 import Heading from "@/components/Heading.vue"
 import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
+import { type NavItemType } from '@/types'
 
-interface NavItem {
-    title: string
-    href: string
-}
-
-const sidebarNavItems: NavItem[] = [
+const sidebarNavItems: NavItemType[] = [
     {
         title: "Profile",
         href: "/settings/profile",
