@@ -9,6 +9,7 @@ import { ref } from 'vue'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { type BreadcrumbItem } from '@/types'
 import SettingsHeading from "@/components/settings/Heading.vue"
 
 interface Props {
@@ -17,7 +18,7 @@ interface Props {
 
 defineProps<Props>()
 
-const breadcrumbItems = [
+const breadcrumbItems: BreadcrumbItem[] = [
     {
         title: 'Password Settings',
         href: '/settings/password'

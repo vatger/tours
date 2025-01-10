@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type LucideIcon, ExternalLink } from 'lucide-vue-next';
-import { type NavItemType } from '@/types'
+import { type NavItem } from '@/types'
 import {
     SidebarGroup,
     SidebarGroupContent,
@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/sidebar';
 
 interface Props {
-    items: NavItemType[];
+    items: NavItem[];
     class?: string;
 }
 

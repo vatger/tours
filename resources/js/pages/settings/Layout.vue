@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button"
 import Heading from "@/components/Heading.vue"
 import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
-import { type NavItemType } from '@/types'
+import { type NavItem } from '@/types'
 
-const sidebarNavItems: NavItemType[] = [
+const sidebarNavItems: NavItem[] = [
     {
         title: "Profile",
         href: "/settings/profile",
@@ -40,7 +40,7 @@ const currentItem = sidebarNavItems.find(item => currentPath === item.href)
                         :key="item.href"
                         variant="ghost" 
                         :class="[
-                            'w-full justify-center justify-start',
+                            'w-full justify-start',
                             currentPath === item.href ? 'bg-muted' : 'hover:underline'
                         ]"
                         as-child

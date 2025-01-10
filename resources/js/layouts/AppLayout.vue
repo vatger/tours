@@ -9,7 +9,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { type BreadcrumbItemType } from '@/types'
+import { type BreadcrumbItem as BreadcrumbItemType } from '@/types'
 import { Separator } from '@/components/ui/separator';
 import {
     SidebarInset,

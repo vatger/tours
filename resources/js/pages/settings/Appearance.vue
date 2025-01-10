@@ -2,14 +2,14 @@
 import { Head } from '@inertiajs/vue3'
 
 import AppearanceTabs from '@/components/AppearanceTabs.vue'
-import { type BreadcrumbItemType } from '@/types'
+import { type BreadcrumbItem } from '@/types'
 import SettingsHeading from "@/components/settings/Heading.vue"
 import { Label } from "@/components/ui/label"
 
 import AppLayout from '@/layouts/AppLayout.vue'
 import SettingsLayout from './Layout.vue'
 
-const breadcrumbItems: BreadcrumbItemType[] = [
+const breadcrumbItems: BreadcrumbItem[] = [
     {
         title: 'Appearance Settings',
         href: '/settings/appearance'

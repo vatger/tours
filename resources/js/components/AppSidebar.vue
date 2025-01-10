@@ -3,7 +3,7 @@ import { BookOpenText, FolderGit2, LayoutDashboard } from 'lucide-vue-next';
 import NavMain from '@/components/NavMain.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavUser from '@/components/NavUser.vue';
-import { type NavItemType } from '@/types'
+import { type NavItem } from '@/types'
 import {
     Sidebar,
     SidebarContent,
@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/sidebar';
 import ApplicationLogo from './ApplicationLogo.vue';
 
-const mainNavItems: NavItemType[] = [
+const mainNavItems: NavItem[] = [
     {
         title: "Dashboard",
         url: "/dashboard",
@@ -23,7 +23,7 @@ const mainNavItems: NavItemType[] = [
     },
 ]
 
-const footerNavItems: NavItemType[] = [
+const footerNavItems: NavItem[] = [
     {
         title: 'Github Repo',
         url: 'https://github.com/laravel/vue-starter-kit',
@@ -62,7 +62,6 @@ const footerNavItems: NavItemType[] = [
         </SidebarContent>
 
         <SidebarFooter>
-            <NavFooter :items="footerNavItems" class="mt-auto" />
             <NavUser />
         </SidebarFooter>
     </Sidebar>

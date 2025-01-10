@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { type NavItemType } from '@/types'
+import { type NavItem } from '@/types'
 import {
     SidebarGroup,
     SidebarMenu,
@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/sidebar';
 
 const props = defineProps<{
-    items?: NavItemType[];
+    items?: NavItem[];
 }>();
 
 const page = usePage();
