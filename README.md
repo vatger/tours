@@ -18,11 +18,11 @@ To install the starter kit, run the following command:
 1. git clone https://github.com/laravel/vue-starter-kit
 2. cd vue-starter-kit
 3. git checkout develop
-3. copy .env.example .env
-4. install dependencies `npm install && composer install`
-5. run migrations `php artisan migrate`
-6. add encryption key `php artisan key:generate`
-7. start the asset watcher `npm run dev`
+4. copy .env.example .env
+5. install dependencies `npm install && composer install`
+6. run migrations `php artisan migrate`
+7. add encryption key `php artisan key:generate`
+8. start the asset watcher `npm run dev`
 
 Visit the URL for your app and you're good to go!
 
@@ -30,15 +30,16 @@ Visit the URL for your app and you're good to go!
 
 This Starter Kit includes the following features:
 
- - **User Authentication** (login, register, password reset, email verify, and password confirmation)
- - **Dashboard Page** (Auth Protected User Dashboard Page)
- - **Settings Page** (Profile Update/Delete, Password Update, Appearance)
+- **User Authentication** (login, register, password reset, email verify, and password confirmation)
+- **Dashboard Page** (Auth Protected User Dashboard Page)
+- **Settings Page** (Profile Update/Delete, Password Update, Appearance)
 
 ## Front-end App Structure
 
 The majority of the front-end code is located in the `resources/js` folder. We follow Vue.js best practices and conventions for organizing these files and folders. The structure follows these naming conventions:
 
 **Folders**: Use kebab-case
+
 ```
 resources/js/
 ├── components/     # Reusable Vue components
@@ -50,6 +51,7 @@ resources/js/
 ```
 
 **Components**: Use PascalCase for component files
+
 ```
 components/
 └── AppearanceTabs.vue
@@ -57,6 +59,7 @@ components/
 ```
 
 **Composables/Utilities**: Use camelCase for utility files and composables
+
 ```
 composables/
 └── useAuth.ts
@@ -84,3 +87,4 @@ Here's a quick example of using an icon in one of your Vue Components:
         <span class="text-lg font-medium">Vue Starter Kit</span>
     </p>
 </template>
+```

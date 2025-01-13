@@ -1,8 +1,7 @@
 <!-- AuthSplitLayout.vue -->
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
-import { usePage } from '@inertiajs/vue3';
 import ApplicationLogo from '@/components/ApplicationLogo.vue';
+import { Link, usePage } from '@inertiajs/vue3';
 
 interface Props {
     title?: string;
@@ -11,7 +10,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
     title: undefined,
-    description: undefined
+    description: undefined,
 });
 
 const page = usePage();
@@ -20,7 +19,7 @@ const quote = page.props.quote;
 </script>
 
 <template>
-    <div class="px-8 sm:px-0 relative h-dvh flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+    <div class="relative grid h-dvh flex-col items-center justify-center px-8 sm:px-0 lg:max-w-none lg:grid-cols-2 lg:px-0">
         <div class="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
             <div class="absolute inset-0 bg-zinc-900" />
             <Link :href="route('home')" class="relative z-20 flex items-center text-lg font-medium">

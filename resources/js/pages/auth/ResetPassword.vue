@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { LoaderCircle } from 'lucide-vue-next';
-import { Head, useForm } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth/AuthBase.vue';
+import { Head, useForm } from '@inertiajs/vue3';
+import { LoaderCircle } from 'lucide-vue-next';
 
 interface Props {
     token: string;
@@ -31,25 +31,14 @@ const submit = () => {
 </script>
 
 <template>
-    <AuthLayout
-        title="Reset Password"
-        description="Please enter your new password below"
-    >
+    <AuthLayout title="Reset Password" description="Please enter your new password below">
         <Head title="Reset Password" />
 
         <form @submit.prevent="submit">
             <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="email">Email</Label>
-                    <Input
-                        id="email"
-                        type="email"
-                        name="email"
-                        autocomplete="email"
-                        v-model="form.email"
-                        class="mt-1 block w-full"
-                        readonly
-                    />
+                    <Input id="email" type="email" name="email" autocomplete="email" v-model="form.email" class="mt-1 block w-full" readonly />
                     <InputError :message="form.errors.email" class="mt-2" />
                 </div>
 
@@ -68,9 +57,7 @@ const submit = () => {
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password_confirmation">
-                        Confirm Password
-                    </Label>
+                    <Label for="password_confirmation"> Confirm Password </Label>
                     <Input
                         id="password_confirmation"
                         type="password"
@@ -82,11 +69,7 @@ const submit = () => {
                     <InputError :message="form.errors.password_confirmation" class="mt-2" />
                 </div>
 
-                <Button 
-                    type="submit"
-                    class="w-full" 
-                    :disabled="form.processing"
-                >
+                <Button type="submit" class="w-full" :disabled="form.processing">
                     <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
                     Reset Password
                 </Button>

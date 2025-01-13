@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { LoaderCircle } from 'lucide-vue-next';
-import { Head, Link, useForm } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
 import AuthLayout from '@/layouts/auth/AuthBase.vue';
+import { Head, Link, useForm } from '@inertiajs/vue3';
+import { LoaderCircle } from 'lucide-vue-next';
 
 defineProps<{
     status?: string;
@@ -20,15 +20,12 @@ const submit = () => {
         <Head title="Email Verification" />
 
         <div class="mb-4 text-sm text-gray-600">
-            Thanks for signing up! Before getting started, could you verify
-            your email address by clicking on the link we just emailed to
-            you? If you didn't receive the email, we will gladly send you
-            another
+            Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you
+            didn't receive the email, we will gladly send you another
         </div>
 
         <div v-if="status === 'verification-link-sent'" class="mb-4 text-sm font-medium text-green-600">
-            A new verification link has been sent to the email address
-            you provided during registration
+            A new verification link has been sent to the email address you provided during registration
         </div>
 
         <form @submit.prevent="submit">

@@ -1,7 +1,7 @@
 <!-- AuthBase.vue -->
 <script setup lang="ts">
-import { defineProps } from 'vue';
 import AuthLayout from '@/layouts/auth/AuthSimpleLayout.vue';
+import { defineProps } from 'vue';
 
 interface Props {
     title?: string;
@@ -10,7 +10,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
     title: undefined,
-    description: undefined
+    description: undefined,
 });
 </script>
 

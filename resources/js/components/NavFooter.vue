@@ -1,14 +1,7 @@
 <script setup lang="ts">
-import { type LucideIcon, ExternalLink } from 'lucide-vue-next';
-import { type NavItem } from '@/types'
-import {
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    SidebarMenuAction
-} from '@/components/ui/sidebar';
+import { SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { type NavItem } from '@/types';
+import { ExternalLink } from 'lucide-vue-next';
 
 interface Props {
     items: NavItem[];
@@ -24,11 +17,7 @@ defineProps<Props>();
             <SidebarMenu>
                 <SidebarMenuItem v-for="item in items" :key="item.title">
                     <SidebarMenuButton as-child>
-                        <a 
-                            :href="item.url" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                        >
+                        <a :href="item.url" target="_blank" rel="noopener noreferrer">
                             <component :is="item.icon" />
                             <span>{{ item.title }}</span>
                         </a>

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { LoaderCircle } from 'lucide-vue-next';
-import { Head, useForm } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AuthLayout from '@/layouts/auth/AuthBase.vue';
+import { Head, useForm } from '@inertiajs/vue3';
+import { LoaderCircle } from 'lucide-vue-next';
 
 const form = useForm({
     password: '',
@@ -20,16 +20,12 @@ const submit = () => {
 </script>
 
 <template>
-    <AuthLayout 
-        title="Confirm Your Password" 
-        description="This is a secure area of the application. Please confirm your password before continuing"
-    >
+    <AuthLayout title="Confirm Your Password" description="This is a secure area of the application. Please confirm your password before continuing">
         <Head title="Confirm Password" />
 
         <form @submit.prevent="submit">
             <div class="space-y-6">
                 <div class="grid gap-2">
-
                     <Input
                         id="password"
                         type="password"

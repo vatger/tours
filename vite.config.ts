@@ -1,9 +1,9 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
+import autoprefixer from 'autoprefixer';
+import laravel from 'laravel-vite-plugin';
 import path from 'path';
 import tailwindcss from 'tailwindcss';
-import autoprefixer from 'autoprefixer';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
     plugins: [
@@ -27,10 +27,7 @@ export default defineConfig({
     },
     css: {
         postcss: {
-            plugins: [
-                tailwindcss,
-                autoprefixer,
-            ],
+            plugins: [tailwindcss, autoprefixer],
         },
     },
 });

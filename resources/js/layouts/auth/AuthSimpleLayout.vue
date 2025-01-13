@@ -1,8 +1,7 @@
 <!-- AuthSimpleLayout.vue -->
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
-import { usePage } from '@inertiajs/vue3';
 import ApplicationLogo from '@/components/ApplicationLogo.vue';
+import { Link, usePage } from '@inertiajs/vue3';
 
 interface Props {
     title?: string;
@@ -11,7 +10,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
     title: undefined,
-    description: undefined
+    description: undefined,
 });
 
 const page = usePage();

@@ -1,9 +1,8 @@
 <!-- AuthCardLayout.vue -->
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
-import { usePage } from '@inertiajs/vue3';
 import ApplicationLogo from '@/components/ApplicationLogo.vue';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Link, usePage } from '@inertiajs/vue3';
 
 interface Props {
     title?: string;
@@ -12,7 +11,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
     title: undefined,
-    description: undefined
+    description: undefined,
 });
 
 const page = usePage();

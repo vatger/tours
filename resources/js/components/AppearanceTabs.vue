@@ -1,44 +1,39 @@
 <script setup lang="ts">
-import { Sun, Moon, Monitor } from 'lucide-vue-next'
-import { useAppearance } from '@/composables/useAppearance'
+import { useAppearance } from '@/composables/useAppearance';
+import { Monitor, Moon, Sun } from 'lucide-vue-next';
 
 interface Props {
-  class?: string
+    class?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  class: ''
-})
+    class: '',
+});
 
-const { appearance, updateAppearance } = useAppearance()
+const { appearance, updateAppearance } = useAppearance();
 
 const tabs = [
-  { value: 'light', Icon: Sun, label: 'Light' },
-  { value: 'dark', Icon: Moon, label: 'Dark' },
-  { value: 'system', Icon: Monitor, label: 'System' }
-] as const
+    { value: 'light', Icon: Sun, label: 'Light' },
+    { value: 'dark', Icon: Moon, label: 'Dark' },
+    { value: 'system', Icon: Monitor, label: 'System' },
+] as const;
 </script>
 
 <template>
-  <div 
-    :class="[
-      'inline-flex bg-neutral-100 dark:bg-neutral-800 p-1 gap-1 rounded-lg',
-      props.class
-    ]"
-  >
-    <button
-      v-for="{ value, Icon, label } in tabs"
-      :key="value"
-      @click="updateAppearance(value)"
-      :class="[
-        'flex items-center px-3.5 py-1.5 rounded-md transition-colors',
-        appearance === value
-          ? 'bg-white dark:bg-neutral-700 shadow-sm dark:text-neutral-100'
-          : 'hover:bg-neutral-200/60 text-neutral-500 hover:text-black dark:hover:bg-neutral-700/60 dark:text-neutral-400'
-      ]"
-    >
-      <component :is="Icon" class="h-4 w-4 -ml-1" />
-      <span class="ml-1.5 text-sm">{{ label }}</span>
-    </button>
-  </div>
+    <div :class="['inline-flex gap-1 rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800', props.class]">
+        <button
+            v-for="{ value, Icon, label } in tabs"
+            :key="value"
+            @click="updateAppearance(value)"
+            :class="[
+                'flex items-center rounded-md px-3.5 py-1.5 transition-colors',
+                appearance === value
+                    ? 'bg-white shadow-sm dark:bg-neutral-700 dark:text-neutral-100'
+                    : 'text-neutral-500 hover:bg-neutral-200/60 hover:text-black dark:text-neutral-400 dark:hover:bg-neutral-700/60',
+            ]"
+        >
+            <component :is="Icon" class="-ml-1 h-4 w-4" />
+            <span class="ml-1.5 text-sm">{{ label }}</span>
+        </button>
+    </div>
 </template>

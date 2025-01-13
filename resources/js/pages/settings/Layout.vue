@@ -1,50 +1,43 @@
 <script setup lang="ts">
-import { Link } from "@inertiajs/vue3"
-import { Button } from "@/components/ui/button"
-import Heading from "@/components/Heading.vue"
-import { cn } from "@/lib/utils"
-import { Separator } from "@/components/ui/separator"
-import { type NavItem } from '@/types'
+import Heading from '@/components/Heading.vue';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { type NavItem } from '@/types';
+import { Link } from '@inertiajs/vue3';
 
 const sidebarNavItems: NavItem[] = [
     {
-        title: "Profile",
-        href: "/settings/profile",
+        title: 'Profile',
+        href: '/settings/profile',
     },
     {
-        title: "Password",
-        href: "/settings/password",
+        title: 'Password',
+        href: '/settings/password',
     },
     {
-        title: "Appearance",
-        href: "/settings/appearance"
-    }
-]
+        title: 'Appearance',
+        href: '/settings/appearance',
+    },
+];
 
-const currentPath = window.location.pathname
-const currentItem = sidebarNavItems.find(item => currentPath === item.href)
+const currentPath = window.location.pathname;
+const currentItem = sidebarNavItems.find((item) => currentPath === item.href);
 </script>
 
 <template>
     <div class="p-5 sm:p-8 md:p-10">
-        <Heading 
-            title="Settings"
-            description="Manage your profile and account settings"
-        />
+        <Heading title="Settings" description="Manage your profile and account settings" />
 
         <div class="flex flex-col space-y-8 md:flex-row md:space-x-12 md:space-y-0">
-            <aside class="md:w-1/3 lg:w-1/4 xl:w-1/5 w-full">
-                <nav class="flex-col space-x-0 space-y-1 flex">
-                    <Button 
+            <aside class="w-full md:w-1/3 lg:w-1/4 xl:w-1/5">
+                <nav class="flex flex-col space-x-0 space-y-1">
+                    <Button
                         v-for="item in sidebarNavItems"
                         :key="item.href"
-                        variant="ghost" 
-                        :class="[
-                            'w-full justify-start',
-                            currentPath === item.href ? 'bg-muted' : 'hover:underline'
-                        ]"
+                        variant="ghost"
+                        :class="['w-full justify-start', currentPath === item.href ? 'bg-muted' : 'hover:underline']"
                         as-child
-                    > 
+                    >
                         <Link :href="item.href">
                             {{ item.title }}
                         </Link>
@@ -52,7 +45,7 @@ const currentItem = sidebarNavItems.find(item => currentPath === item.href)
                 </nav>
             </aside>
 
-            <Separator class="md:hidden my-6" />
+            <Separator class="my-6 md:hidden" />
 
             <div class="flex-1 md:max-w-2xl">
                 <section class="max-w-xl space-y-12">

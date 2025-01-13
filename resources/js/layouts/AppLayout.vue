@@ -1,21 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import AppSidebar from '@/components/AppSidebar.vue';
-import { 
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { type BreadcrumbItem as BreadcrumbItemType } from '@/types'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
-import {
-    SidebarInset,
-    SidebarProvider,
-    SidebarTrigger,
-} from '@/components/ui/sidebar';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { type BreadcrumbItem as BreadcrumbItemType } from '@/types';
+import { ref } from 'vue';
 
 interface Props {
     breadcrumbs?: BreadcrumbItemType[];
@@ -25,11 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
 });
 
-const isOpen = ref(
-    typeof window !== 'undefined' 
-        ? localStorage.getItem('sidebar') !== 'false'
-        : true
-);
+const isOpen = ref(typeof window !== 'undefined' ? localStorage.getItem('sidebar') !== 'false' : true);
 
 const handleSidebarChange = (open: boolean) => {
     isOpen.value = open;
@@ -40,14 +25,10 @@ const handleSidebarChange = (open: boolean) => {
 </script>
 
 <template>
-    <SidebarProvider 
-        :default-open="isOpen" 
-        :open="isOpen"
-        @update:open="handleSidebarChange"
-    >
+    <SidebarProvider :default-open="isOpen" :open="isOpen" @update:open="handleSidebarChange">
         <AppSidebar />
         <SidebarInset>
-            <header class="flex h-16 shrink-0 items-center w-full justify-between gap-2 border-b px-4">
+            <header class="flex h-16 w-full shrink-0 items-center justify-between gap-2 border-b px-4">
                 <div class="flex items-center gap-2">
                     <SidebarTrigger class="-ml-1" />
                     <template v-if="breadcrumbs.length > 0">

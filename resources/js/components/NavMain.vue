@@ -1,12 +1,7 @@
 <script setup lang="ts">
+import { SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { type NavItem } from '@/types'
-import {
-    SidebarGroup,
-    SidebarMenu,
-    SidebarMenuItem,
-    SidebarMenuButton,
-} from '@/components/ui/sidebar';
 
 const props = defineProps<{
     items?: NavItem[];
