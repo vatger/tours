@@ -12,23 +12,20 @@ export function updateTheme(value: Appearance) {
   }
 }
 
+const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+
+const handleSystemThemeChange = () => {
+  const currentAppearance = localStorage.getItem('appearance') as Appearance | null
+  updateTheme(currentAppearance || 'system')
+}
+
 export function initializeTheme() {
   // Initialize theme from saved preference or default to system
   const savedAppearance = localStorage.getItem('appearance') as Appearance | null
-  if (savedAppearance) {
-    updateTheme(savedAppearance)
-  } else {
-    updateTheme('system')
-  }
+  updateTheme(savedAppearance || 'system')
 
   // Set up system theme change listener
-  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-  mediaQuery.addEventListener('change', () => {
-    const currentAppearance = localStorage.getItem('appearance') as Appearance | null
-    if (!currentAppearance || currentAppearance === 'system') {
-      updateTheme('system')
-    }
-  })
+  mediaQuery.addEventListener('change', handleSystemThemeChange)
 }
 
 export function useAppearance() {
