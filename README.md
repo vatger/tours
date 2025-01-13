@@ -44,8 +44,9 @@ resources/js/
 ├── components/     # Reusable Vue components
 ├── composables/    # Vue composables/hooks
 ├── layouts/        # Application layouts
+├── lib/           # Utility functions and configurations
 ├── pages/         # Page components
-└── lib/           # Utility functions and configurations
+└── types/         # Typescript definitions and interfaces
 ```
 
 **Components**: Use PascalCase for component files

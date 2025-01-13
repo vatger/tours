@@ -2,6 +2,7 @@
 import { defineComponent } from 'vue';
 import { ChevronsUpDown, LogOut, Settings } from 'lucide-vue-next';
 import { Link, usePage } from '@inertiajs/vue3';
+import { User } from '@/types';
 import {
     Avatar,
     AvatarFallback,
@@ -21,12 +22,6 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-
-interface User {
-    name: string;
-    email: string;
-    avatar?: string;
-}
 
 function getInitials(fullName: string): string {
     const names = fullName.trim().split(' ');
