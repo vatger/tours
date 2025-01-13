@@ -46,7 +46,7 @@ const submit = () => {
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="email">Email Address</Label>
+                    <Label for="email">Email address</Label>
                     <Input
                         id="email"
                         type="email"
@@ -72,7 +72,7 @@ const submit = () => {
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password_confirmation">Confirm Password</Label>
+                    <Label for="password_confirmation">Confirm password</Label>
                     <Input
                         id="password_confirmation"
                         type="password"
@@ -93,8 +93,6 @@ const submit = () => {
                     <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
                     Create Account
                 </Button>
-
-                <hr />
             </div>
 
             <div class="text-center text-sm">

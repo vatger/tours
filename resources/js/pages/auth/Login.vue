@@ -85,8 +85,6 @@ const submit = () => {
                     <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
                     Log In
                 </Button>
-
-                <hr />
             </div>
 
             <div class="text-center text-sm">

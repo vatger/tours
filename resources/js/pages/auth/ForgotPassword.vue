@@ -53,8 +53,6 @@ const submit = () => {
                         Email Password Reset Link
                     </Button>
                 </div>
-            
-                <hr />
             </form>
             <div class="text-center text-sm space-x-1">
                 <span>Or, return to the</span>
