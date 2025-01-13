@@ -4,7 +4,9 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "lint": "prettier --write .",
+        "test:lint": "prettier --check ."
     },
     "devDependencies": {
         "@headlessui/vue": "^1.7.23",
