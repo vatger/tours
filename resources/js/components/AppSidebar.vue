@@ -1,13 +1,22 @@
 <script setup lang="ts">
+import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
-import NavFooter from '@/components/NavFooter.vue';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import {
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarHeader,
+    SidebarInset,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    SidebarProvider,
+} from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { BookOpenText, FolderGit2, LayoutDashboard } from 'lucide-vue-next';
-import ApplicationLogo from './ApplicationLogo.vue';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { ref } from 'vue';
+import ApplicationLogo from './ApplicationLogo.vue';
 
 const mainNavItems: NavItem[] = [
     {

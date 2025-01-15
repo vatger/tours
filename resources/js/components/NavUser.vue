@@ -10,7 +10,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { User } from '@/types';
+import { type SharedData, type User } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import { ChevronsUpDown, LogOut, Settings } from 'lucide-vue-next';
 
@@ -21,7 +21,7 @@ function getInitials(fullName: string): string {
     return `${names[0].charAt(0)}${names[names.length - 1].charAt(0)}`.toUpperCase();
 }
 
-const page = usePage();
+const page = usePage<SharedData>();
 const user = page.props.auth.user as User;
 </script>
 

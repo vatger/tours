@@ -14,13 +14,20 @@ export interface NavItem {
     url: string;
     icon?: LucideIcon | null;
     isActive?: boolean;
-    items?: { title: string; url: string }[];
+}
+
+export interface SharedData {
+    auth: Auth;
+    name: string;
+    quote: { message: string; author: string };
+    [key: string]: any;
 }
 
 export interface User {
     id: number;
     name: string;
     email: string;
+    avatar?: string;
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;

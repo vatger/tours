@@ -2,7 +2,7 @@
 import { Head } from '@inertiajs/vue3';
 
 import AppearanceTabs from '@/components/AppearanceTabs.vue';
-import SettingsHeading from '@/components/settings/Heading.vue';
+import HeadingSmall from '@/components/HeadingSmall.vue';
 import { Label } from '@/components/ui/label';
 import { type BreadcrumbItem } from '@/types';
 
@@ -23,7 +23,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
         <SettingsLayout>
             <div>
-                <SettingsHeading title="Appearance Settings" description="Update your account's appearance settings" />
+                <HeadingSmall title="Appearance Settings" description="Update your account's appearance settings" />
                 <div class="flex flex-col items-start gap-4">
                     <Label>Appearance</Label>
                     <AppearanceTabs />

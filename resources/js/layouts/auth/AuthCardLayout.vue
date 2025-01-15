@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import ApplicationLogo from '@/components/ApplicationLogo.vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 
 interface Props {
     title?: string;
@@ -13,14 +13,11 @@ const props = withDefaults(defineProps<Props>(), {
     title: undefined,
     description: undefined,
 });
-
-const page = usePage();
-const name = page.props.name;
 </script>
 
 <template>
     <div class="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
-        <div class="flex w-full max-w-sm flex-col gap-6">
+        <div class="flex w-full max-w-md flex-col gap-6">
             <Link :href="route('home')" class="flex items-center gap-2 self-center font-medium">
                 <div class="flex h-10 w-10 items-center justify-center">
                     <ApplicationLogo class="size-10 fill-current text-black" />
@@ -28,14 +25,14 @@ const name = page.props.name;
             </Link>
 
             <div class="flex flex-col gap-6">
-                <Card>
-                    <CardHeader class="text-center">
+                <Card class="rounded-xl">
+                    <CardHeader class="px-10 pb-0 pt-8 text-center">
                         <CardTitle class="text-xl">{{ title }}</CardTitle>
                         <CardDescription>
                             {{ description }}
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent class="px-10 py-8">
                         <slot />
                     </CardContent>
                 </Card>

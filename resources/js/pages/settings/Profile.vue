@@ -2,14 +2,14 @@
 import { TransitionRoot } from '@headlessui/vue';
 import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 
+import DeleteUser from '@/components/DeleteUser.vue';
+import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
-import DeleteUser from '@/components/settings/DeleteUser.vue';
-import SettingsHeading from '@/components/settings/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem, type SharedData, type User } from '@/types';
 import SettingsLayout from './Layout.vue';
 
 interface Props {
@@ -27,8 +27,8 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const page = usePage();
-const user = page.props.auth.user;
+const page = usePage<SharedData>();
+const user = page.props.auth.user as User;
 
 const form = useForm({
     name: user.name,
@@ -46,7 +46,7 @@ const submit = () => {
 
         <SettingsLayout>
             <div class="flex flex-col">
-                <SettingsHeading title="Profile Information" description="Update your name and email address" />
+                <HeadingSmall title="Profile Information" description="Update your name and email address" />
 
                 <form @submit.prevent="submit" class="space-y-6">
                     <div class="grid gap-2">

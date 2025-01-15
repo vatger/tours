@@ -3,8 +3,8 @@ import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 // Components
+import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
-import SettingsHeading from '@/components/settings/Heading.vue';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -43,7 +43,7 @@ const closeModal = () => {
 
 <template>
     <div>
-        <SettingsHeading title="Delete Account" description="Delete your account and all of its resources" />
+        <HeadingSmall title="Delete Account" description="Delete your account and all of its resources" />
         <div className="border border-red-100 dark:border-red-950 p-3 rounded-lg flex items-center bg-red-50 dark:bg-red-500/20">
             <Dialog>
                 <DialogTrigger as-child>
