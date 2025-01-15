@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import InputError from '@/components/InputError.vue';
+import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 
 const form = useForm({
@@ -66,7 +67,7 @@ const submit = () => {
 
             <div class="text-center text-sm">
                 Already have an account?
-                <Link :href="route('login')" class="underline underline-offset-4" tabindex="6"> Log in </Link>
+                <TextLink :href="route('login')" class="underline underline-offset-4" tabindex="6">Log in</TextLink>
             </div>
         </form>
     </AuthBase>

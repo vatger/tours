@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import AuthLayout from '@/layouts/AuthLayout.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 
 defineProps<{
@@ -35,14 +36,14 @@ const submit = () => {
                     Resend Verification Email
                 </Button>
 
-                <Link
+                <TextLink
                     :href="route('logout')"
                     method="post"
                     as="button"
                     class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                     Log Out
-                </Link>
+                </TextLink>
             </div>
         </form>
     </AuthLayout>

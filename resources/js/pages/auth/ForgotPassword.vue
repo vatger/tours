@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import InputError from '@/components/InputError.vue';
+import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/AuthLayout.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 
 defineProps<{
@@ -46,7 +47,7 @@ const submit = () => {
             </form>
             <div class="space-x-1 text-center text-sm">
                 <span>Or, return to the</span>
-                <Link :href="route('login')" class="underline underline-offset-4"> login page </Link>
+                <TextLink :href="route('login')" class="underline underline-offset-4">login page</TextLink>
             </div>
         </div>
     </AuthLayout>

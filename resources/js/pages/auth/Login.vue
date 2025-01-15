@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import InputError from '@/components/InputError.vue';
+import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 
 defineProps<{
@@ -44,14 +45,9 @@ const submit = () => {
                 <div class="grid gap-2">
                     <div class="flex items-center justify-between">
                         <Label for="password">Password</Label>
-                        <Link
-                            v-if="canResetPassword"
-                            :href="route('password.request')"
-                            class="text-sm underline-offset-4 hover:underline"
-                            tabindex="5"
-                        >
+                        <TextLink v-if="canResetPassword" :href="route('password.request')" class="text-sm" tabindex="5">
                             Forgot your password?
-                        </Link>
+                        </TextLink>
                     </div>
                     <Input id="password" type="password" required tabindex="2" autocomplete="current-password" v-model="form.password" />
                     <InputError :message="form.errors.password" />
@@ -65,7 +61,7 @@ const submit = () => {
 
             <div class="text-center text-sm">
                 Don't have an account?
-                <Link :href="route('register')" class="underline underline-offset-4" tabindex="4"> Sign up </Link>
+                <TextLink :href="route('register')" :tabindex="4">Sign up</TextLink>
             </div>
         </form>
     </AuthBase>
