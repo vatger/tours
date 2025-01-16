@@ -42,12 +42,12 @@ const closeModal = () => {
 </script>
 
 <template>
-    <div>
-        <HeadingSmall title="Delete Account" description="Delete your account and all of its resources" />
-        <div className="border border-red-100 dark:border-red-950 p-3 rounded-lg flex items-center bg-red-50 dark:bg-red-500/20">
+    <div class="space-y-6">
+        <HeadingSmall title="Delete account" description="Delete your account and all of its resources" />
+        <div className="border border-red-100 dark:border-red-950 p-3 rounded-lg flex items-center bg-red-50 dark:bg-red-700/10">
             <Dialog>
                 <DialogTrigger as-child>
-                    <Button variant="destructive">Delete Account</Button>
+                    <Button variant="destructive">Delete account</Button>
                 </DialogTrigger>
                 <DialogContent>
                     <form class="space-y-6" @submit="deleteUser">
@@ -72,7 +72,7 @@ const closeModal = () => {
                             </DialogClose>
 
                             <Button variant="destructive" :disabled="form.processing">
-                                <button type="submit">Delete Account</button>
+                                <button type="submit">Delete account</button>
                             </Button>
                         </DialogFooter>
                     </form>

@@ -25,7 +25,7 @@ const currentItem = sidebarNavItems.find((item) => currentPath === item.href);
 </script>
 
 <template>
-    <div class="p-5 sm:p-8 md:p-10">
+    <div class="border-t border-sidebar-border/70 p-5 lg:p-7">
         <Heading title="Settings" description="Manage your profile and account settings" />
 
         <div class="flex flex-col space-y-8 md:flex-row md:space-x-12 md:space-y-0">
@@ -35,7 +35,7 @@ const currentItem = sidebarNavItems.find((item) => currentPath === item.href);
                         v-for="item in sidebarNavItems"
                         :key="item.href"
                         variant="ghost"
-                        :class="['w-full justify-start', currentPath === item.href ? 'bg-muted' : 'hover:underline']"
+                        :class="['w-full justify-start', { 'bg-muted': currentPath === item.href }]"
                         as-child
                     >
                         <Link :href="item.href">

@@ -58,8 +58,8 @@ const updatePassword = () => {
         <Head title="Profile Settings" />
 
         <SettingsLayout>
-            <div>
-                <HeadingSmall title="Update Password" description="Ensure your account is using a long, random password to stay secure" />
+            <div class="space-y-6">
+                <HeadingSmall title="Update password" description="Ensure your account is using a long, random password to stay secure" />
 
                 <form @submit.prevent="updatePassword" class="space-y-6">
                     <div class="grid gap-2">
@@ -78,7 +78,7 @@ const updatePassword = () => {
                     </div>
 
                     <div class="grid gap-2">
-                        <Label for="password">New Password</Label>
+                        <Label for="password">New password</Label>
 
                         <Input
                             id="password"
@@ -93,7 +93,7 @@ const updatePassword = () => {
                     </div>
 
                     <div class="grid gap-2">
-                        <Label for="password_confirmation">Confirm Password</Label>
+                        <Label for="password_confirmation">Confirm password</Label>
 
                         <Input
                             id="password_confirmation"
@@ -107,7 +107,7 @@ const updatePassword = () => {
                     </div>
 
                     <div class="flex items-center gap-4">
-                        <Button :disabled="form.processing">Save</Button>
+                        <Button :disabled="form.processing">Save password</Button>
 
                         <TransitionRoot
                             :show="form.recentlySuccessful"

@@ -56,11 +56,11 @@ const handleSidebarChange = (open: boolean) => {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" as-child>
-                            <a href="#" class="flex items-center gap-3">
+                            <a href="#">
                                 <div
                                     class="flex aspect-square size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground"
                                 >
-                                    <ApplicationLogo class="size-5 fill-current text-white" />
+                                    <ApplicationLogo class="size-5 fill-current text-white dark:text-black" />
                                 </div>
                                 <div class="grid flex-1 text-left text-sm leading-tight">
                                     <span class="truncate font-semibold">Laravel</span>
