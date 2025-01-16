@@ -22,9 +22,6 @@ defineProps<Props>();
                             <span>{{ item.title }}</span>
                         </a>
                     </SidebarMenuButton>
-                    <SidebarMenuAction show-on-hover>
-                        <ExternalLink class="text-neutral-600 dark:text-neutral-300" />
-                    </SidebarMenuAction>
                 </SidebarMenuItem>
             </SidebarMenu>
         </SidebarGroupContent>

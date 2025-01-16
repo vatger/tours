@@ -18,7 +18,6 @@ const props = withDefaults(defineProps<Props>(), {
         <div class="flex items-center gap-2">
             <SidebarTrigger class="-ml-1" />
             <template v-if="breadcrumbs.length > 0">
-                <Separator orientation="vertical" class="mr-2 h-4" />
                 <Breadcrumb>
                     <BreadcrumbList>
                         <template v-for="(item, index) in breadcrumbs" :key="index">
