@@ -1,6 +1,6 @@
 <!-- AuthSimpleLayout.vue -->
 <script setup lang="ts">
-import ApplicationLogo from '@/components/ApplicationLogo.vue';
+import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { Link } from '@inertiajs/vue3';
 
 interface Props {
@@ -21,7 +21,7 @@ const props = withDefaults(defineProps<Props>(), {
                 <div class="flex flex-col items-center gap-2">
                     <Link :href="route('home')" class="flex flex-col items-center gap-2 font-medium">
                         <div class="flex h-10 w-10 items-center justify-center rounded-md">
-                            <ApplicationLogo class="size-10 fill-current text-black dark:text-white" />
+                            <AppLogoIcon class="size-10 fill-current text-black dark:text-white" />
                         </div>
                         <span class="sr-only">{{ title }}</span>
                     </Link>

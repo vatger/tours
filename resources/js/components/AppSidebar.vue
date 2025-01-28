@@ -15,8 +15,7 @@ import {
 } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { BookOpenText, FolderGit2, LayoutDashboard } from 'lucide-vue-next';
-import { ref } from 'vue';
-import ApplicationLogo from './ApplicationLogo.vue';
+import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
     {
@@ -39,50 +38,38 @@ const footerNavItems: NavItem[] = [
     },
 ];
 
-const isOpen = ref(typeof window !== 'undefined' ? localStorage.getItem('sidebar') !== 'false' : true);
-
-const handleSidebarChange = (open: boolean) => {
-    isOpen.value = open;
-    if (typeof window !== 'undefined') {
-        localStorage.setItem('sidebar', String(open));
-    }
-};
 </script>
 
 <template>
-    <SidebarProvider :default-open="isOpen" :open="isOpen" @update:open="handleSidebarChange">
-        <Sidebar variant="sidebar" collapsible="icon">
-            <SidebarHeader>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" as-child>
-                            <a href="#">
-                                <div
-                                    class="flex aspect-square size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground"
-                                >
-                                    <ApplicationLogo class="size-5 fill-current text-white dark:text-black" />
-                                </div>
-                                <div class="grid flex-1 text-left text-sm leading-tight">
-                                    <span class="truncate font-semibold">Laravel</span>
-                                    <span class="truncate text-xs">Starter Kit</span>
-                                </div>
-                            </a>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarHeader>
+    <Sidebar variant="sidebar" collapsible="icon">
+        <SidebarHeader>
+            <SidebarMenu>
+                <SidebarMenuItem>
+                    <SidebarMenuButton size="lg" as-child>
+                        <a href="#">
+                            <div
+                                class="flex aspect-square size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground"
+                            >
+                                <AppLogo class="size-5 fill-current text-white dark:text-black" />
+                            </div>
+                            <div class="grid flex-1 text-left text-sm leading-tight">
+                                <span class="truncate font-semibold">Laravel</span>
+                                <span class="truncate text-xs">Starter Kit</span>
+                            </div>
+                        </a>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+            </SidebarMenu>
+        </SidebarHeader>
 
-            <SidebarContent>
-                <NavMain :items="mainNavItems" />
-            </SidebarContent>
+        <SidebarContent>
+            <NavMain :items="mainNavItems" />
+        </SidebarContent>
 
-            <SidebarFooter>
-                <NavFooter :items="footerNavItems" />
-                <NavUser />
-            </SidebarFooter>
-        </Sidebar>
-        <SidebarInset>
-            <slot />
-        </SidebarInset>
-    </SidebarProvider>
+        <SidebarFooter>
+            <NavFooter :items="footerNavItems" />
+            <NavUser />
+        </SidebarFooter>
+    </Sidebar>
+    <slot />
 </template>

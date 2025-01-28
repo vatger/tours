@@ -1,6 +1,6 @@
 <!-- AuthSplitLayout.vue -->
 <script setup lang="ts">
-import ApplicationLogo from '@/components/ApplicationLogo.vue';
+import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { Link, usePage } from '@inertiajs/vue3';
 
 interface Props {
@@ -23,7 +23,7 @@ const quote = page.props.quote;
         <div class="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
             <div class="absolute inset-0 bg-zinc-900" />
             <Link :href="route('home')" class="relative z-20 flex items-center text-lg font-medium">
-                <ApplicationLogo class="mr-2 h-6 fill-current text-white" />
+                <AppLogoIcon class="mr-2 h-6 fill-current text-white" />
                 {{ name }}
             </Link>
             <div v-if="quote" class="relative z-20 mt-auto">

@@ -25,7 +25,7 @@ const currentItem = sidebarNavItems.find((item) => currentPath === item.href);
 </script>
 
 <template>
-    <div class="border-t border-sidebar-border/70 p-5 lg:p-7">
+    <div class="px-4 py-6">
         <Heading title="Settings" description="Manage your profile and account settings" />
 
         <div class="flex flex-col space-y-8 md:flex-row md:space-x-12 md:space-y-0">

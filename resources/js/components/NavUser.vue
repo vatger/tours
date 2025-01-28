@@ -3,16 +3,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type SharedData, type User } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { ChevronsUpDown, LogOut, Settings } from 'lucide-vue-next';
+import { ChevronsUpDown } from 'lucide-vue-next';
+import UserMenuContent from './UserMenuContent.vue';
 
 const page = usePage<SharedData>();
 const user = page.props.auth.user as User;
@@ -45,36 +42,7 @@ function getInitials(fullName: string): string {
                     </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent class="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg" side="bottom" align="end" :side-offset="4">
-                    <DropdownMenuLabel class="p-0 font-normal">
-                        <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                            <Avatar class="h-8 w-8 overflow-hidden rounded-full bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
-                                <AvatarImage v-if="user.avatar" :src="user.avatar" :alt="user.name" />
-                                <AvatarFallback>
-                                    {{ getInitials(user.name) }}
-                                </AvatarFallback>
-                            </Avatar>
-                            <div class="grid flex-1 text-left text-sm leading-tight">
-                                <span class="truncate font-semibold">{{ user.name }}</span>
-                                <span class="truncate text-xs">{{ user.email }}</span>
-                            </div>
-                        </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuGroup>
-                        <DropdownMenuItem as-child>
-                            <Link class="block w-full" :href="route('profile.edit')" as="button">
-                                <Settings class="mr-2" />
-                                Settings
-                            </Link>
-                        </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem as-child>
-                        <Link class="block w-full" method="post" :href="route('logout')" as="button">
-                            <LogOut class="mr-2" />
-                            Log out
-                        </Link>
-                    </DropdownMenuItem>
+                    <UserMenuContent :user="user" />
                 </DropdownMenuContent>
             </DropdownMenu>
         </SidebarMenuItem>

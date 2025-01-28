@@ -1,6 +1,6 @@
 <!-- AuthCardLayout.vue -->
 <script setup lang="ts">
-import ApplicationLogo from '@/components/ApplicationLogo.vue';
+import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from '@inertiajs/vue3';
 
@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
         <div class="flex w-full max-w-md flex-col gap-6">
             <Link :href="route('home')" class="flex items-center gap-2 self-center font-medium">
                 <div class="flex h-10 w-10 items-center justify-center">
-                    <ApplicationLogo class="size-10 fill-current text-black" />
+                    <AppLogoIcon class="size-10 fill-current text-black" />
                 </div>
             </Link>
 
