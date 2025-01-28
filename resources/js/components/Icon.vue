@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { LucideIcon as LucideIconType } from 'lucide-vue-next'
+import * as icons from 'lucide-vue-next'
 import { cn } from '@/lib/utils'
 
 interface Props {
-    iconNode: LucideIconType
+    name: string
     class?: string
     size?: number | string
     color?: string
@@ -18,11 +18,15 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const className = computed(() => cn('h-4 w-4', props.class))
+const icon = computed(() => {
+    const iconName = props.name.charAt(0).toUpperCase() + props.name.slice(1)
+    return (icons as Record<string, any>)[iconName]
+})
 </script>
 
 <template>
     <component 
-        :is="iconNode" 
+        :is="icon" 
         :class="className"
         :size="props.size"
         :stroke-width="props.strokeWidth"

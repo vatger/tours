@@ -1,4 +1,4 @@
-import { LucideIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-vue-next';
 
 export interface Auth {
     user: User;
@@ -11,16 +11,21 @@ export interface BreadcrumbItem {
 
 export interface NavItem {
     title: string;
-    url: string;
-    icon?: LucideIcon | null;
+    href: string;
+    icon?: LucideIcon;
     isActive?: boolean;
 }
 
 export interface SharedData {
     auth: Auth;
     name: string;
-    quote: { message: string; author: string };
-    [key: string]: any;
+    ziggy: {
+        location: string;
+        url: string;
+        port: null | number;
+        defaults: Record<string, unknown>;
+        routes: Record<string, string>;
+    };
 }
 
 export interface User {
@@ -32,3 +37,5 @@ export interface User {
     created_at: string;
     updated_at: string;
 }
+
+export type BreadcrumbItemType = BreadcrumbItem;
