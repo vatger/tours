@@ -9,7 +9,7 @@ interface Props {
 }
 
 const { user } = defineProps<Props>()
-const getInitials = useInitials()
+const { getInitials } = useInitials()
 
 // Compute whether we should show the avatar image
 const showAvatar = computed(() => user.avatar && user.avatar !== '')
@@ -18,7 +18,7 @@ const showAvatar = computed(() => user.avatar && user.avatar !== '')
 <template>
     <Avatar class="h-8 w-8 overflow-hidden rounded-lg">
         <AvatarImage v-if="showAvatar" :src="user.avatar" :alt="user.name" />
-        <AvatarFallback class="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
+        <AvatarFallback class="rounded-lg text-black dark:text-white">
             {{ getInitials(user.name) }}
         </AvatarFallback>
     </Avatar>
