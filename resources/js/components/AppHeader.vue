@@ -44,6 +44,14 @@ const props = withDefaults(defineProps<Props>(), {
 const page = usePage()
 const auth = computed(() => page.props.auth)
 
+const isCurrentRoute = (url: string) => {
+    return page.url === url
+}
+
+const activeItemStyles = computed(() => (url: string) => 
+    isCurrentRoute(url) ? 'bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100' : ''
+)
+
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
@@ -64,8 +72,6 @@ const rightNavItems: NavItem[] = [
         icon: BookOpenText,
     },
 ];
-
-const activeItemStyles = 'bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
 </script>
 
 <template>
@@ -91,9 +97,9 @@ const activeItemStyles = 'bg-neutral-100 text-neutral-900 dark:bg-neutral-800 da
                                     <Link
                                         v-for="item in mainNavItems"
                                         :key="item.title"
-                                        :href="item.href"
+                                        :href="item.url"
                                         class="flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
-                                        :class="activeItemStyles"
+                                        :class="activeItemStyles(item.url)"
                                     >
                                         <component v-if="item.icon" :is="item.icon" class="h-5 w-5" />
                                         {{ item.title }}
@@ -117,7 +123,7 @@ const activeItemStyles = 'bg-neutral-100 text-neutral-900 dark:bg-neutral-800 da
                     </Sheet>
                 </div>
 
-                <Link href="/" class="flex items-center gap-x-2">
+                <Link :href="route('dashboard')" class="flex items-center gap-x-2">
                     <AppLogo class="hidden h-6 xl:block" />
                 </Link>
 
@@ -130,7 +136,7 @@ const activeItemStyles = 'bg-neutral-100 text-neutral-900 dark:bg-neutral-800 da
                             <NavigationMenuItem v-for="(item, index) in mainNavItems" :key="index" class="relative flex h-full items-center">
                                 <Link :href="item.url">
                                     <NavigationMenuLink
-                                        :class="[navigationMenuTriggerStyle(), activeItemStyles, 'h-9 cursor-pointer px-3']"
+                                        :class="[navigationMenuTriggerStyle(), activeItemStyles(item.url), 'h-9 cursor-pointer px-3']"
                                     >
                                         <component v-if="item.icon" :is="item.icon" class="mr-2 h-4 w-4" />
                                         {{ item.title }}

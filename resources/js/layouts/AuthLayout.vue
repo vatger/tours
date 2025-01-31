@@ -1,6 +1,6 @@
 <!-- AuthBase.vue -->
 <script setup lang="ts">
-import AuthLayout from '@/layouts/auth/AuthSimpleLayout.vue';
+import AuthLayout from '@/layouts/auth/AuthSplitLayout.vue';
 import { defineProps } from 'vue';
 
 interface Props {
