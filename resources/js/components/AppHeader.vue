@@ -1,56 +1,42 @@
 <script setup lang="ts">
-import { Link, usePage } from '@inertiajs/vue3'
-import type { BreadcrumbItem, NavItem } from '@/types'
-import AppLogo from '@/components/AppLogo.vue'
-import AppLogoIcon from '@/components/AppLogoIcon.vue'
-import { Button } from "@/components/ui/button"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from '@/components/ui/tooltip'
-import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTrigger,
-} from '@/components/ui/sheet'
+import AppLogo from '@/components/AppLogo.vue';
+import AppLogoIcon from '@/components/AppLogoIcon.vue';
+import UserMenuContent from '@/components/UserMenuContent.vue';
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import {
     NavigationMenu,
     NavigationMenuItem,
     NavigationMenuLink,
     NavigationMenuList,
     navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu'
-import { BookOpenText, ChevronDown, FolderGit2, LayoutGrid, Menu, Search } from 'lucide-vue-next'
-import UserMenuContent from '@/components/UserMenuContent.vue'
-import { getInitials } from '@/composables/useInitials'
-import { computed } from 'vue'
+} from '@/components/ui/navigation-menu';
+import { Sheet, SheetContent, SheetHeader, SheetTrigger } from '@/components/ui/sheet';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { getInitials } from '@/composables/useInitials';
+import type { BreadcrumbItem, NavItem } from '@/types';
+import { Link, usePage } from '@inertiajs/vue3';
+import { BookOpenText, ChevronDown, FolderGit2, LayoutGrid, Menu, Search } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 interface Props {
-    breadcrumbs?: BreadcrumbItem[]
+    breadcrumbs?: BreadcrumbItem[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    breadcrumbs: () => []
-})
+    breadcrumbs: () => [],
+});
 
-const page = usePage()
-const auth = computed(() => page.props.auth)
+const page = usePage();
+const auth = computed(() => page.props.auth);
 
 const isCurrentRoute = (url: string) => {
-    return page.url === url
-}
+    return page.url === url;
+};
 
-const activeItemStyles = computed(() => (url: string) => 
-    isCurrentRoute(url) ? 'bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100' : ''
-)
+const activeItemStyles = computed(
+    () => (url: string) => (isCurrentRoute(url) ? 'bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100' : ''),
+);
 
 const mainNavItems: NavItem[] = [
     {
@@ -77,13 +63,12 @@ const rightNavItems: NavItem[] = [
 <template>
     <div>
         <div class="border-b border-sidebar-border/80">
-            <div class="flex h-16 items-center px-4 md:max-w-7xl mx-auto">
+            <div class="mx-auto flex h-16 items-center px-4 md:max-w-7xl">
                 <!-- Mobile Menu -->
                 <div class="lg:hidden">
-                    
                     <Sheet>
                         <SheetTrigger :as-child="true">
-                            <Button variant="ghost" size="icon" class="w-9 h-9 mr-2">
+                            <Button variant="ghost" size="icon" class="mr-2 h-9 w-9">
                                 <Menu class="h-5 w-5" />
                             </Button>
                         </SheetTrigger>
@@ -93,7 +78,7 @@ const rightNavItems: NavItem[] = [
                                 <AppLogoIcon class="size-6 fill-current text-black dark:text-white" />
                             </SheetHeader>
                             <div className="flex flex-col justify-between h-full space-y-4 py-6 flex-1">
-                                <nav class="space-y-1 -mx-3">
+                                <nav class="-mx-3 space-y-1">
                                     <Link
                                         v-for="item in mainNavItems"
                                         :key="item.title"
@@ -112,7 +97,7 @@ const rightNavItems: NavItem[] = [
                                         :href="item.url"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        class="flex items-center text-sm space-x-2 font-medium"
+                                        class="flex items-center space-x-2 text-sm font-medium"
                                     >
                                         <component v-if="item.icon" :is="item.icon" class="h-5 w-5" />
                                         <span>{{ item.title }}</span>
@@ -128,10 +113,8 @@ const rightNavItems: NavItem[] = [
                 </Link>
 
                 <!-- Desktop Menu -->
-                <div class="hidden lg:flex lg:flex-1 h-full">
-                    
-
-                    <NavigationMenu class="flex h-full items-stretch ml-10">
+                <div class="hidden h-full lg:flex lg:flex-1">
+                    <NavigationMenu class="ml-10 flex h-full items-stretch">
                         <NavigationMenuList class="flex h-full items-stretch space-x-2">
                             <NavigationMenuItem v-for="(item, index) in mainNavItems" :key="index" class="relative flex h-full items-center">
                                 <Link :href="item.url">
@@ -146,12 +129,11 @@ const rightNavItems: NavItem[] = [
                             </NavigationMenuItem>
                         </NavigationMenuList>
                     </NavigationMenu>
-
                 </div>
 
                 <div class="ml-auto flex items-center space-x-2">
                     <div class="relative flex items-center space-x-1">
-                        <Button variant="ghost" size="icon" class="w-9 h-9 cursor-pointer">
+                        <Button variant="ghost" size="icon" class="h-9 w-9 cursor-pointer">
                             <Search class="h-5 w-5" />
                         </Button>
 
@@ -178,24 +160,18 @@ const rightNavItems: NavItem[] = [
 
                     <DropdownMenu>
                         <DropdownMenuTrigger :as-child="true">
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                class="relative h-9 w-auto px-1 rounded-md"
-                            >
-                                <span><img
-                                    v-if="auth.user?.avatar"
-                                    :src="auth.user.avatar"
-                                    :alt="auth.user.name"
-                                    class="rounded-full"
-                                />
-                                <span v-else class="flex h-7 w-7 items-center justify-center rounded-md bg-primary/10 text-sm font-medium text-primary">
-                                    {{ getInitials(auth.user?.name) }}
+                            <Button variant="ghost" size="icon" class="relative h-9 w-auto rounded-md px-1">
+                                <span
+                                    ><img v-if="auth.user?.avatar" :src="auth.user.avatar" :alt="auth.user.name" class="rounded-full" />
+                                    <span
+                                        v-else
+                                        class="flex h-7 w-7 items-center justify-center rounded-md bg-primary/10 text-sm font-medium text-primary"
+                                    >
+                                        {{ getInitials(auth.user?.name) }}
+                                    </span>
                                 </span>
-                                </span>
-                                <ChevronDown class="ml-auto size-4 mr-1" />
+                                <ChevronDown class="ml-auto mr-1 size-4" />
                             </Button>
-                            
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" class="w-56">
                             <UserMenuContent :user="auth.user" />
@@ -204,8 +180,8 @@ const rightNavItems: NavItem[] = [
                 </div>
             </div>
         </div>
-        <div v-if="props.breadcrumbs.length > 1" class="w-full flex border-b border-sidebar-border/70">
-            <div class="flex h-12 items-center justify-start w-full px-4 md:max-w-7xl mx-auto text-neutral-500">
+        <div v-if="props.breadcrumbs.length > 1" class="flex w-full border-b border-sidebar-border/70">
+            <div class="mx-auto flex h-12 w-full items-center justify-start px-4 text-neutral-500 md:max-w-7xl">
                 <Breadcrumbs :breadcrumbs="props.breadcrumbs" />
             </div>
         </div>

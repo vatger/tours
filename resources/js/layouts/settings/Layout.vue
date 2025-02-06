@@ -21,7 +21,6 @@ const sidebarNavItems: NavItem[] = [
 ];
 
 const currentPath = window.location.pathname;
-const currentItem = sidebarNavItems.find((item) => currentPath === item.href);
 </script>
 
 <template>

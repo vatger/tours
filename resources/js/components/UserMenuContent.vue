@@ -1,20 +1,15 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3'
-import UserInfo from '@/components/UserInfo.vue'
-import {
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu"
-import { Settings, LogOut } from 'lucide-vue-next'
-import type { User } from '@/types'
+import UserInfo from '@/components/UserInfo.vue';
+import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import type { User } from '@/types';
+import { Link } from '@inertiajs/vue3';
+import { LogOut, Settings } from 'lucide-vue-next';
 
 interface Props {
-    user: User
+    user: User;
 }
 
-defineProps<Props>()
+defineProps<Props>();
 </script>
 
 <template>

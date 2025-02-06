@@ -3,16 +3,6 @@
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from '@inertiajs/vue3';
-
-interface Props {
-    title?: string;
-    description?: string;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-    title: undefined,
-    description: undefined,
-});
 </script>
 
 <template>
