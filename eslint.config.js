@@ -1,8 +1,8 @@
 import js from '@eslint/js';
 import prettier from 'eslint-config-prettier';
+import vue from 'eslint-plugin-vue';
 import globals from 'globals';
 import typescript from 'typescript-eslint';
-import vue from 'eslint-plugin-vue';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -10,49 +10,49 @@ export default [
     ...typescript.configs.recommended,
     {
         ...vue.configs.flat.recommended,
-        ...vue.configs["flat/strongly-recommended"],
-        ...vue.configs["flat/essential"],
+        ...vue.configs['flat/strongly-recommended'],
+        ...vue.configs['flat/essential'],
         languageOptions: {
             globals: {
                 ...globals.browser,
             },
         },
         rules: {
-            "vue/match-component-import-name": "warn",
-            "vue/match-component-file-name": [
-                "error",
+            'vue/match-component-import-name': 'warn',
+            'vue/match-component-file-name': [
+                'error',
                 {
-                    extensions: ["vue"],
+                    extensions: ['vue'],
                     shouldMatchCase: true,
                 },
             ],
-            "vue/component-definition-name-casing": ["error", "PascalCase"],
-            "vue/block-tag-newline": [
-                "warn",
+            'vue/component-definition-name-casing': ['error', 'PascalCase'],
+            'vue/block-tag-newline': [
+                'warn',
                 {
-                    singleline: "always",
-                    multiline: "always",
+                    singleline: 'always',
+                    multiline: 'always',
                     maxEmptyLines: 0,
                 },
             ],
-            "vue/html-self-closing": [
-                "error",
+            'vue/html-self-closing': [
+                'error',
                 {
                     html: {
-                        void: "always",
-                        normal: "never",
-                        component: "always",
+                        void: 'always',
+                        normal: 'never',
+                        component: 'always',
                     },
-                    svg: "always",
-                    math: "always",
+                    svg: 'always',
+                    math: 'always',
                 },
             ],
-            "vue/require-default-prop": "off",
+            'vue/require-default-prop': 'off',
         },
     },
     {
         plugins: {
-            "@typescript-eslint": tseslint.plugin,
+            '@typescript-eslint': tseslint.plugin,
         },
         languageOptions: {
             parser: tseslint.parser,
