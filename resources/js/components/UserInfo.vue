@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { useInitials } from '@/composables/useInitials'
-import type { User } from '@/types'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useInitials } from '@/composables/useInitials';
+import type { User } from '@/types';
+import { computed } from 'vue';
 
 interface Props {
-    user: User
+    user: User;
 }
 
-const { user } = defineProps<Props>()
-const { getInitials } = useInitials()
+const { user } = defineProps<Props>();
+const { getInitials } = useInitials();
 
 // Compute whether we should show the avatar image
-const showAvatar = computed(() => user.avatar && user.avatar !== '')
+const showAvatar = computed(() => user.avatar && user.avatar !== '');
 </script>
 
 <template>

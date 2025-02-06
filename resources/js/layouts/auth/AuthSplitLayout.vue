@@ -3,16 +3,6 @@
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { Link, usePage } from '@inertiajs/vue3';
 
-interface Props {
-    title?: string;
-    description?: string;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-    title: undefined,
-    description: undefined,
-});
-
 const page = usePage();
 const name = page.props.name;
 const quote = page.props.quote;

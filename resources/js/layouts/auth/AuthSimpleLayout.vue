@@ -2,16 +2,6 @@
 <script setup lang="ts">
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { Link } from '@inertiajs/vue3';
-
-interface Props {
-    title?: string;
-    description?: string;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-    title: undefined,
-    description: undefined,
-});
 </script>
 
 <template>
