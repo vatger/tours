@@ -2,6 +2,12 @@
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { onMounted, ref } from 'vue';
 
+interface Props {
+    variant?: 'header' | 'sidebar';
+}
+
+defineProps<Props>();
+
 const isOpen = ref(true);
 
 onMounted(() => {
