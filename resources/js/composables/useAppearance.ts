@@ -19,11 +19,11 @@ const handleSystemThemeChange = () => {
 };
 
 export function initializeTheme() {
-    // Initialize theme from saved preference or default to system
+    // Initialize theme from saved preference or default to system...
     const savedAppearance = localStorage.getItem('appearance') as Appearance | null;
     updateTheme(savedAppearance || 'system');
 
-    // Set up system theme change listener
+    // Set up system theme change listener...
     mediaQuery.addEventListener('change', handleSystemThemeChange);
 }
 
@@ -32,7 +32,9 @@ export function useAppearance() {
 
     onMounted(() => {
         initializeTheme();
+
         const savedAppearance = localStorage.getItem('appearance') as Appearance | null;
+
         if (savedAppearance) {
             appearance.value = savedAppearance;
         }
