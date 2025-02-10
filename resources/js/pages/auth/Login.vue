@@ -54,15 +54,14 @@ const submit = () => {
                     <InputError :message="form.errors.password" />
                 </div>
 
-                <!-- Uncomment this below to enable remember me checkbox -->
-                <!-- <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between" tabindex="3">
                     <Label for="remember" class="space-x-1.5 h-full flex items-center">
                         <Checkbox id="remember" v-model:checked="form.remember" tabindex="4" />
                         <span>Remember me</span>
                     </Label>
-                </div> -->
+                </div>
 
-                <Button type="submit" class="w-full" tabindex="3" :disabled="form.processing">
+                <Button type="submit" class="w-full" tabindex="4" :disabled="form.processing">
                     <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
                     Log In
                 </Button>
@@ -70,7 +69,7 @@ const submit = () => {
 
             <div class="text-center text-sm">
                 Don't have an account?
-                <TextLink :href="route('register')" :tabindex="4">Sign up</TextLink>
+                <TextLink :href="route('register')" :tabindex="5">Sign up</TextLink>
             </div>
         </form>
     </AuthBase>
