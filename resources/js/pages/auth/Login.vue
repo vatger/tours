@@ -2,6 +2,7 @@
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/Components/ui/checkbox'
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
@@ -52,6 +53,14 @@ const submit = () => {
                     <Input id="password" type="password" required tabindex="2" autocomplete="current-password" v-model="form.password" />
                     <InputError :message="form.errors.password" />
                 </div>
+
+                <!-- Uncomment this below to enable remember me checkbox -->
+                <!-- <div class="flex items-center justify-between">
+                    <Label for="remember" class="space-x-1.5 h-full flex items-center">
+                        <Checkbox id="remember" v-model:checked="form.remember" tabindex="4" />
+                        <span>Remember me</span>
+                    </Label>
+                </div> -->
 
                 <Button type="submit" class="w-full" tabindex="3" :disabled="form.processing">
                     <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
