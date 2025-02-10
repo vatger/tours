@@ -20,6 +20,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 const passwordInput = ref<HTMLInputElement | null>(null);
+
 const form = useForm({
     password: '',
 });
@@ -58,11 +59,10 @@ const closeModal = () => {
                                 password to confirm you would like to permanently delete your account.
                             </DialogDescription>
                         </DialogHeader>
+
                         <div class="grid gap-2">
                             <Label for="password" class="sr-only">Password</Label>
-
                             <Input id="password" type="password" name="password" ref="passwordInput" v-model="form.password" placeholder="Password" />
-
                             <InputError :message="form.errors.password" />
                         </div>
 
@@ -78,6 +78,7 @@ const closeModal = () => {
                     </form>
                 </DialogContent>
             </Dialog>
+
             <div className="relative text-red-600 dark:text-red-100 ml-3">
                 <p className="font-medium leading-none mb-1 text-sm">Warning</p>
                 <p className="leading-none text-xs">Please proceed with caution, this cannot be undone</p>

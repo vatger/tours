@@ -1,4 +1,3 @@
-5
 <script setup lang="ts">
 defineProps<{
     message?: string;
