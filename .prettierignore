@@ -14,6 +14,7 @@ dist/
 .env
 .env.*
 !.env.example
+composer.lock
 
 # Config files
 *.config.js
@@ -22,7 +23,7 @@ dist/
 # ShadCN Vue components (as per project rules)
 resources/js/components/ui/
 
-# IDE and Editor files
+# IDE and editor files
 .idea/
 .vscode/
 *.sublime-project
