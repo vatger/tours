@@ -50,9 +50,7 @@ test('email verification status is unchanged when the email address is unchanged
     $this->assertNotNull($user->refresh()->email_verified_at);
 });
 
-// Delete Profile Tests
-
-test('user can delete their account', function () {
+test('users can delete their account', function () {
     $user = User::factory()->create();
 
     $response = $this
