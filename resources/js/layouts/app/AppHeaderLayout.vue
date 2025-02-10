@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-    <AppShell>
+    <AppShell class="flex-col">
         <AppHeader :breadcrumbs="props.breadcrumbs" />
         <AppContent>
             <slot />
