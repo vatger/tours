@@ -2,6 +2,17 @@
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
+import type { Component } from 'vue';
+
+interface NavItem {
+    title: string;
+    url: string;
+    icon: Component;
+}
+
+defineProps<{
+    items: NavItem[];
+}>();
 
 const page = usePage<SharedData>();
 </script>
