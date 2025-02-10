@@ -64,7 +64,6 @@ const updatePassword = () => {
                 <form @submit.prevent="updatePassword" class="space-y-6">
                     <div class="grid gap-2">
                         <Label for="current_password">Current Password</Label>
-
                         <Input
                             id="current_password"
                             ref="currentPasswordInput"
@@ -73,13 +72,11 @@ const updatePassword = () => {
                             class="mt-1 block w-full"
                             autocomplete="current-password"
                         />
-
                         <InputError :message="form.errors.current_password" />
                     </div>
 
                     <div class="grid gap-2">
                         <Label for="password">New password</Label>
-
                         <Input
                             id="password"
                             ref="passwordInput"
@@ -88,13 +85,11 @@ const updatePassword = () => {
                             class="mt-1 block w-full"
                             autocomplete="new-password"
                         />
-
                         <InputError :message="form.errors.password" />
                     </div>
 
                     <div class="grid gap-2">
                         <Label for="password_confirmation">Confirm password</Label>
-
                         <Input
                             id="password_confirmation"
                             v-model="form.password_confirmation"
@@ -102,7 +97,6 @@ const updatePassword = () => {
                             class="mt-1 block w-full"
                             autocomplete="new-password"
                         />
-
                         <InputError :message="form.errors.password_confirmation" />
                     </div>
 

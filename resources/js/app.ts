@@ -7,7 +7,7 @@ import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import { initializeTheme } from './composables/useAppearance';
 
-// Extend ImportMeta interface for Vite
+// Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
     interface ImportMetaEnv {
         readonly VITE_APP_NAME: string;
@@ -36,5 +36,5 @@ createInertiaApp({
     },
 });
 
-// This will set dark/light mode on load
+// This will set light / dark mode on page load...
 initializeTheme();
