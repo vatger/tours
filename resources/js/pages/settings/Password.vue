@@ -25,8 +25,8 @@ const breadcrumbItems: BreadcrumbItem[] = [
     },
 ];
 
-const passwordInput = ref<HTMLInputElement | null>(null);
-const currentPasswordInput = ref<HTMLInputElement | null>(null);
+const passwordInput = ref<HTMLInputElement>();
+const currentPasswordInput = ref<HTMLInputElement>();
 
 const form = useForm({
     current_password: '',
@@ -41,12 +41,16 @@ const updatePassword = () => {
         onError: (errors: any) => {
             if (errors.password) {
                 form.reset('password', 'password_confirmation');
-                passwordInput.value?.focus();
+                if (passwordInput.value instanceof HTMLInputElement) {
+                    passwordInput.value.focus();
+                }
             }
 
             if (errors.current_password) {
                 form.reset('current_password');
-                currentPasswordInput.value?.focus();
+                if (currentPasswordInput.value instanceof HTMLInputElement) {
+                    currentPasswordInput.value.focus();
+                }
             }
         },
     });
