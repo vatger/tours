@@ -2,7 +2,7 @@
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/Components/ui/checkbox'
+import { Checkbox } from '@/Components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
@@ -55,7 +55,7 @@ const submit = () => {
                 </div>
 
                 <div class="flex items-center justify-between" tabindex="3">
-                    <Label for="remember" class="space-x-1.5 h-full flex items-center">
+                    <Label for="remember" class="flex h-full items-center space-x-1.5">
                         <Checkbox id="remember" v-model:checked="form.remember" tabindex="4" />
                         <span>Remember me</span>
                     </Label>
