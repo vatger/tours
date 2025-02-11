@@ -11,7 +11,7 @@ interface Props {
 const { user } = defineProps<Props>();
 const { getInitials } = useInitials();
 
-// Compute whether we should show the avatar image
+// Compute whether we should show the avatar image...
 const showAvatar = computed(() => user.avatar && user.avatar !== '');
 </script>
 
@@ -22,6 +22,7 @@ const showAvatar = computed(() => user.avatar && user.avatar !== '');
             {{ getInitials(user.name) }}
         </AvatarFallback>
     </Avatar>
+
     <div class="grid flex-1 text-left text-sm leading-tight">
         <span class="truncate font-semibold">{{ user.name }}</span>
         <span class="truncate text-xs">{{ user.email }}</span>
