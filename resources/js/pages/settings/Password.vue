@@ -67,7 +67,7 @@ const updatePassword = () => {
 
                 <form @submit.prevent="updatePassword" class="space-y-6">
                     <div class="grid gap-2">
-                        <Label for="current_password">Current Password</Label>
+                        <Label for="current_password">Current password</Label>
                         <Input
                             id="current_password"
                             ref="currentPasswordInput"
