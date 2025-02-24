@@ -76,7 +76,7 @@ const rightNavItems: NavItem[] = [
                             <SheetHeader class="flex justify-start text-left">
                                 <AppLogoIcon class="size-6 fill-current text-black dark:text-white" />
                             </SheetHeader>
-                            <div className="flex flex-col justify-between h-full space-y-4 py-6 flex-1">
+                            <div class="flex flex-col justify-between h-full space-y-4 py-6 flex-1">
                                 <nav class="-mx-3 space-y-1">
                                     <Link
                                         v-for="item in mainNavItems"
