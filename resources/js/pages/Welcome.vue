@@ -782,6 +782,6 @@ import { Head, Link } from '@inertiajs/vue3';
                 </div>
             </main>
         </div>
-        <div class="h-14.5 hidden lg:block"></div>
+        <div class="h-14 hidden lg:block"></div>
     </div>
 </template>
