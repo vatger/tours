@@ -9,7 +9,7 @@ interface Props {
     breadcrumbs?: BreadcrumbItemType[];
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
 });
 </script>
@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
     <AppShell variant="sidebar">
         <AppSidebar />
         <AppContent variant="sidebar">
-            <AppSidebarHeader :breadcrumbs="props.breadcrumbs" />
+            <AppSidebarHeader :breadcrumbs="breadcrumbs" />
             <slot />
         </AppContent>
     </AppShell>
