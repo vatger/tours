@@ -1,26 +1,18 @@
 <script setup lang="ts">
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 
-    import {
-        Breadcrumb,
-        BreadcrumbItem,
-        BreadcrumbLink,
-        BreadcrumbList,
-        BreadcrumbPage,
-        BreadcrumbSeparator
-    } from '@/components/ui/breadcrumb';
+interface BreadcrumbItem {
+    title: string;
+    href?: string;
+}
 
-    interface BreadcrumbItem {
-        title: string;
-        href?: string;
-    }
-
-    defineProps<{
-        breadcrumbs: BreadcrumbItem[];
-    }>();
+defineProps<{
+    breadcrumbs: BreadcrumbItem[];
+}>();
 </script>
 
 <template>
-  <Breadcrumb>
+    <Breadcrumb>
         <BreadcrumbList>
             <template v-for="(item, index) in breadcrumbs" :key="index">
                 <BreadcrumbItem>
