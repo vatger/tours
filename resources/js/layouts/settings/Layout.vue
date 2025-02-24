@@ -8,15 +8,15 @@ import { Link } from '@inertiajs/vue3';
 const sidebarNavItems: NavItem[] = [
     {
         title: 'Profile',
-        href: '/settings/profile',
+        url: '/settings/profile',
     },
     {
         title: 'Password',
-        href: '/settings/password',
+        url: '/settings/password',
     },
     {
         title: 'Appearance',
-        href: '/settings/appearance',
+        url: '/settings/appearance',
     },
 ];
 
@@ -32,12 +32,12 @@ const currentPath = window.location.pathname;
                 <nav class="flex flex-col space-x-0 space-y-1">
                     <Button
                         v-for="item in sidebarNavItems"
-                        :key="item.href"
+                        :key="item.url"
                         variant="ghost"
-                        :class="['w-full justify-start', { 'bg-muted': currentPath === item.href }]"
+                        :class="['w-full justify-start', { 'bg-muted': currentPath === item.url }]"
                         as-child
                     >
-                        <Link :href="item.href">
+                        <Link :href="item.url">
                             {{ item.title }}
                         </Link>
                     </Button>
