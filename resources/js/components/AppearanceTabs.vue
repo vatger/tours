@@ -6,9 +6,7 @@ interface Props {
     class?: string;
 }
 
-const { class: containerClass } = withDefaults(defineProps<Props>(), {
-    class: '',
-});
+const { class: containerClass = '' } = defineProps<Props>();
 
 const { appearance, updateAppearance } = useAppearance();
 
