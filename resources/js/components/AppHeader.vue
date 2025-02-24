@@ -19,6 +19,14 @@ import type { BreadcrumbItem, NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
 import { computed } from 'vue';
+import {
+    Breadcrumb,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+    BreadcrumbItem as BreadcrumbItemComponent
+} from '@/components/ui/breadcrumb';
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[];
@@ -182,7 +190,23 @@ const rightNavItems: NavItem[] = [
 
         <div v-if="props.breadcrumbs.length > 1" class="flex w-full border-b border-sidebar-border/70">
             <div class="mx-auto flex h-12 w-full items-center justify-start px-4 text-neutral-500 md:max-w-7xl">
-                <Breadcrumbs :breadcrumbs="breadcrumbs" />
+                <Breadcrumb>
+                    <BreadcrumbList>
+                        <template v-for="(item, index) in breadcrumbs" :key="index">
+                            <BreadcrumbItemComponent>
+                                <template v-if="index === breadcrumbs.length - 1">
+                                    <BreadcrumbPage>{{ item.title }}</BreadcrumbPage>
+                                </template>
+                                <template v-else>
+                                    <BreadcrumbLink :href="item.href">
+                                        {{ item.title }}
+                                    </BreadcrumbLink>
+                                </template>
+                            </BreadcrumbItemComponent>
+                            <BreadcrumbSeparator v-if="index !== breadcrumbs.length - 1" />
+                        </template>
+                    </BreadcrumbList>
+                </Breadcrumb>
             </div>
         </div>
     </div>
