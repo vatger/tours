@@ -9,6 +9,8 @@ const props = defineProps<{
     class?: HTMLAttributes['class'];
 }>();
 
+const input = ref<HTMLInputElement | null>(null);
+
 const emits = defineEmits<{
     (e: 'update:modelValue', payload: string | number): void;
 }>();
@@ -17,10 +19,19 @@ const modelValue = useVModel(props, 'modelValue', emits, {
     passive: true,
     defaultValue: props.defaultValue,
 });
+
+function focus() {
+    input.value?.focus();
+}
+
+defineExpose({
+    focus,
+});
 </script>
 
 <template>
     <input
+        ref="input"
         v-model="modelValue"
         :class="
             cn(
