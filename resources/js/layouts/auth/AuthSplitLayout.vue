@@ -2,8 +2,8 @@
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { Link, usePage } from '@inertiajs/vue3';
 
+const name = import.meta.env.VITE_APP_NAME || 'Laravel';
 const page = usePage();
-const name = page.props.name;
 const quote = page.props.quote;
 
 defineProps<{
