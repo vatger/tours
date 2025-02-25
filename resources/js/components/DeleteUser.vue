@@ -70,7 +70,7 @@ const closeModal = () => {
                             <InputError :message="form.errors.password" />
                         </div>
 
-                        <DialogFooter>
+                        <DialogFooter class="gap-2">
                             <DialogClose as-child>
                                 <Button variant="secondary" @click="closeModal"> Cancel </Button>
                             </DialogClose>
