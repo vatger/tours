@@ -12,7 +12,7 @@ export interface BreadcrumbItem {
 
 export interface NavItem {
     title: string;
-    href: string;
+    url: string;
     icon?: LucideIcon;
     isActive?: boolean;
 }
