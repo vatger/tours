@@ -15,7 +15,6 @@ import { type BreadcrumbItem, type SharedData, type User } from '@/types';
 interface Props {
     mustVerifyEmail: boolean;
     status?: string;
-    className?: string;
 }
 
 defineProps<Props>();
@@ -78,7 +77,7 @@ const submit = () => {
                                 :href="route('verification.send')"
                                 method="post"
                                 as="button"
-                                class="hover:decoration-current! text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out dark:decoration-neutral-500"
+                                class="hover:!decoration-current text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out dark:decoration-neutral-500"
                             >
                                 Click here to resend the verification email.
                             </Link>

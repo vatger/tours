@@ -12,12 +12,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { type BreadcrumbItem } from '@/types';
 
-interface Props {
-    className?: string;
-}
-
-defineProps<Props>();
-
 const breadcrumbItems: BreadcrumbItem[] = [
     {
         title: 'Password settings',
@@ -59,7 +53,7 @@ const updatePassword = () => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbItems">
-        <Head title="Profile settings" />
+        <Head title="Password settings" />
 
         <SettingsLayout>
             <div class="space-y-6">
