@@ -20,7 +20,8 @@ const sidebarNavItems: NavItem[] = [
     },
 ];
 
-const currentPath = window.location.pathname;
+// For SSR, we can't access the window location
+const currentPath = (typeof window === 'undefined') ? '' : window.location.pathname;
 </script>
 
 <template>
