@@ -14,6 +14,8 @@ createServer((page) =>
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob('./pages/**/*.vue')),
     setup({ App, props, plugin }) {
+      const app = createSSRApp({ render: () => h(App, props) })
+
       // Configure Ziggy for SSR
       const ziggyConfig = {
         ...page.props.ziggy,
@@ -24,20 +26,13 @@ createServer((page) =>
       const route = (name: string, params?: any, absolute?: boolean) =>
         ziggyRoute(name, params, absolute, ziggyConfig)
 
+      // Make route function available globally
+      app.config.globalProperties.route = route
+
       // Make route function available globally for SSR
       if (typeof window === 'undefined') {
         global.route = route
       }
-
-      // Create the SSR app with route function in context
-      const app = createSSRApp({
-        render: () => h(App, props),
-        setup() {
-          return {
-            route,
-          }
-        },
-      })
 
       app.use(plugin)
       
