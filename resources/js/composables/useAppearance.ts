@@ -16,6 +16,15 @@ export function updateTheme(value: Appearance) {
     }
 }
 
+const setCookie = (name: string, value: string, days = 365) => {
+    if (typeof document === 'undefined') {
+        return;
+    }
+
+    const maxAge = days * 24 * 60 * 60;
+    document.cookie = `${name}=${value};path=/;max-age=${maxAge};SameSite=Lax`;
+};
+
 const mediaQuery = () => {
     if (typeof window === 'undefined') {
         return null;
@@ -64,10 +73,14 @@ export function useAppearance() {
 
     function updateAppearance(value: Appearance) {
         appearance.value = value;
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('appearance', value);
-            updateTheme(value);
-        }
+        
+        // Store in localStorage for client-side persistence...
+        localStorage.setItem('appearance', value);
+
+        // Store in cookie for SSR...
+        setCookie('appearance', value);
+
+        updateTheme(value);
     }
 
     return {
