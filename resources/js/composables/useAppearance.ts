@@ -77,7 +77,7 @@ export function useAppearance() {
 
     function updateAppearance(value: Appearance) {
         appearance.value = value;
-        
+
         // Store in localStorage for client-side persistence...
         localStorage.setItem('appearance', value);
 
