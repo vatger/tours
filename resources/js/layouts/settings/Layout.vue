@@ -20,8 +20,8 @@ const sidebarNavItems: NavItem[] = [
     },
 ];
 
-// Get the current path from Ziggy config
 const page = usePage();
+
 const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.location).pathname : '';
 </script>
 

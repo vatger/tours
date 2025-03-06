@@ -10,6 +10,7 @@ export function updateTheme(value: Appearance) {
     if (value === 'system') {
         const mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
         const systemTheme = mediaQueryList.matches ? 'dark' : 'light';
+
         document.documentElement.classList.toggle('dark', systemTheme === 'dark');
     } else {
         document.documentElement.classList.toggle('dark', value === 'dark');
@@ -22,6 +23,7 @@ const setCookie = (name: string, value: string, days = 365) => {
     }
 
     const maxAge = days * 24 * 60 * 60;
+
     document.cookie = `${name}=${value};path=/;max-age=${maxAge};SameSite=Lax`;
 };
 
@@ -37,11 +39,13 @@ const getStoredAppearance = () => {
     if (typeof window === 'undefined') {
         return null;
     }
+
     return localStorage.getItem('appearance') as Appearance | null;
 };
 
 const handleSystemThemeChange = () => {
     const currentAppearance = getStoredAppearance();
+
     updateTheme(currentAppearance || 'system');
 };
 
