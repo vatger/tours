@@ -1,14 +1,9 @@
 <script setup lang="ts">
-import { DialogRoot, useForwardPropsEmits, type DialogRootEmits, type DialogRootProps } from 'radix-vue';
-
-const props = defineProps<DialogRootProps>();
-const emits = defineEmits<DialogRootEmits>();
-
-const forwarded = useForwardPropsEmits(props, emits);
+const props = defineProps();
 </script>
 
 <template>
-    <DialogRoot v-bind="forwarded">
+    <VDialog v-bind="props">
         <slot />
-    </DialogRoot>
+    </VDialog>
 </template>

@@ -2,7 +2,6 @@
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
@@ -31,27 +30,25 @@ const footerNavItems: NavItem[] = [
 </script>
 
 <template>
-    <Sidebar collapsible="icon" variant="inset">
-        <SidebarHeader>
-            <SidebarMenu>
-                <SidebarMenuItem>
-                    <SidebarMenuButton size="lg" as-child>
-                        <Link :href="route('dashboard')">
-                            <AppLogo />
-                        </Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-            </SidebarMenu>
-        </SidebarHeader>
+    <VNavigationDrawer app>
+        <VList>
+            <VListItem>
+                <VListItemIcon>
+                    <Link :href="route('dashboard')">
+                        <AppLogo />
+                    </Link>
+                </VListItemIcon>
+            </VListItem>
+        </VList>
 
-        <SidebarContent>
+        <VList>
             <NavMain :items="mainNavItems" />
-        </SidebarContent>
+        </VList>
 
-        <SidebarFooter>
+        <VList>
             <NavFooter :items="footerNavItems" />
             <NavUser />
-        </SidebarFooter>
-    </Sidebar>
+        </VList>
+    </VNavigationDrawer>
     <slot />
 </template>

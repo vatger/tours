@@ -5,19 +5,6 @@ import { ref } from 'vue';
 // Components
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 
 const passwordInput = ref<HTMLInputElement | null>(null);
 
@@ -50,38 +37,29 @@ const closeModal = () => {
                 <p class="font-medium">Warning</p>
                 <p class="text-sm">Please proceed with caution, this cannot be undone.</p>
             </div>
-            <Dialog>
-                <DialogTrigger as-child>
-                    <Button variant="destructive">Delete account</Button>
-                </DialogTrigger>
-                <DialogContent>
+            <VDialog v-model="dialog" max-width="500px">
+                <template v-slot:activator="{ on, attrs }">
+                    <VBtn color="red" dark v-bind="attrs" v-on="on">Delete account</VBtn>
+                </template>
+                <VDialogTitle>Are you sure you want to delete your account?</VDialogTitle>
+                <VDialogContent>
                     <form class="space-y-6" @submit="deleteUser">
-                        <DialogHeader class="space-y-3">
-                            <DialogTitle>Are you sure you want to delete your account?</DialogTitle>
-                            <DialogDescription>
-                                Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your
-                                password to confirm you would like to permanently delete your account.
-                            </DialogDescription>
-                        </DialogHeader>
+                        <div class="space-y-3">
+                            <p>Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.</p>
+                        </div>
 
                         <div class="grid gap-2">
-                            <Label for="password" class="sr-only">Password</Label>
-                            <Input id="password" type="password" name="password" ref="passwordInput" v-model="form.password" placeholder="Password" />
+                            <VTextField id="password" type="password" name="password" ref="passwordInput" v-model="form.password" label="Password" />
                             <InputError :message="form.errors.password" />
                         </div>
 
-                        <DialogFooter class="gap-2">
-                            <DialogClose as-child>
-                                <Button variant="secondary" @click="closeModal"> Cancel </Button>
-                            </DialogClose>
-
-                            <Button variant="destructive" :disabled="form.processing">
-                                <button type="submit">Delete account</button>
-                            </Button>
-                        </DialogFooter>
+                        <VDialogActions class="gap-2">
+                            <VBtn color="secondary" @click="closeModal">Cancel</VBtn>
+                            <VBtn color="red" dark :disabled="form.processing" type="submit">Delete account</VBtn>
+                        </VDialogActions>
                     </form>
-                </DialogContent>
-            </Dialog>
+                </VDialogContent>
+            </VDialog>
         </div>
     </div>
 </template>

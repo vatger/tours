@@ -1,24 +1,21 @@
 <script setup lang="ts">
-import { cn } from '@/lib/utils';
-import { AvatarRoot } from 'radix-vue';
 import type { HTMLAttributes } from 'vue';
-import { avatarVariant, type AvatarVariants } from '.';
 
 const props = withDefaults(
     defineProps<{
         class?: HTMLAttributes['class'];
-        size?: AvatarVariants['size'];
-        shape?: AvatarVariants['shape'];
+        size?: 'small' | 'large';
+        shape?: 'circle' | 'square';
     }>(),
     {
-        size: 'sm',
+        size: 'small',
         shape: 'circle',
     },
 );
 </script>
 
 <template>
-    <AvatarRoot :class="cn(avatarVariant({ size, shape }), props.class)">
+    <VAvatar :class="props.class" :size="props.size" :rounded="props.shape === 'circle'">
         <slot />
-    </AvatarRoot>
+    </VAvatar>
 </template>

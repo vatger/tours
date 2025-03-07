@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { cn } from '@/lib/utils';
 import { useEventListener, useMediaQuery, useVModel } from '@vueuse/core';
-import { TooltipProvider } from 'radix-vue';
 import { computed, ref, type HTMLAttributes, type Ref } from 'vue';
 import {
     SIDEBAR_COOKIE_MAX_AGE,
@@ -75,15 +74,13 @@ provideSidebarContext({
 </script>
 
 <template>
-    <TooltipProvider :delay-duration="0">
-        <div
-            :style="{
-                '--sidebar-width': SIDEBAR_WIDTH,
-                '--sidebar-width-icon': SIDEBAR_WIDTH_ICON,
-            }"
-            :class="cn('group/sidebar-wrapper flex min-h-svh w-full text-sidebar-foreground has-[[data-variant=inset]]:bg-sidebar', props.class)"
-        >
-            <slot />
-        </div>
-    </TooltipProvider>
+    <v-navigation-drawer
+        :style="{
+            '--sidebar-width': SIDEBAR_WIDTH,
+            '--sidebar-width-icon': SIDEBAR_WIDTH_ICON,
+        }"
+        :class="cn('group/sidebar-wrapper flex min-h-svh w-full text-sidebar-foreground has-[[data-variant=inset]]:bg-sidebar', props.class)"
+    >
+        <slot />
+    </v-navigation-drawer>
 </template>

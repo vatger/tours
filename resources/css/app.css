@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'vuetify/styles';
+@import 'vuetify/src/styles/main.sass';
 
 body,
 html {
