@@ -27,7 +27,7 @@ const { isMobile, state } = useSidebar();
                     :side="isMobile ? 'bottom' : state === 'collapsed' ? 'left' : 'bottom'"
                     align="end" 
                     :side-offset="4"
-                    >
+                >
                     <UserMenuContent :user="user" />
                 </DropdownMenuContent>
             </DropdownMenu>
