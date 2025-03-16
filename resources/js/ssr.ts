@@ -8,8 +8,8 @@ import { route as ziggyRoute } from 'ziggy-js';
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 /**
- *  Added eslint-disable-next-line @typescript-eslint/ban-ts-comment and @ts-ignore to fix the error.
- * I'm not sure if the fix really leads to a type-safe Javascript.
+ * Added eslint-disable-next-line @typescript-eslint/ban-ts-comment and @ts-ignore to fix the error.
+ * I'm not sure if the fix really leads to a type-safe Javascript. However, it looks like a javascript hack to me, which is perfectly legitimate.
  */
 
 createServer((page) =>
