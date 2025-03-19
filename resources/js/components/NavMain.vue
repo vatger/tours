@@ -18,7 +18,7 @@ const page = usePage<SharedData>();
                 <SidebarMenuButton 
                     as-child :is-active="item.href === page.url"
                     :tooltip="item.title"
-                    >
+                >
                     <Link :href="item.href">
                         <component :is="item.icon" />
                         <span>{{ item.title }}</span>
