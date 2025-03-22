@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
+
 import DeleteUser from '@/components/DeleteUser.vue';
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
@@ -9,10 +11,8 @@ import { Label } from '@/components/ui/label';
 import { getInitials } from '@/composables/useInitials';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-import { type BreadcrumbItem, type SharedData, type User } from '@/types';
-import { TransitionRoot } from '@headlessui/vue';
-import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { User, type BreadcrumbItem, type SharedData } from '@/types';
+import { computed, ref } from 'vue';
 
 interface ProfileForm {
     _method: string;
@@ -36,12 +36,12 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const page = usePage<SharedData>();
-const user = page.props.auth.user as User;
+const user = computed(() => page.props.auth.user as User);
 
 const form = useForm<Required<ProfileForm>>({
     _method: 'patch',
-    name: user.name,
-    email: user.email,
+    name: user.value.name,
+    email: user.value.email,
     photo: null,
 });
 
@@ -63,14 +63,16 @@ const selectNewPhoto = () => {
 };
 
 const updatePhotoPreview = () => {
-    const photo = photoInput.value?.files?.[0];
-    if (!photo) return;
+    const file = photoInput.value?.files?.[0];
+    if (!file) return;
 
     const reader = new FileReader();
     reader.onload = (e) => {
-        photoPreview.value = e.target?.result as string;
+        if (e.target?.result) {
+            photoPreview.value = e.target.result.toString();
+        }
     };
-    reader.readAsDataURL(photo);
+    reader.readAsDataURL(file);
 };
 
 const deletePhoto = () => {
@@ -106,12 +108,18 @@ const clearPhotoFileInput = () => {
                         <div class="flex items-center gap-4">
                             <Avatar class="h-20 w-20">
                                 <AvatarImage :src="photoPreview || user.avatar || ''" :alt="user.name" />
-                                <AvatarFallback>{{ getInitials(user.name) }}</AvatarFallback>
+                                <AvatarFallback>
+                                    {{ getInitials(user.name) }}
+                                </AvatarFallback>
                             </Avatar>
 
-                            <Button type="button" variant="outline" @click.prevent="selectNewPhoto"> Select New Photo </Button>
+                            <Button type="button" variant="outline" @click.prevent="selectNewPhoto">
+                                {{ user.avatar ? 'Change Photo' : 'Upload Photo' }}
+                            </Button>
 
-                            <Button v-if="user.avatar" type="button" variant="outline" @click.prevent="deletePhoto"> Remove Photo </Button>
+                            <Button v-if="user.avatar || photoPreview" type="button" variant="outline" @click.prevent="deletePhoto">
+                                Remove Photo
+                            </Button>
                         </div>
                         <InputError class="mt-2" :message="form.errors.photo" />
                     </div>
