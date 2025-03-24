@@ -1,11 +1,6 @@
-import { Router as ZiggyRouter, RouteParams } from 'ziggy-js';
-
-type AppRouter = {
-    (): ZiggyRouter;
-    (name: string, params?: RouteParams<typeof name> | undefined, absolute?: boolean): string;
-};
+import { RouteParams, Router } from 'ziggy-js';
 
 declare global {
-    // eslint-disable-next-line no-var
-    var route: AppRouter;
+    function route(): Router;
+    function route(name: string, params?: RouteParams<typeof name> | undefined, absolute?: boolean): string;
 }
