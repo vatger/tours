@@ -14,6 +14,26 @@ const mainNavItems: NavItem[] = [
         href: '/dashboard',
         icon: LayoutGrid,
     },
+    // Example
+    //     {
+    //     title: 'User Management',
+    //     href: '#',
+    //     icon: Shield,
+    //     children: [
+    //       {
+    //         title: 'Roles',
+    //         href: '#',
+    //       },
+    //       {
+    //         title: 'Permissions',
+    //         href: '#',
+    //       },
+    //       {
+    //         title: 'Users',
+    //         href: '#',
+    //       },
+    //     ],
+    //   },
 ];
 
 const footerNavItems: NavItem[] = [
@@ -37,7 +57,7 @@ const footerNavItems: NavItem[] = [
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
                         <Link :href="route('dashboard')">
-                            <AppLogo />
+                        <AppLogo />
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
