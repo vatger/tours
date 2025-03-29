@@ -50,6 +50,7 @@ const form = useForm({
     name: user.name,
     email: user.email,
     profile_photo: null as File | null,
+    remove_avatar: false as boolean,
     _method: 'PATCH',
 });
 
@@ -68,6 +69,7 @@ const handleAvatarChange = (event: Event) => {
 const removeAvatar = () => {
     form.profile_photo = null;
     user.avatar = undefined;
+    form.remove_avatar = true;
     form.errors.profile_photo = '';
 };
 

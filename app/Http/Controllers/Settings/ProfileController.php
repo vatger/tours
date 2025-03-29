@@ -38,11 +38,15 @@ class ProfileController extends Controller
             $user->email_verified_at = null;
         }
 
-        if ($request->hasFile('profile_photo')) {
+        if ($request->boolean('remove_avatar')) {
             if ($user->profile_photo_path && Storage::exists($user->profile_photo_path)) {
                 Storage::delete($user->profile_photo_path);
             }
 
+            $user->profile_photo_path = null;
+        }
+
+        if ($request->hasFile('profile_photo')) {
             $path = $request->file('profile_photo')->store('avatars', 'public');
             $user->profile_photo_path = $path;
         }
@@ -51,6 +55,7 @@ class ProfileController extends Controller
 
         return to_route('profile.edit');
     }
+
 
     /**
      * Delete the user's profile.
