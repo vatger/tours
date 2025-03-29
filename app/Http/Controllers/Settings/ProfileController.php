@@ -16,6 +16,9 @@ class ProfileController extends Controller
 {
     /**
      * Show the user's profile settings page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Inertia\Response
      */
     public function edit(Request $request): Response
     {
@@ -27,6 +30,9 @@ class ProfileController extends Controller
 
     /**
      * Update the user's profile information.
+     *
+     * @param  \App\Http\Requests\Settings\ProfileUpdateRequest  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
@@ -39,8 +45,8 @@ class ProfileController extends Controller
         }
 
         if ($request->boolean('remove_avatar')) {
-            if ($user->profile_photo_path && Storage::exists($user->profile_photo_path)) {
-                Storage::delete($user->profile_photo_path);
+            if ($user->profile_photo_path && Storage::disk('public')->exists($user->profile_photo_path)) {
+                Storage::disk('public')->delete($user->profile_photo_path);
             }
 
             $user->profile_photo_path = null;
@@ -56,9 +62,11 @@ class ProfileController extends Controller
         return to_route('profile.edit');
     }
 
-
     /**
-     * Delete the user's profile.
+     * Delete the user's account.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Request $request): RedirectResponse
     {
