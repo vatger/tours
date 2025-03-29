@@ -50,6 +50,7 @@ const form = useForm({
     name: user.name,
     email: user.email,
     profile_photo: null as File | null,
+    _method: 'PATCH',
 });
 
 const handleAvatarChange = (event: Event) => {
@@ -96,7 +97,7 @@ const avatarSrc = computed(() => {
                         <div class="group relative">
                             <label for="avatar-upload" class="cursor-pointer" aria-label="Upload avatar">
                                 <Avatar size="lg">
-                                    <AvatarImage :src="avatarSrc || user.avatar" alt="User avatar" />
+                                    <AvatarImage :src="avatarSrc || user.avatar || ''" alt="User avatar" />
                                     <AvatarFallback>{{ getInitials(user.name) }}</AvatarFallback>
                                 </Avatar>
                             </label>

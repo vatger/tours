@@ -28,23 +28,23 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request): RedirectResponse
     {
         $user = $request->user();
 
-        $user->fill($request->only(['name', 'email']));
+        $user->fill($request->validated());
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
 
         if ($request->hasFile('profile_photo')) {
-            // delete old avatar if exists
             if ($user->profile_photo_path && Storage::exists($user->profile_photo_path)) {
                 Storage::delete($user->profile_photo_path);
             }
 
-            // save new avatar
             $path = $request->file('profile_photo')->store('avatars', 'public');
             $user->profile_photo_path = $path;
-        } else {
-            $user->profile_photo_path = null;
         }
 
         $user->save();
