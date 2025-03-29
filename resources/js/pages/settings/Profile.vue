@@ -57,7 +57,6 @@ const handleAvatarChange = (event: Event) => {
     if (target.files && target.files[0]) {
         const file = target.files[0];
         if (file.size > 2 * 1024 * 1024) {
-            // 2MB limit
             form.errors.profile_photo = 'File size exceeds 2MB.';
             return;
         }
@@ -93,7 +92,6 @@ const avatarSrc = computed(() => {
             <div class="flex flex-col space-y-6">
                 <HeadingSmall title="Profile information" description="Update your name, email and avatar" />
                 <form @submit.prevent="submit" class="space-y-6">
-                    <!-- Avatar Upload -->
                     <div class="flex items-center gap-4">
                         <div class="group relative">
                             <label for="avatar-upload" class="cursor-pointer" aria-label="Upload avatar">
@@ -147,21 +145,18 @@ const avatarSrc = computed(() => {
                     </div>
                     <InputError :message="form.errors.profile_photo" class="mt-1" />
 
-                    <!-- Name -->
                     <div class="grid gap-2">
                         <Label for="name">Name</Label>
                         <Input id="name" v-model="form.name" required autocomplete="name" placeholder="Full name" />
                         <InputError class="mt-2" :message="form.errors.name" />
                     </div>
 
-                    <!-- Email -->
                     <div class="grid gap-2">
                         <Label for="email">Email address</Label>
                         <Input id="email" type="email" v-model="form.email" required autocomplete="username" placeholder="Email address" />
                         <InputError class="mt-2" :message="form.errors.email" />
                     </div>
-
-                    <!-- Email Verification -->
+         
                     <div v-if="mustVerifyEmail && !user.email_verified_at">
                         <p class="-mt-4 text-sm text-muted-foreground">
                             Your email address is unverified.
@@ -180,7 +175,6 @@ const avatarSrc = computed(() => {
                         </div>
                     </div>
 
-                    <!-- Submit -->
                     <div class="flex items-center gap-4">
                         <Button :disabled="form.processing">Save</Button>
 
