@@ -147,16 +147,24 @@ const avatarSrc = computed(() => {
 
                     <div class="grid gap-2">
                         <Label for="name">Name</Label>
-                        <Input id="name" v-model="form.name" required autocomplete="name" placeholder="Full name" />
+                        <Input id="name" class="mt-1 block w-full" v-model="form.name" required autocomplete="name" placeholder="Full name" />
                         <InputError class="mt-2" :message="form.errors.name" />
                     </div>
 
                     <div class="grid gap-2">
                         <Label for="email">Email address</Label>
-                        <Input id="email" type="email" v-model="form.email" required autocomplete="username" placeholder="Email address" />
+                        <Input
+                            id="email"
+                            class="mt-1 block w-full"
+                            type="email"
+                            v-model="form.email"
+                            required
+                            autocomplete="username"
+                            placeholder="Email address"
+                        />
                         <InputError class="mt-2" :message="form.errors.email" />
                     </div>
-         
+
                     <div v-if="mustVerifyEmail && !user.email_verified_at">
                         <p class="-mt-4 text-sm text-muted-foreground">
                             Your email address is unverified.
