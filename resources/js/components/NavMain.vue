@@ -42,7 +42,7 @@ function isChildActive(item: { children: any[], href: string }) {
                                 <component :is="item.icon" v-if="item.icon" />
                                 <span>{{ item.title }}</span>
                                 <ChevronRight
-                                    class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                                    class="ml-auto group-data-[state=open]/collapsible:rotate-90 transition-transform duration-200" />
                             </SidebarMenuButton>
                         </CollapsibleTrigger>
                         <CollapsibleContent>
