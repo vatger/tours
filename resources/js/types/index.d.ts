@@ -7,8 +7,9 @@ export interface Auth {
 }
 
 export interface BreadcrumbItem {
-    title: string;
-    href: string;
+    title: string
+    href: string
+    subItems?: BreadcrumbItem[]
 }
 
 export interface NavItem {
