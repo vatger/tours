@@ -24,7 +24,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
       cn('peer size-5 shrink-0 rounded-sm border border-input ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground data-[state=checked]:border-accent-foreground',
          props.class)"
   >
-    <CheckboxIndicator class="flex h-full w-full items-center justify-center text-current">
+    <CheckboxIndicator class="flex size-full items-center justify-center text-current">
       <slot>
         <Check class="size-3.5 stroke-[3]" />
       </slot>

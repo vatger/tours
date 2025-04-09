@@ -69,7 +69,7 @@ const submit = () => {
                 </div>
 
                 <Button type="submit" class="mt-2 w-full" tabindex="5" :disabled="form.processing">
-                    <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
+                    <LoaderCircle v-if="form.processing" class="size-4 animate-spin" />
                     Create account
                 </Button>
             </div>

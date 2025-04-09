@@ -37,7 +37,7 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
                 '--sidebar-width': SIDEBAR_WIDTH_MOBILE,
             }"
         >
-            <div class="flex h-full w-full flex-col">
+            <div class="flex size-full flex-col">
                 <slot />
             </div>
         </SheetContent>
@@ -82,7 +82,7 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
         >
             <div
                 data-sidebar="sidebar"
-                class="flex h-full w-full flex-col bg-sidebar text-sidebar-foreground group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
+                class="flex size-full flex-col bg-sidebar text-sidebar-foreground group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
             >
                 <slot />
             </div>

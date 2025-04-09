@@ -48,9 +48,9 @@ import { Head, Link } from '@inertiajs/vue3';
                         >
                             <span class="relative bg-white py-1 dark:bg-[#161615]">
                                 <span
-                                    class="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-[#e3e3e0] bg-[#FDFDFC] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] dark:border-[#3E3E3A] dark:bg-[#161615]"
+                                    class="flex size-3.5 items-center justify-center rounded-full border border-[#e3e3e0] bg-[#FDFDFC] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] dark:border-[#3E3E3A] dark:bg-[#161615]"
                                 >
-                                    <span class="h-1.5 w-1.5 rounded-full bg-[#dbdbd7] dark:bg-[#3E3E3A]" />
+                                    <span class="size-1.5 rounded-full bg-[#dbdbd7] dark:bg-[#3E3E3A]" />
                                 </span>
                             </span>
                             <span>
@@ -67,7 +67,7 @@ import { Head, Link } from '@inertiajs/vue3';
                                         viewBox="0 0 10 11"
                                         fill="none"
                                         xmlns="http://www.w3.org/2000/svg"
-                                        class="h-2.5 w-2.5"
+                                        class="size-2.5"
                                     >
                                         <path d="M7.70833 6.95834V2.79167H3.54167M2.5 8L7.5 3.00001" stroke="currentColor" stroke-linecap="square" />
                                     </svg>
@@ -79,9 +79,9 @@ import { Head, Link } from '@inertiajs/vue3';
                         >
                             <span class="relative bg-white py-1 dark:bg-[#161615]">
                                 <span
-                                    class="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-[#e3e3e0] bg-[#FDFDFC] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] dark:border-[#3E3E3A] dark:bg-[#161615]"
+                                    class="flex size-3.5 items-center justify-center rounded-full border border-[#e3e3e0] bg-[#FDFDFC] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] dark:border-[#3E3E3A] dark:bg-[#161615]"
                                 >
-                                    <span class="h-1.5 w-1.5 rounded-full bg-[#dbdbd7] dark:bg-[#3E3E3A]" />
+                                    <span class="size-1.5 rounded-full bg-[#dbdbd7] dark:bg-[#3E3E3A]" />
                                 </span>
                             </span>
                             <span>
@@ -98,7 +98,7 @@ import { Head, Link } from '@inertiajs/vue3';
                                         viewBox="0 0 10 11"
                                         fill="none"
                                         xmlns="http://www.w3.org/2000/svg"
-                                        class="h-2.5 w-2.5"
+                                        class="size-2.5"
                                     >
                                         <path d="M7.70833 6.95834V2.79167H3.54167M2.5 8L7.5 3.00001" stroke="currentColor" stroke-linecap="square" />
                                     </svg>
