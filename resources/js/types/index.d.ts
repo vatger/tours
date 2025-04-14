@@ -9,11 +9,13 @@ export interface Auth {
 export interface BreadcrumbItem {
     title: string;
     href: string;
+    type?: 'href' | 'route';
 }
 
 export interface NavItem {
     title: string;
     href: string;
+    type?: 'href' | 'route';
     icon?: LucideIcon;
     isActive?: boolean;
 }
