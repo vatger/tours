@@ -6,6 +6,7 @@ import { getNavItemLink } from '@/lib/utils';
 interface BreadcrumbItem {
     title: string;
     href?: string;
+    type?: 'route'|'href';
 }
 
 defineProps<{
