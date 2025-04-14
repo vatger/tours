@@ -23,6 +23,11 @@ const sidebarNavItems: NavItem[] = [
 const page = usePage();
 
 const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.location).pathname : '';
+
+const getNavItemLink = (item:NavItem,defaultValue:string  =  '#') : string=>{
+    if(!item.href ) return defaultValue;
+    return item.type === 'route' ? route(item.href):item.href;
+}
 </script>
 
 <template>
@@ -36,10 +41,10 @@ const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.locati
                         v-for="item in sidebarNavItems"
                         :key="item.href"
                         variant="ghost"
-                        :class="['w-full justify-start', { 'bg-muted': currentPath === item.href }]"
+                        :class="['w-full justify-start', { 'bg-muted': currentPath === getNavItemLink(item) }]"
                         as-child
                     >
-                        <Link :href="item.href">
+                        <Link :href="getNavItemLink(item)">
                             {{ item.title }}
                         </Link>
                     </Button>
