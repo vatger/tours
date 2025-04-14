@@ -8,6 +8,10 @@ defineProps<{
 }>();
 
 const page = usePage<SharedData>();
+const getItemLink = (item:NavItem,defaultValue:string  =  '#') : string=>{
+    if(!item.href ) return defaultValue;
+    return item.type === 'route' ? route(item.href):item.href;
+}
 </script>
 
 <template>
@@ -16,10 +20,10 @@ const page = usePage<SharedData>();
         <SidebarMenu>
             <SidebarMenuItem v-for="item in items" :key="item.title">
                 <SidebarMenuButton 
-                    as-child :is-active="item.href === page.url"
+                    as-child :is-active="getItemLink(item) === page.url"
                     :tooltip="item.title"
                 >
-                    <Link :href="item.href">
+                    <Link :href="getItemLink(item)">
                         <component :is="item.icon" />
                         <span>{{ item.title }}</span>
                     </Link>
