@@ -10,6 +10,10 @@ interface BreadcrumbItem {
 defineProps<{
     breadcrumbs: BreadcrumbItem[];
 }>();
+const getBreadcrumbItemLink = (item:BreadcrumbItem,defaultValue:string  =  '#') : string=>{
+    if(!item.href ) return defaultValue;
+    return item.type === 'route' ? route(item.href):item.href;
+}
 </script>
 
 <template>
@@ -22,7 +26,7 @@ defineProps<{
                     </template>
                     <template v-else>
                         <BreadcrumbLink as-child>
-                            <Link :href="item.href ?? '#'">{{ item.title }}</Link>
+                            <Link :href="getBreadcrumbItemLink(item)">{{ item.title }}</Link>
                         </BreadcrumbLink>
                     </template>
                 </BreadcrumbItem>
