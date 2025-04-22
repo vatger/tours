@@ -45,14 +45,12 @@ const {
   verifyStep,
   showingRecoveryCodes,
   showModal,
-  enable,
   confirm,
   regenerateRecoveryCodes,
   disable,
   copyToClipboard
 } = useTwoFactorAuth(props.confirmed, props.recoveryCodes);
 
-const showRegenerateConfirm = ref(false);
 const pinValue = ref<string[]>([]);
 const pinInputContainerRef = ref<HTMLElement | null>(null);
 
