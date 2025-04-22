@@ -9,7 +9,6 @@ interface Props {
     user: User;
 }
 
-// Define the logout handler function
 const handleLogout = () => {
     router.flushAll();
 };
