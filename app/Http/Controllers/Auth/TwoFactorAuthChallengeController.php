@@ -55,7 +55,7 @@ class TwoFactorAuthChallengeController extends Controller
      */
     protected function authenticateUsingCode(Request $request, User $user)
     {
-        $secret = decrypt($user->two_factor_secret);
+        $secret = $user->two_factor_secret;
         $valid = app(VerifyTwoFactorCode::class)($secret, $request->code);
         
         if ($valid) {
@@ -77,7 +77,7 @@ class TwoFactorAuthChallengeController extends Controller
      */
     protected function authenticateUsingRecoveryCode(Request $request, User $user)
     {
-        $recoveryCodes = json_decode(decrypt($user->two_factor_recovery_codes), true);
+        $recoveryCodes = $user->two_factor_recovery_codes;
         
         // Process the recovery code - this handles validation and removing the used code
         $updatedCodes = app(ProcessRecoveryCode::class)($recoveryCodes, $request->recovery_code);
@@ -89,7 +89,7 @@ class TwoFactorAuthChallengeController extends Controller
         }
         
         // Update the user's recovery codes, removing the used code
-        $user->two_factor_recovery_codes = encrypt(json_encode($updatedCodes));
+        $user->two_factor_recovery_codes = $updatedCodes;
         $user->save();
         
         // Complete the authentication process

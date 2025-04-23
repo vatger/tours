@@ -33,7 +33,7 @@ class TwoFactorAuthController extends Controller
 
         return Inertia::render('settings/TwoFactor', [
             'confirmed' => $confirmed,
-            'recoveryCodes' => !is_null($user->two_factor_secret) ? json_decode(decrypt($user->two_factor_recovery_codes)) : [],
+            'recoveryCodes' => !is_null($user->two_factor_secret) ? $user->two_factor_recovery_codes : [],
         ]);
     }
 
@@ -49,7 +49,7 @@ class TwoFactorAuthController extends Controller
         [$qrCode, $secret] = app(GenerateQrCodeAndSecretKey::class)($request->user());
         
         $request->user()->forceFill([
-            'two_factor_secret' => encrypt($secret)
+            'two_factor_secret' => $secret
         ])->save();
         
         return response()->json([
@@ -72,7 +72,7 @@ class TwoFactorAuthController extends Controller
         ]);
 
         // Get the secret key from the user's record
-        $secret = decrypt($request->user()->two_factor_secret);
+        $secret = $request->user()->two_factor_secret;
         
         // Verify the code
         $valid = app(VerifyTwoFactorCode::class)($secret, $request->code);
@@ -83,7 +83,7 @@ class TwoFactorAuthController extends Controller
             
             // Update user with recovery codes and confirm 2FA
             $request->user()->forceFill([
-                'two_factor_recovery_codes' => encrypt(json_encode($recoveryCodes)),
+                'two_factor_recovery_codes' => $recoveryCodes,
                 'two_factor_confirmed_at' => now()
             ])->save();
             
@@ -111,7 +111,7 @@ class TwoFactorAuthController extends Controller
         $codes = app(GenerateNewRecoveryCodes::class)($request->user());
         
         $request->user()->forceFill([
-            'two_factor_recovery_codes' => encrypt(json_encode($codes))
+            'two_factor_recovery_codes' => $codes
         ])->save();
         
         return response()->json([

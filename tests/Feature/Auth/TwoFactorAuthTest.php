@@ -66,8 +66,8 @@ class TwoFactorAuthTest extends TestCase
 
         // Manually enable 2FA for the user
         $user->forceFill([
-            'two_factor_secret' => encrypt($secret),
-            'two_factor_recovery_codes' => encrypt(json_encode($recoveryCodes)),
+            'two_factor_secret' => $secret,
+            'two_factor_recovery_codes' => $recoveryCodes,
             'two_factor_confirmed_at' => now(),
         ])->save();
 
@@ -100,8 +100,8 @@ class TwoFactorAuthTest extends TestCase
 
         // Manually enable 2FA for the user
         $user->forceFill([
-            'two_factor_secret' => encrypt($secret),
-            'two_factor_recovery_codes' => encrypt(json_encode($recoveryCodes)),
+            'two_factor_secret' => $secret,
+            'two_factor_recovery_codes' => $recoveryCodes,
             'two_factor_confirmed_at' => now(),
         ])->save();
 
@@ -131,8 +131,8 @@ class TwoFactorAuthTest extends TestCase
 
         // Manually enable 2FA for the user
         $user->forceFill([
-            'two_factor_secret' => encrypt($secret),
-            'two_factor_recovery_codes' => encrypt(json_encode($recoveryCodes)),
+            'two_factor_secret' => $secret,
+            'two_factor_recovery_codes' => $recoveryCodes,
             'two_factor_confirmed_at' => now(),
         ])->save();
 
@@ -150,7 +150,7 @@ class TwoFactorAuthTest extends TestCase
 
         // Verify the recovery code was removed
         $user->refresh();
-        $updatedRecoveryCodes = json_decode(decrypt($user->two_factor_recovery_codes));
+        $updatedRecoveryCodes = $user->two_factor_recovery_codes;
         $this->assertCount(count($recoveryCodes) - 1, $updatedRecoveryCodes);
         $this->assertNotContains($recoveryCode, $updatedRecoveryCodes);
 
@@ -196,8 +196,8 @@ class TwoFactorAuthTest extends TestCase
 
         // Manually enable 2FA for the user
         $user->forceFill([
-            'two_factor_secret' => encrypt($secret),
-            'two_factor_recovery_codes' => encrypt(json_encode($recoveryCodes)),
+            'two_factor_secret' => $secret,
+            'two_factor_recovery_codes' => $recoveryCodes,
             'two_factor_confirmed_at' => now(),
         ])->save();
 
@@ -227,8 +227,8 @@ class TwoFactorAuthTest extends TestCase
 
         // Manually enable 2FA for the user
         $user->forceFill([
-            'two_factor_secret' => encrypt($secret),
-            'two_factor_recovery_codes' => encrypt(json_encode($recoveryCodes)),
+            'two_factor_secret' => $secret,
+            'two_factor_recovery_codes' => $recoveryCodes,
             'two_factor_confirmed_at' => now(),
         ])->save();
 
