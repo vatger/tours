@@ -14,7 +14,7 @@ class GenerateQrCodeAndSecretKey
     public string $companyName;
 
     /**
-     * Generate new recovery codes for the user.
+     * Generate a QR code image and secret key for the user.
      *
      * @return array{string, string}
      */
