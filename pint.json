@@ -1,0 +1,15 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "array_push": true,
+        "array_syntax": true,
+        "declare_strict_types": true,
+        "is_null": true,
+        "no_extra_blank_lines": true,
+        "no_trailing_whitespace": true,
+        "no_whitespace_in_blank_line": true,
+        "ordered_class_elements": true,
+        "single_blank_line_at_eof": true
+    },
+    "cache-file": ".pint/.pint.json"
+}
