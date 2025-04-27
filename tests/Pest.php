@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Tests\TestCase;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -13,7 +15,7 @@ declare(strict_types=1);
 |
 */
 
-pest()->extend(Tests\TestCase::class)
+pest()->extend(TestCase::class)
  // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
 
@@ -43,7 +45,7 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function something(): void
 {
     // ..
 }

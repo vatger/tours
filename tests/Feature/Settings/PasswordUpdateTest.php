@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 test('password can be updated', function (): void {
     $user = User::factory()->create();

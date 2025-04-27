@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 test('login screen can be rendered', function (): void {
     $response = $this->get('/login');

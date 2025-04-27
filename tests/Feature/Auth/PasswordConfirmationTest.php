@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 test('confirm password screen can be rendered', function (): void {
     $user = User::factory()->create();

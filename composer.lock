@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1d7693fc87ca616df667456dfc8a4587",
+    "content-hash": "5041db49bc5381040f1dfcfcbd5f6552",
     "packages": [
         {
             "name": "brick/math",
@@ -8531,16 +8531,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "2.0.12",
+            "version": "2.0.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "a7f9b968f6c15abfd0d2a1442c9dcd9ade677192"
+                "reference": "9afd5874acf95fd8b0166715e431c2b1d4ac60c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/a7f9b968f6c15abfd0d2a1442c9dcd9ade677192",
-                "reference": "a7f9b968f6c15abfd0d2a1442c9dcd9ade677192",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/9afd5874acf95fd8b0166715e431c2b1d4ac60c0",
+                "reference": "9afd5874acf95fd8b0166715e431c2b1d4ac60c0",
                 "shasum": ""
             },
             "require": {
@@ -8578,7 +8578,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.0.12"
+                "source": "https://github.com/rectorphp/rector/tree/2.0.13"
             },
             "funding": [
                 {
@@ -8586,7 +8586,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-04-22T12:47:33+00:00"
+            "time": "2025-04-27T21:02:57+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -10686,8 +10686,11 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.2"
+        "php": "^8.4"
     },
     "platform-dev": {},
+    "platform-overrides": {
+        "php": "8.4"
+    },
     "plugin-api-version": "2.6.0"
 }
