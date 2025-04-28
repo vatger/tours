@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
+import { store } from '@/actions/App/Http/Controllers/Auth/EmailVerificationNotificationController';
+import { destroy as logout } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 
 defineProps<{
     status?: string;
@@ -12,7 +14,7 @@ defineProps<{
 const form = useForm({});
 
 const submit = () => {
-    form.post(route('verification.send'));
+    form.post(store.url());
 };
 </script>
 
@@ -30,7 +32,7 @@ const submit = () => {
                 Resend verification email
             </Button>
 
-            <TextLink :href="route('logout')" method="post" as="button" class="mx-auto block text-sm"> Log out </TextLink>
+            <TextLink :href="logout.url()" method="post" as="button" class="mx-auto block text-sm"> Log out </TextLink>
         </form>
     </AuthLayout>
 </template>

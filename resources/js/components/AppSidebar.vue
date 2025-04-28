@@ -7,6 +7,7 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
+import DashboardController from '@/actions/App/Http/Controllers/DashboardController';
 
 const mainNavItems: NavItem[] = [
     {
@@ -36,7 +37,7 @@ const footerNavItems: NavItem[] = [
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="route('dashboard')">
+                        <Link :href="DashboardController.url()">
                             <AppLogo />
                         </Link>
                     </SidebarMenuButton>

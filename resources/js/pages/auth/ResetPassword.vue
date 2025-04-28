@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
+import { store } from '@/actions/App/Http/Controllers/Auth/NewPasswordController';
 
 interface Props {
     token: string;
@@ -22,7 +23,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route('password.store'), {
+    form.post(store.url(), {
         onFinish: () => {
             form.reset('password', 'password_confirmation');
         },

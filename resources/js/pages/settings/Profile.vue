@@ -10,6 +10,8 @@ import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { type BreadcrumbItem, type SharedData, type User } from '@/types';
+import { update } from '@/actions/App/Http/Controllers/Settings/ProfileController';
+import { store as verifyEmail } from '@/actions/App/Http/Controllers/Auth/EmailVerificationNotificationController';
 
 interface Props {
     mustVerifyEmail: boolean;
@@ -34,7 +36,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.patch(route('profile.update'), {
+    form.patch(update().url, {
         preserveScroll: true,
     });
 };
@@ -73,7 +75,7 @@ const submit = () => {
                         <p class="-mt-4 text-sm text-muted-foreground">
                             Your email address is unverified.
                             <Link
-                                :href="route('verification.send')"
+                                :href="verifyEmail.url()"
                                 method="post"
                                 as="button"
                                 class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
