@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { create as login } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
+import { store } from '@/actions/App/Http/Controllers/Auth/RegisteredUserController';
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
@@ -7,8 +9,6 @@ import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
-import { store } from '@/actions/App/Http/Controllers/Auth/RegisteredUserController';
-import { create as login } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 
 const form = useForm({
     name: '',
@@ -76,7 +76,7 @@ const submit = () => {
                 </Button>
             </div>
 
-            <div class="text-center text-sm text-muted-foreground">
+            <div class="text-muted-foreground text-center text-sm">
                 Already have an account?
                 <TextLink :href="login.url()" class="underline underline-offset-4" :tabindex="6">Log in</TextLink>
             </div>

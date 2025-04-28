@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { destroy as logout } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
+import { edit } from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import UserInfo from '@/components/UserInfo.vue';
 import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import type { User } from '@/types';
 import { Link, router } from '@inertiajs/vue3';
 import { LogOut, Settings } from 'lucide-vue-next';
-import { edit } from '@/actions/App/Http/Controllers/Settings/ProfileController';
-import { destroy as logout } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 
 interface Props {
     user: User;

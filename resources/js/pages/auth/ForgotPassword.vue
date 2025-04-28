@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { create as login } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
+import { store } from '@/actions/App/Http/Controllers/Auth/PasswordResetLinkController';
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
@@ -7,8 +9,6 @@ import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
-import { create as login } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
-import { store } from '@/actions/App/Http/Controllers/Auth/PasswordResetLinkController';
 
 defineProps<{
     status?: string;
@@ -47,7 +47,7 @@ const submit = () => {
                 </div>
             </form>
 
-            <div class="space-x-1 text-center text-sm text-muted-foreground">
+            <div class="text-muted-foreground space-x-1 text-center text-sm">
                 <span>Or, return to</span>
                 <TextLink :href="login.url()">log in</TextLink>
             </div>

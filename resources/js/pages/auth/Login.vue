@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { store } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
+import { create as resetPassword } from '@/actions/App/Http/Controllers/Auth/PasswordResetLinkController';
+import { create as register } from '@/actions/App/Http/Controllers/Auth/RegisteredUserController';
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
@@ -8,9 +11,6 @@ import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
-import { store } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
-import { create as resetPassword } from '@/actions/App/Http/Controllers/Auth/PasswordResetLinkController';
-import { create as register } from '@/actions/App/Http/Controllers/Auth/RegisteredUserController';
 
 defineProps<{
     status?: string;
@@ -58,9 +58,7 @@ const submit = () => {
                 <div class="grid gap-2">
                     <div class="flex items-center justify-between">
                         <Label for="password">Password</Label>
-                        <TextLink v-if="canResetPassword" :href="resetPassword.url()" class="text-sm" :tabindex="5">
-                            Forgot password?
-                        </TextLink>
+                        <TextLink v-if="canResetPassword" :href="resetPassword.url()" class="text-sm" :tabindex="5"> Forgot password? </TextLink>
                     </div>
                     <Input
                         id="password"
@@ -87,7 +85,7 @@ const submit = () => {
                 </Button>
             </div>
 
-            <div class="text-center text-sm text-muted-foreground">
+            <div class="text-muted-foreground text-center text-sm">
                 Don't have an account?
                 <TextLink :href="register.url()" :tabindex="5">Sign up</TextLink>
             </div>
