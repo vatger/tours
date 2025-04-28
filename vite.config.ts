@@ -4,6 +4,7 @@ import path from 'path';
 import tailwindcss from "@tailwindcss/vite";
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
+import run from 'vite-plugin-run';
 
 export default defineConfig({
     plugins: [
@@ -21,6 +22,13 @@ export default defineConfig({
                 },
             },
         }),
+        run([
+            {
+                name: 'wayfinder',
+                run: ['php', 'artisan', 'wayfinder:generate'],
+                pattern: ['routes/**/*.php', 'app/**/Http/**/*.php'],
+            }
+        ])
     ],
     resolve: {
         alias: {
