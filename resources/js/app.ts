@@ -7,6 +7,10 @@ import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
 
+// VS Code warning: "File 'vite/client.d.ts' is not a module" (TS2306)
+// This import is still safe to use for type support in Vite projects.
+// See related Vite issue: https://github.com/vitejs/vite/issues/5370
+
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
     interface ImportMetaEnv {
