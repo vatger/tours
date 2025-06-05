@@ -3,11 +3,14 @@ import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItemType } from '@/types';
 
-withDefaults(defineProps<{
-    breadcrumbs?: BreadcrumbItemType[];
-}>(),{
-    breadcrumbs:()=>[]
-});
+withDefaults(
+    defineProps<{
+        breadcrumbs?: BreadcrumbItemType[];
+    }>(),
+    {
+        breadcrumbs: () => [],
+    },
+);
 </script>
 
 <template>
