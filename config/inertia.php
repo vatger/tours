@@ -47,11 +47,6 @@ return [
             'tsx',
             'vue',
         ],
-
-    ],
-
-    'history' => [
-        'encrypt' => false,
     ],
 
 ];
