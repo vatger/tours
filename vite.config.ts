@@ -1,10 +1,17 @@
+import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
+import i18n from 'laravel-vue-i18n/vite';
 import path from 'path';
-import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+    server: {
+        host: '0.0.0.0',
+        hmr: {
+            host: 'localhost',
+        },
+    },
     plugins: [
         laravel({
             input: ['resources/js/app.ts'],
@@ -20,6 +27,7 @@ export default defineConfig({
                 },
             },
         }),
+        i18n(),
     ],
     resolve: {
         alias: {

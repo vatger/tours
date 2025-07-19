@@ -1,0 +1,65 @@
+{
+    "name": "Gender",
+    "version": "V1",
+    "softDeletes": true,
+    "timestamps": true,
+    "useIsActive": true,
+    "useApprovedStatus": false,
+    "useScribe": true,
+    "authorize": false,
+    "logsActivity": true,
+    "clearsResponseCache": true,
+    "attributes": [
+        {
+            "name": "name",
+            "type": "string",
+            "length": 255,
+            "precision": 0,
+            "scale": 0,
+            "max": 255,
+            "min": 0,
+            "validate": true,
+            "required": true,
+            "nullable": true,
+            "unique": true,
+            "translated": true,
+            "sortAble": true,
+            "filterAble": true,
+            "exactFilter": false,
+            "searchAble": true,
+            "description": "Determina o g\u00eanero",
+            "example": "male"
+        },
+        {
+            "name": "icon",
+            "type": "image",
+            "length": 255,
+            "precision": 0,
+            "scale": 0,
+            "max": 255,
+            "min": 0,
+            "validate": true,
+            "required": false,
+            "nullable": true,
+            "unique": false,
+            "translated": false,
+            "sortAble": false,
+            "filterAble": false,
+            "exactFilter": false,
+            "searchAble": false,
+            "description": "icon to represent",
+            "example": null
+        }
+    ],
+    "relations": [
+        {
+            "name": "users",
+            "type": "hasMany",
+            "default": true,
+            "related": "User",
+            "description": null
+        }
+    ],
+    "created_at": "2025-06-27 12:30:07",
+    "updated_at": "2025-06-27 12:30:53"
+}

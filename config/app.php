@@ -123,4 +123,66 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Supported Locales
+    |--------------------------------------------------------------------------
+    |
+    | This option controls the supported locales for your application.
+    | You may add any of the locales that your application should support.
+    |
+    */
+
+    'supported_locales' => ['en', 'pt_BR', 'es', 'de', 'it', 'fr'],
+    'keep_deleted_backup' => env('APP_KEEP_DELETED_BACKUP', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Configuration
+    |--------------------------------------------------------------------------
+    |
+    | This option controls the configuration of your application.
+    | You may add any of the configurations that your application should support.
+    |
+    */
+
+    'config' => [
+        'image_file' => [
+            'supported_images' => [
+                'jpg',
+                'jpeg',
+                'png',
+                'svg',
+                'ifc',
+                'dwg',
+                'dxf'
+            ],
+            'supported_videos' => [
+                'mp4',
+                'mov',
+                'avi',
+                'wmv',
+                'mkv',
+                'webm'
+            ],
+            'supported_files' => [
+                'txt',
+                'xls',
+                'pdf',
+                'doc',
+                'docx',
+                'xlsx',
+                'jpg',
+                'jpeg',
+                'png',
+                'ifc',
+                'dwg',
+                'dxf',
+                'pptx',
+                'odt',
+                'ods',
+                'odp'
+            ],
+        ],
+    ],
 ];

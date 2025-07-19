@@ -38,14 +38,43 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
+        $user = $request->user();
 
+        // Preparar dados de roles e permissions
+        $authData = [
+            'user' => null,
+            'roles' => [],
+            'permissions' => []
+        ];
+        $locale = app()->getLocale();
+
+        if ($request->hasHeader('X-Locale')) {
+            $locale = $request->header('X-Locale');
+            if ($locale) {
+                app()->setLocale($locale);
+            }
+        }
+
+        if ($user) {
+            // Carregar roles e permissions (evitar N+1 query problem)
+            $user->load('roles', 'permissions');
+
+            $authData = [
+                'user' => $user,
+                'roles' => $user->getRoleNames(), // Retorna apenas os nomes das roles
+                'permissions' => $user->getAllPermissions()->pluck('name') // Retorna todos os nomes de permissions
+            ];
+        }
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
-            'auth' => [
-                'user' => $request->user(),
-            ],
+            'locale' => $locale,
+            'auth' => $authData,
+
+            // 'auth' => [
+            //     'user' => $request->user(),
+            // ],
             'ziggy' => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
