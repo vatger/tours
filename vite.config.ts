@@ -1,8 +1,12 @@
 import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
+<<<<<<< HEAD
 import i18n from 'laravel-vue-i18n/vite';
 import path from 'path';
+=======
+import tailwindcss from '@tailwindcss/vite';
+>>>>>>> fbae2a4df2eec7e4f7c857ffe50db2b78473ce3f
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -29,9 +33,4 @@ export default defineConfig({
         }),
         i18n(),
     ],
-    resolve: {
-        alias: {
-            '@': path.resolve(__dirname, './resources/js'),
-        },
-    },
 });
