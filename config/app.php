@@ -15,6 +15,8 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    'is_team_active' => env('IS_TEAM_ACTIVE', false),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
