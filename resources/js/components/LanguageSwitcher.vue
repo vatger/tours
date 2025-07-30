@@ -57,7 +57,7 @@ const syncLocaleWithBackend = async (langCode: string) => {
                 },
             },
         );
-    } catch (error) {
+    } catch {
         initializeLocale();
     }
 };
