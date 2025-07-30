@@ -29,3 +29,6 @@ Route::middleware('auth')->group(function () {
 
     Route::patch('settings/language', [LanguageController::class, 'update'])->name('language.update');
 });
+
+// Guest language update route
+Route::patch('language', [LanguageController::class, 'update'])->name('language.update.guest');

@@ -18,10 +18,16 @@ class LanguageController extends Controller
             'locale' => ['required', 'string', Rule::in(['en', 'fr'])],
         ]);
 
-        $request->user()->update([
-            'locale' => $validated['locale'],
-        ]);
+        // Update user's locale preference if authenticated
+        if ($request->user()) {
+            $request->user()->update([
+                'locale' => $validated['locale'],
+            ]);
+        }
 
-        return back()->with('status', 'Language updated successfully');
+        // Set session locale for both authenticated and guest users
+        $request->session()->put('locale', $validated['locale']);
+
+        return back()->with('status', __('messages.language_updated'));
     }
 }

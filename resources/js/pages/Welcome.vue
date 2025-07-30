@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
 
 const { t } = useI18n();
 </script>
@@ -34,6 +35,7 @@ const { t } = useI18n();
                         {{ t('auth.register') }}
                     </Link>
                 </template>
+                <LanguageSwitcher />
             </nav>
         </header>
         <div class="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">

@@ -19,6 +19,7 @@ class SetUserLocale
         // Priority 1: User's saved locale preference
         if ($userLocale = $request->user()?->locale) {
             App::setLocale($userLocale);
+
             return $next($request);
         }
 
@@ -26,6 +27,7 @@ class SetUserLocale
         if ($sessionLocale = $request->session()->get('locale')) {
             if (in_array($sessionLocale, $this->getSupportedLocales())) {
                 App::setLocale($sessionLocale);
+
                 return $next($request);
             }
         }
@@ -49,6 +51,7 @@ class SetUserLocale
             $normalizedLocale = str_replace('_', '-', strtolower($browserLocale));
             if (in_array($normalizedLocale, $supportedLocales)) {
                 App::setLocale($normalizedLocale);
+
                 return;
             }
 
@@ -56,13 +59,15 @@ class SetUserLocale
             $languageCode = strtolower(substr($browserLocale, 0, 2));
             if (in_array($languageCode, $supportedLocales)) {
                 App::setLocale($languageCode);
+
                 return;
             }
 
             // Try to find a supported locale that starts with the language code
             foreach ($supportedLocales as $supportedLocale) {
-                if (str_starts_with($supportedLocale, $languageCode . '-')) {
+                if (str_starts_with($supportedLocale, $languageCode.'-')) {
                     App::setLocale($supportedLocale);
+
                     return;
                 }
             }
