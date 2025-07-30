@@ -25,7 +25,7 @@ const submit = () => {
 </script>
 
 <template>
-            <AuthLayout :title="t('auth.forgotPasswordTitle')" :description="t('auth.forgotPasswordDescription')">
+    <AuthLayout :title="t('auth.forgotPasswordTitle')" :description="t('auth.forgotPasswordDescription')">
         <Head :title="t('auth.forgotPasswordTitle')" />
 
         <div v-if="status" class="mb-4 text-center text-sm font-medium text-green-600">
@@ -35,8 +35,16 @@ const submit = () => {
         <div class="space-y-6">
             <form @submit.prevent="submit">
                 <div class="grid gap-2">
-                                    <Label for="email">{{ t('auth.email') }}</Label>
-                <Input id="email" type="email" name="email" autocomplete="off" v-model="form.email" autofocus :placeholder="t('placeholder.emailAddress')" />
+                    <Label for="email">{{ t('auth.email') }}</Label>
+                    <Input
+                        id="email"
+                        type="email"
+                        name="email"
+                        autocomplete="off"
+                        v-model="form.email"
+                        autofocus
+                        :placeholder="t('placeholder.emailAddress')"
+                    />
                     <InputError :message="form.errors.email" />
                 </div>
 
@@ -48,10 +56,10 @@ const submit = () => {
                 </div>
             </form>
 
-                          <div class="space-x-1 text-center text-sm text-muted-foreground">
-                  <span>{{ t('auth.orReturnTo') }}</span>
-                  <TextLink :href="route('login')">{{ t('auth.logIn') }}</TextLink>
-              </div>
+            <div class="space-x-1 text-center text-sm text-muted-foreground">
+                <span>{{ t('auth.orReturnTo') }}</span>
+                <TextLink :href="route('login')">{{ t('auth.logIn') }}</TextLink>
+            </div>
         </div>
     </AuthLayout>
 </template>

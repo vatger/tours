@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const sidebarNavItems = computed<NavItem[]>(() => [
     {
@@ -34,7 +34,7 @@ const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.locati
 
 <template>
     <div class="px-4 py-6">
-                    <Heading :title="t('nav.settings')" :description="t('settings.manageSettings')" />
+        <Heading :title="t('nav.settings')" :description="t('settings.manageSettings')" />
 
         <div class="flex flex-col lg:flex-row lg:space-x-12">
             <aside class="w-full max-w-xl lg:w-48">

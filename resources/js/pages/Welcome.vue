@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
-import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
 
 const { t } = useI18n();
 </script>

@@ -27,7 +27,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
             <div class="space-y-6">
                 <HeadingSmall :title="t('settings.appearance.title')" :description="t('settings.appearance.description')" />
                 <AppearanceTabs />
-                
+
                 <!-- Theme preview or additional appearance settings can go here -->
                 <div class="text-sm text-muted-foreground">
                     {{ t('settings.appearance.description') }}

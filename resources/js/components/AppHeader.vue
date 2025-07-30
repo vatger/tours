@@ -156,8 +156,6 @@ const rightNavItems = computed<NavItem[]>(() => [
                         </div>
                     </div>
 
-
-
                     <DropdownMenu>
                         <DropdownMenuTrigger :as-child="true">
                             <Button

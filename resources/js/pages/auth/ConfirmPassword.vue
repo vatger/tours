@@ -24,7 +24,7 @@ const submit = () => {
 </script>
 
 <template>
-            <AuthLayout :title="t('auth.confirmPasswordTitle')" :description="t('auth.confirmPasswordDescription')">
+    <AuthLayout :title="t('auth.confirmPasswordTitle')" :description="t('auth.confirmPasswordDescription')">
         <Head :title="t('auth.confirmPasswordTitle')" />
 
         <form @submit.prevent="submit">

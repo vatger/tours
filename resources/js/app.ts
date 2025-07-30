@@ -18,10 +18,9 @@ createInertiaApp({
 
         // Handle the new locale structure where locale is an object with 'current' property
         const localeData = (props.initialPage.props as any)?.locale;
-        const currentLocale = typeof localeData === 'object' && localeData?.current 
-            ? localeData.current 
-            : (typeof localeData === 'string' ? localeData : 'en');
-        
+        const currentLocale =
+            typeof localeData === 'object' && localeData?.current ? localeData.current : typeof localeData === 'string' ? localeData : 'en';
+
         i18n.global.locale.value = currentLocale;
 
         app.use(plugin).use(ZiggyVue).use(i18n).mount(el);

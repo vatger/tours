@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
-import LanguageTab from '@/components/LanguageTab.vue';
 import HeadingSmall from '@/components/HeadingSmall.vue';
+import LanguageTab from '@/components/LanguageTab.vue';
 import { type BreadcrumbItem } from '@/types';
 
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -31,4 +31,4 @@ const breadcrumbItems = computed<BreadcrumbItem[]>(() => [
             </div>
         </SettingsLayout>
     </AppLayout>
-</template> 
+</template>

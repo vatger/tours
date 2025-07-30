@@ -34,14 +34,14 @@ const submit = () => {
 </script>
 
 <template>
-            <AuthLayout :title="t('auth.resetPasswordTitle')" :description="t('auth.resetPasswordDescription')">
+    <AuthLayout :title="t('auth.resetPasswordTitle')" :description="t('auth.resetPasswordDescription')">
         <Head :title="t('auth.resetPasswordTitle')" />
 
         <form @submit.prevent="submit">
             <div class="grid gap-6">
                 <div class="grid gap-2">
-                                    <Label for="email">{{ t('auth.email') }}</Label>
-                <Input id="email" type="email" name="email" autocomplete="email" v-model="form.email" class="mt-1 block w-full" readonly />
+                    <Label for="email">{{ t('auth.email') }}</Label>
+                    <Input id="email" type="email" name="email" autocomplete="email" v-model="form.email" class="mt-1 block w-full" readonly />
                     <InputError :message="form.errors.email" class="mt-2" />
                 </div>
 
