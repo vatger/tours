@@ -17,16 +17,22 @@ withDefaults(defineProps<Props>(), {
     display: 'dropdown',
 });
 
-const { locale, t } = useI18n();
+const { t, locale } = useI18n();
 const page = usePage();
 const { initializeLocale } = useLocale();
 
-const languages = [
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'fr', name: 'Français', flag: '🇫🇷' },
-];
+const availableLocales = page.props.locale.available;
 
-const currentLanguage = computed(() => languages.find((lang) => lang.code === locale.value) || languages[0]);
+const capitalize = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
+
+const languages = availableLocales.map((code: string) => {
+    const name = new Intl.DisplayNames([code], { type: 'language' }).of(code);
+    return { code, name: capitalize(name || code) };
+});
+
+const currentLanguage = computed(() => {
+    return languages.find((lang) => lang.code === locale.value) || languages[0];
+});
 
 watch(locale, async (newLocale, oldLocale) => {
     if (newLocale !== oldLocale && oldLocale) {
@@ -77,7 +83,6 @@ const switchLanguage = async (langCode: string) => {
                 @click="switchLanguage(language.code)"
                 :class="{ 'bg-accent': language.code === currentLanguage.code }"
             >
-                <span class="mr-2">{{ language.flag }}</span>
                 {{ language.name }}
             </DropdownMenuItem>
         </DropdownMenuContent>
@@ -88,7 +93,6 @@ const switchLanguage = async (langCode: string) => {
         <SelectTrigger class="w-[180px]">
             <SelectValue class="text-foreground">
                 <span class="flex items-center gap-2">
-                    <span>{{ currentLanguage.flag }}</span>
                     <span class="text-foreground">{{ currentLanguage.name }}</span>
                 </span>
             </SelectValue>
@@ -96,7 +100,6 @@ const switchLanguage = async (langCode: string) => {
         <SelectContent>
             <SelectItem v-for="language in languages" :key="language.code" :value="language.code">
                 <span class="flex items-center gap-2">
-                    <span>{{ language.flag }}</span>
                     <span>{{ language.name }}</span>
                 </span>
             </SelectItem>
@@ -123,7 +126,6 @@ const switchLanguage = async (langCode: string) => {
                     variant="outline"
                     :class="['justify-start', language.code === currentLanguage.code ? 'border-primary bg-primary/5' : 'hover:bg-muted']"
                 >
-                    <span class="mr-3 text-lg">{{ language.flag }}</span>
                     <div class="flex w-full items-center justify-between">
                         <span class="font-medium">{{ language.name }}</span>
                         <span v-if="language.code === currentLanguage.code" class="text-xs text-muted-foreground">
