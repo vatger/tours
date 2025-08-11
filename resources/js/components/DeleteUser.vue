@@ -55,7 +55,7 @@ const closeModal = () => {
                     <Button variant="destructive">Delete account</Button>
                 </DialogTrigger>
                 <DialogContent>
-                    <form class="space-y-6" @submit="deleteUser">
+                    <form method="POST" class="space-y-6" @submit="deleteUser">
                         <DialogHeader class="space-y-3">
                             <DialogTitle>Are you sure you want to delete your account?</DialogTitle>
                             <DialogDescription>

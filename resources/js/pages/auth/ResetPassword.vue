@@ -34,7 +34,7 @@ const submit = () => {
     <AuthLayout title="Reset password" description="Please enter your new password below">
         <Head title="Reset password" />
 
-        <form @submit.prevent="submit">
+        <form method="POST" @submit.prevent="submit">
             <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="email">Email</Label>
