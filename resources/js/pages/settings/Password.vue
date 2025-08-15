@@ -36,17 +36,6 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                     :options="{
                         preserveScroll: true,
                     }"
-                    @error="
-                        (errors) => {
-                            if (errors.password && passwordInput) {
-                                passwordInput.focus();
-                            }
-
-                            if (errors.current_password && currentPasswordInput) {
-                                currentPasswordInput.focus();
-                            }
-                        }
-                    "
                     reset-on-success
                     :reset-on-error="['password', 'password_confirmation', 'current_password']"
                     class="space-y-6"
