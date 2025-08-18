@@ -2,12 +2,15 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Laravel\Fortify\Features;
 
 class LoginRequest extends FormRequest
 {
@@ -41,6 +44,25 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
+        // Check if two-factor authentication is enabled
+        if (Features::enabled(Features::twoFactorAuthentication())) {
+            $user = User::where('email', $this->email)->first();
+
+            // If this user exists, the password is correct, and 2FA is enabled; we want to redirect to the 2FA challenge
+            if ($user && $user->two_factor_confirmed_at && Hash::check($this->password, $user->password)) {
+                // Store the user ID and remember preference in the session
+                $this->session()->put([
+                    'login.id' => $user->getKey(),
+                    'login.remember' => $this->boolean('remember'),
+                ]);
+
+                RateLimiter::clear($this->throttleKey());
+
+                return redirect()->route('two-factor.login');
+            }
+        }
+
+        // Proceed with normal authentication if 2FA is not enabled or the user doesn't have 2FA
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
@@ -76,7 +98,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get the rate limiting throttle key for the request.
+     * Get the rate-limiting throttle key for the request.
      */
     public function throttleKey(): string
     {
