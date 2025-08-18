@@ -1,24 +1,16 @@
 <script setup lang="ts">
-import { ref, computed, nextTick, watch, ComputedRef } from 'vue';
-import { Head, Form, router } from '@inertiajs/vue3';
+import HeadingSmall from '@/components/HeadingSmall.vue';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-import HeadingSmall from '@/components/HeadingSmall.vue';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Head } from '@inertiajs/vue3';
 import { PinInputInput, PinInputRoot } from 'reka-ui';
+import { computed, ComputedRef, nextTick, ref } from 'vue';
 
-import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Check, Copy, Eye, EyeOff, Loader2, ScanLine, LockKeyhole } from 'lucide-vue-next';
-
-interface QrCodeResponse {
-    svg: string;
-    url: string;
-}
-
-interface SecretKeyResponse {
-    secretKey: string;
-}
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Check, Copy, Eye, EyeOff, Loader2, LockKeyhole, ScanLine } from 'lucide-vue-next';
 
 const props = withDefaults(
     defineProps<{
@@ -38,79 +30,23 @@ const breadcrumbs = [
     },
 ];
 
-const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-
-const headers = {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-    'X-CSRF-TOKEN': csrfToken,
-    'X-Requested-With': 'XMLHttpRequest',
-};
-
-const confirmed = ref(props.confirmed);
-const qrCodeSvg = ref('');
-const secretKey = ref('');
-const recoveryCodesList = ref(props.recoveryCodes);
-const copied = ref(false);
-const error = ref('');
-const verifyStep = ref(false);
-const showingRecoveryCodes = ref(false);
-const showModal = ref(false);
-
-watch([showModal, verifyStep, qrCodeSvg], ([newShowModal, newVerifyStep, newQrCodeSvg]) => {
-    if (newShowModal && !newVerifyStep && !newQrCodeSvg) {
-        enable();
-    }
-});
-
-const enable = async () => {
-    try {
-        const enableResponse = await fetch(route('two-factor.enable'), {
-            method: 'POST',
-            headers,
-        });
-
-        if (enableResponse.ok) {
-            const qrResponse = await fetch(route('two-factor.qr-code'), {
-                method: 'GET',
-                headers,
-            });
-
-            const secretResponse = await fetch(route('two-factor.secret-key'), {
-                method: 'GET',
-                headers,
-            });
-
-            if (qrResponse.ok && secretResponse.ok) {
-                const qrData: QrCodeResponse = await qrResponse.json();
-                const secretData: SecretKeyResponse = await secretResponse.json();
-
-                qrCodeSvg.value = btoa(qrData.svg);
-                secretKey.value = secretData.secretKey;
-            }
-        } else if (enableResponse.status === 423) {
-            window.location.reload();
-        } else {
-            console.error('Error enabling 2FA:', enableResponse.status, enableResponse.statusText);
-            const errorText = await enableResponse.text();
-            console.error('Response body:', errorText);
-        }
-    } catch (error) {
-        console.error('Error enabling 2FA:', error);
-    }
-};
-
-const handleRegenerateRecoveryCodes = (page: any) => {
-    if (page.props.recoveryCodes) {
-        recoveryCodesList.value = page.props.recoveryCodes as string[];
-    }
-};
-
-const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    copied.value = true;
-    setTimeout(() => (copied.value = false), 1500);
-};
+const {
+    confirmed,
+    qrCodeSvg,
+    secretKey,
+    recoveryCodesList,
+    copied,
+    passcode,
+    error,
+    verifyStep,
+    showingRecoveryCodes,
+    showModal,
+    isLoading,
+    confirm,
+    regenerateRecoveryCodes,
+    disable,
+    copyToClipboard,
+} = useTwoFactorAuth(props.confirmed, props.recoveryCodes);
 
 const pinValue = ref<number[]>([]);
 const pinInputContainerRef = ref<HTMLElement | null>(null);
@@ -119,6 +55,7 @@ const code: ComputedRef<string> = computed(() => pinValue.value.join(''));
 const toggleRecoveryCodes = () => {
     showingRecoveryCodes.value = !showingRecoveryCodes.value;
 };
+
 </script>
 
 <template>
@@ -180,7 +117,7 @@ const toggleRecoveryCodes = () => {
                                             class="relative mx-auto aspect-square w-64 overflow-hidden rounded-lg border border-stone-200 dark:border-stone-700"
                                         >
                                             <div
-                                                v-if="!qrCodeSvg"
+                                                v-if="!qrCodeSvg || isLoading"
                                                 class="absolute inset-0 z-10 flex aspect-square h-auto w-full animate-pulse items-center justify-center bg-white dark:bg-stone-700"
                                             >
                                                 <Loader2 class="size-6 animate-spin" />
@@ -227,7 +164,7 @@ const toggleRecoveryCodes = () => {
                                     <div class="flex w-full items-center justify-center space-x-2">
                                         <div class="flex w-full items-stretch overflow-hidden rounded-xl border dark:border-stone-700">
                                             <div
-                                                v-if="!secretKey"
+                                                v-if="!secretKey || isLoading"
                                                 class="flex h-full w-full items-center justify-center bg-stone-100 p-3 dark:bg-stone-700"
                                             >
                                                 <Loader2 class="size-4 animate-spin" />
@@ -252,67 +189,48 @@ const toggleRecoveryCodes = () => {
                                 </template>
 
                                 <template v-else>
-                                    <Form
-                                        ref="formRef"
-                                        :action="route('two-factor.confirm')"
-                                        method="post"
-                                        #default="{ errors, processing }"
-                                        @success="
-                                            () => {
-                                                confirmed = true;
-                                                verifyStep = false;
-                                                showModal = false;
-                                                showingRecoveryCodes = true;
-                                                pinValue = [];
-                                                error = '';
-                                            }
-                                        "
-                                        @error="
-                                            () => {
-                                                pinValue = [];
-                                            }
-                                        "
-                                    >
-                                        <div ref="pinInputContainerRef" class="relative w-full space-y-3">
-                                            <input type="hidden" name="code" :value="code" />
-
-                                            <div class="flex w-full flex-col items-center justify-center space-y-3 py-2">
-                                                <PinInputRoot
-                                                    id="otp"
-                                                    type="number"
-                                                    v-model="pinValue"
-                                                    placeholder="○"
-                                                    class="mt-1 flex items-center gap-2"
-                                                >
-                                                    <PinInputInput
-                                                        v-for="(id, index) in 6"
-                                                        :key="id"
-                                                        :index="index"
-                                                        :disabled="processing"
-                                                        class="h-10 w-10 rounded-lg border border-input bg-background text-center text-foreground shadow-sm outline-none placeholder:text-muted-foreground focus:shadow-[0_0_0_2px] focus:shadow-ring disabled:cursor-not-allowed disabled:opacity-50"
-                                                    />
-                                                </PinInputRoot>
-                                                <div v-if="errors.confirmTwoFactorAuthentication?.code" class="mt-2 text-sm text-red-600">
-                                                    {{ errors.confirmTwoFactorAuthentication.code }}
-                                                </div>
-                                            </div>
-
-                                            <div class="flex w-full items-center space-x-5">
-                                                <Button
-                                                    type="button"
-                                                    variant="outline"
-                                                    class="w-auto flex-1"
-                                                    @click="verifyStep = false"
-                                                    :disabled="processing"
-                                                >
-                                                    Back
-                                                </Button>
-                                                <Button type="submit" class="w-auto flex-1" :disabled="processing || pinValue.length < 6">
-                                                    {{ processing ? 'Confirming...' : 'Confirm' }}
-                                                </Button>
+                                    <div ref="pinInputContainerRef" class="relative w-full space-y-3">
+                                        <div class="flex w-full flex-col items-center justify-center space-y-3 py-2">
+                                            <PinInputRoot
+                                                id="otp"
+                                                type="number"
+                                                v-model="pinValue"
+                                                placeholder="○"
+                                                class="mt-1 flex items-center gap-2"
+                                            >
+                                                <PinInputInput
+                                                    v-for="(id, index) in 6"
+                                                    :key="id"
+                                                    :index="index"
+                                                    :disabled="isLoading"
+                                                    class="h-10 w-10 rounded-lg border border-input bg-background text-center text-foreground shadow-sm outline-none placeholder:text-muted-foreground focus:shadow-[0_0_0_2px] focus:shadow-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                                />
+                                            </PinInputRoot>
+                                            <div v-if="error" class="mt-2 text-sm text-red-600">
+                                                {{ error }}
                                             </div>
                                         </div>
-                                    </Form>
+
+                                        <div class="flex w-full items-center space-x-5">
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                class="w-auto flex-1"
+                                                @click="verifyStep = false"
+                                                :disabled="isLoading"
+                                            >
+                                                Back
+                                            </Button>
+                                            <Button
+                                                type="button"
+                                                class="w-auto flex-1"
+                                                :disabled="isLoading || pinValue.length < 6"
+                                                @click="() => { passcode = code; confirm(); }"
+                                            >
+                                                {{ isLoading ? 'Confirming...' : 'Confirm' }}
+                                            </Button>
+                                        </div>
+                                    </div>
                                 </template>
                             </div>
                         </DialogContent>
@@ -351,18 +269,17 @@ const toggleRecoveryCodes = () => {
                                     </span>
                                 </div>
 
-                                <Form
+                                <Button
                                     v-if="showingRecoveryCodes"
-                                    :action="route('two-factor.recovery-codes')"
-                                    method="post"
-                                    :async="false"
-                                    #default="{ processing }"
-                                    @success="handleRegenerateRecoveryCodes"
+                                    size="sm"
+                                    variant="outline"
+                                    class="text-stone-600"
+                                    type="button"
+                                    :disabled="isLoading"
+                                    @click.stop="regenerateRecoveryCodes"
                                 >
-                                    <Button size="sm" variant="outline" class="text-stone-600" type="submit" :disabled="processing" @click.stop>
-                                        {{ processing ? 'Regenerating...' : 'Regenerate Codes' }}
-                                    </Button>
-                                </Form>
+                                    {{ isLoading ? 'Regenerating...' : 'Regenerate Codes' }}
+                                </Button>
                             </div>
 
                             <div
@@ -384,23 +301,14 @@ const toggleRecoveryCodes = () => {
                     </div>
 
                     <div class="relative inline">
-                        <Form
-                            :action="route('two-factor.disable')"
-                            method="delete"
-                            :async="false"
-                            #default="{ processing }"
-                            @success="() => {
-                                confirmed = false;
-                                showingRecoveryCodes = false;
-                                recoveryCodesList = [];
-                                qrCodeSvg = '';
-                                secretKey = '';
-                            }"
+                        <Button
+                            variant="destructive"
+                            type="button"
+                            :disabled="isLoading"
+                            @click="disable"
                         >
-                            <Button variant="destructive" type="submit" :disabled="processing">
-                                {{ processing ? 'Disabling...' : 'Disable 2FA' }}
-                            </Button>
-                        </Form>
+                            {{ isLoading ? 'Disabling...' : 'Disable 2FA' }}
+                        </Button>
                     </div>
                 </div>
             </div>
