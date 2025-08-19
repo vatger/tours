@@ -2,10 +2,10 @@
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { PinInput, PinInputGroup, PinInputSlot } from '@/components/ui/pin-input';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { Form, Head } from '@inertiajs/vue3';
-import { PinInputInput, PinInputRoot } from 'reka-ui';
 import { computed, ComputedRef, nextTick, ref } from 'vue';
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -136,10 +136,7 @@ const toggleRecoveryCodes = () => {
                                                 <Loader2 class="size-6 animate-spin" />
                                             </div>
                                             <div v-else class="relative z-10 overflow-hidden border p-5">
-                                                <div
-                                                    v-html="props.qrCodeSvg"
-                                                    class="flex aspect-square size-full items-center justify-center"
-                                                ></div>
+                                                <div v-html="props.qrCodeSvg" class="flex aspect-square size-full items-center justify-center"></div>
                                                 <div v-if="props.qrCodeSvg" class="animate-scanning-line absolute inset-0 h-full w-full">
                                                     <div
                                                         class="absolute inset-x-0 h-0.5 bg-blue-500 opacity-60 transition-all duration-300 ease-in-out"
@@ -209,21 +206,17 @@ const toggleRecoveryCodes = () => {
                                         <input type="hidden" name="code" :value="code" />
                                         <div ref="pinInputContainerRef" class="relative w-full space-y-3">
                                             <div class="flex w-full flex-col items-center justify-center space-y-3 py-2">
-                                                <PinInputRoot
-                                                    id="otp"
-                                                    type="number"
-                                                    v-model="pinValue"
-                                                    placeholder="○"
-                                                    class="mt-1 flex items-center gap-2"
-                                                >
-                                                    <PinInputInput
-                                                        v-for="(id, index) in 6"
-                                                        :key="id"
-                                                        :index="index"
-                                                        :disabled="processing"
-                                                        class="h-10 w-10 rounded-lg border border-input bg-background text-center text-foreground shadow-sm outline-none placeholder:text-muted-foreground focus:shadow-[0_0_0_2px] focus:shadow-ring disabled:cursor-not-allowed disabled:opacity-50"
-                                                    />
-                                                </PinInputRoot>
+                                                <PinInput id="otp" v-model="pinValue" class="mt-1" type="number" otp>
+                                                    <PinInputGroup class="gap-2">
+                                                        <PinInputSlot
+                                                            v-for="(id, index) in 6"
+                                                            :key="id"
+                                                            :index="index"
+                                                            :disabled="processing"
+                                                            class="h-10 w-10 rounded-lg"
+                                                        />
+                                                    </PinInputGroup>
+                                                </PinInput>
                                                 <div v-if="error" class="mt-2 text-sm text-red-600">
                                                     {{ error }}
                                                 </div>
@@ -269,7 +262,7 @@ const toggleRecoveryCodes = () => {
                             </div>
                         </div>
 
-                        <div class="rounded-b-xl border border-t-0 border-stone-200 bg-secondary dark:border-stone-700 text-sm">
+                        <div class="rounded-b-xl border border-t-0 border-stone-200 bg-secondary text-sm dark:border-stone-700">
                             <div
                                 @click="toggleRecoveryCodes"
                                 class="group flex h-10 cursor-pointer items-center justify-between px-5 text-xs select-none"
@@ -317,12 +310,7 @@ const toggleRecoveryCodes = () => {
                     </div>
 
                     <div class="relative inline">
-                        <Form
-                            :action="route('two-factor.disable')"
-                            method="delete"
-                            async="true"
-                            #default="{ processing }"
-                        >
+                        <Form :action="route('two-factor.disable')" method="delete" async="true" #default="{ processing }">
                             <Button variant="destructive" type="submit" :disabled="processing">
                                 {{ processing ? 'Disabling...' : 'Disable 2FA' }}
                             </Button>
