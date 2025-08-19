@@ -32,7 +32,7 @@ class AuthenticatedSessionController extends Controller
     {
         $user = $request->validateCredentials();
 
-        if (Fortify::confirmsTwoFactorAuthentication() && filled($user->two_factor_confirmed_at)) {
+        if (Fortify::confirmsTwoFactorAuthentication() && $user->hasEnabledTwoFactorAuthentication()) {
             $request->session()->put([
                 'login.id' => $user->getKey(),
                 'login.remember' => $request->boolean('remember'),
