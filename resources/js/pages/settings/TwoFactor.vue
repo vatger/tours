@@ -2,10 +2,9 @@
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import { PinInputInput, PinInputRoot } from 'reka-ui';
 import { computed, ComputedRef, nextTick, ref } from 'vue';
 
@@ -16,10 +15,14 @@ const props = withDefaults(
     defineProps<{
         confirmed?: boolean;
         recoveryCodes?: string[];
+        qrCodeSvg?: string | null;
+        secretKey?: string | null;
     }>(),
     {
         confirmed: false,
         recoveryCodes: () => [],
+        qrCodeSvg: null,
+        secretKey: null,
     },
 );
 
@@ -30,23 +33,103 @@ const breadcrumbs = [
     },
 ];
 
-const {
-    confirmed,
-    qrCodeSvg,
-    secretKey,
-    recoveryCodesList,
-    copied,
-    passcode,
-    error,
-    verifyStep,
-    showingRecoveryCodes,
-    showModal,
-    isLoading,
-    confirm,
-    regenerateRecoveryCodes,
-    disable,
-    copyToClipboard,
-} = useTwoFactorAuth(props.confirmed, props.recoveryCodes);
+const confirmed = ref(props.confirmed);
+const qrCodeSvg = ref(props.qrCodeSvg || '');
+const secretKey = ref(props.secretKey || '');
+const recoveryCodesList = ref(props.recoveryCodes);
+const copied = ref(false);
+const passcode = ref('');
+const error = ref('');
+const verifyStep = ref(false);
+const showingRecoveryCodes = ref(false);
+const showModal = ref(false);
+const isLoading = ref(false);
+
+const enable = (): void => {
+    isLoading.value = true;
+    error.value = '';
+
+    router.post(route('two-factor.enable'), {}, {
+        async: false,
+        onSuccess: () =>{
+            showModal.value = true;
+         },
+        onError: () => {
+            error.value = 'Failed to enable two-factor authentication';
+        },
+        onFinish: () => {
+            isLoading.value = false;
+        }
+    });
+};
+
+const confirm = (): Promise<boolean> => {
+    if (!passcode.value || passcode.value.length !== 6) return Promise.resolve(false);
+
+    const formattedCode = passcode.value.replace(/\s+/g, '').trim();
+
+    return new Promise((resolve) => {
+        router.post(route('two-factor.confirm'), { code: formattedCode }, {
+            onSuccess: (page) => {
+                const props = page.props as any;
+                if (props.recoveryCodes) {
+                    recoveryCodesList.value = props.recoveryCodes;
+                }
+
+                confirmed.value = true;
+                verifyStep.value = false;
+                showModal.value = false;
+                showingRecoveryCodes.value = true;
+                passcode.value = '';
+                error.value = '';
+                resolve(true);
+            },
+            onError: (errors) => {
+                error.value = errors.message || 'Invalid verification code';
+                passcode.value = '';
+                resolve(false);
+            }
+        });
+    });
+};
+
+const regenerateRecoveryCodes = (): void => {
+    router.post(route('two-factor.recovery-codes'), {}, {
+        onSuccess: (page) => {
+            const props = page.props as any;
+            if (props.recoveryCodes) {
+                recoveryCodesList.value = props.recoveryCodes;
+            }
+        },
+        onError: () => {
+            console.error('Error regenerating codes');
+        }
+    });
+};
+
+const disable = (): Promise<boolean> => {
+    return new Promise((resolve) => {
+        router.delete(route('two-factor.disable'), {
+            onSuccess: () => {
+                confirmed.value = false;
+                showingRecoveryCodes.value = false;
+                recoveryCodesList.value = [];
+                qrCodeSvg.value = '';
+                secretKey.value = '';
+                resolve(true);
+            },
+            onError: () => {
+                console.error('Error disabling 2FA');
+                resolve(false);
+            }
+        });
+    });
+};
+
+const copyToClipboard = (text: string): void => {
+    navigator.clipboard.writeText(text).then(() => copied.value = true);
+    setTimeout(() => copied.value = false, 1500);
+};
 
 const pinValue = ref<number[]>([]);
 const pinInputContainerRef = ref<HTMLElement | null>(null);
@@ -75,7 +158,7 @@ const toggleRecoveryCodes = () => {
 
                     <Dialog :open="showModal" @update:open="showModal = $event">
                         <DialogTrigger as-child>
-                            <Button @click="showModal = true">Enable</Button>
+                            <Button @click="enable">Enable</Button>
                         </DialogTrigger>
                         <DialogContent class="sm:max-w-md">
                             <DialogHeader class="flex items-center justify-center">
@@ -123,11 +206,8 @@ const toggleRecoveryCodes = () => {
                                                 <Loader2 class="size-6 animate-spin" />
                                             </div>
                                             <div v-else class="relative z-10 overflow-hidden border p-5">
-                                                <img
-                                                    :src="'data:image/svg+xml;base64,' + qrCodeSvg"
-                                                    alt="QR Code"
-                                                    class="aspect-square h-full w-full"
-                                                />
+                                                <div  v-html="qrCodeSvg" class="aspect-square h-full w-full flex items-center justify-center">
+                                                </div>
                                                 <div v-if="qrCodeSvg" class="animate-scanning-line absolute inset-0 h-full w-full">
                                                     <div
                                                         class="absolute inset-x-0 h-0.5 bg-blue-500 opacity-60 transition-all duration-300 ease-in-out"

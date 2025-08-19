@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -15,10 +16,13 @@ class TwoFactorAuthenticationController extends Controller
     {
         $user = $request->user();
         $confirmed = ! is_null($user->two_factor_confirmed_at);
+        $hasTwoFactorSecret = ! is_null($user->two_factor_secret);
 
         return Inertia::render('settings/TwoFactor', [
             'confirmed' => $confirmed,
-            'recoveryCodes' => ! is_null($user->two_factor_secret) ? json_decode(decrypt($user->two_factor_recovery_codes)) : [],
+            'recoveryCodes' => $hasTwoFactorSecret ? json_decode(decrypt($user->two_factor_recovery_codes)) : [],
+            'qrCodeSvg' => $hasTwoFactorSecret ? $user->twoFactorQrCodeSvg() : null,
+            'secretKey' => $hasTwoFactorSecret ? decrypt($user->two_factor_secret) : null,
         ]);
     }
 }
