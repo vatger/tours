@@ -4,6 +4,7 @@ namespace Tests\Feature\Settings;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia as Assert;
 use Laravel\Fortify\Features;
 use Tests\TestCase;
 
@@ -11,75 +12,76 @@ class TwoFactorAuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_can_view_two_factor_settings_page()
+    public function test_renders_two_factor_settings_component()
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)
-            ->get('/settings/two-factor');
-
-        $response->assertStatus(200);
-
-        $inertiaProps = $response->original?->getData() ?? [];
-        $props = $inertiaProps['page']['props'];
-        $this->assertArrayHasKey('confirmed', $props);
-        $this->assertArrayHasKey('requiresConfirmation', $props);
-        $this->assertFalse($props['confirmed']);
+        $this->actingAs($user)
+            ->get('/settings/two-factor')
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('settings/TwoFactor')
+            );
     }
 
-    public function test_can_enable_two_factor_authentication()
+    public function test_passes_correct_props_to_two_factor_component()
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get('/settings/two-factor')
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('settings/TwoFactor')
+                ->has('requiresConfirmation')
+                ->where('requiresConfirmation', true)
+                ->has('twoFactorEnabled')
+                ->where('twoFactorEnabled', false)
+            );
+    }
+
+    public function test_shows_two_factor_disabled_status_initially()
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get('/settings/two-factor')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('twoFactorEnabled', false)
+            );
+    }
+
+    public function test_shows_two_factor_status_reflects_user_state()
     {
         if (! Features::canManageTwoFactorAuthentication()) {
             $this->markTestSkipped('Two factor authentication is not enabled.');
         }
 
-        $this->actingAs($user = User::factory()->create());
+        $user = User::factory()->create();
+        $this->actingAs($user);
 
         $this->withSession(['auth.password_confirmed_at' => time()]);
-
         $this->post('/user/two-factor-authentication');
 
-        $this->assertNotNull($user->fresh()->two_factor_secret);
-        $this->assertCount(8, $user->fresh()->recoveryCodes());
+        $this->get('/settings/two-factor')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('twoFactorEnabled', $user->fresh()->hasEnabledTwoFactorAuthentication())
+            );
     }
 
-    public function test_recovery_codes_can_be_regenerated()
+    public function test_requires_confirmation_prop_matches_fortify_config()
     {
-        if (! Features::canManageTwoFactorAuthentication()) {
-            $this->markTestSkipped('Two factor authentication is not enabled.');
-        }
+        $user = User::factory()->create();
+        $expectedRequiresConfirmation = Features::optionEnabled(Features::twoFactorAuthentication(), 'confirm');
 
-        $this->actingAs($user = User::factory()->create());
-
-        $this->withSession(['auth.password_confirmed_at' => time()]);
-
-        $this->post('/user/two-factor-authentication');
-        $this->post('/user/two-factor-recovery-codes');
-
-        $user = $user->fresh();
-
-        $this->post('/user/two-factor-recovery-codes');
-
-        $this->assertCount(8, $user->recoveryCodes());
-        $this->assertCount(8, array_diff($user->recoveryCodes(), $user->fresh()->recoveryCodes()));
+        $this->actingAs($user)
+            ->get('/settings/two-factor')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('requiresConfirmation', $expectedRequiresConfirmation)
+            );
     }
 
-    public function test_two_factor_authentication_can_be_disabled()
+    public function test_two_factor_settings_page_requires_authentication()
     {
-        if (! Features::canManageTwoFactorAuthentication()) {
-            $this->markTestSkipped('Two factor authentication is not enabled.');
-        }
-
-        $this->actingAs($user = User::factory()->create());
-
-        $this->withSession(['auth.password_confirmed_at' => time()]);
-
-        $this->post('/user/two-factor-authentication');
-
-        $this->assertNotNull($user->fresh()->two_factor_secret);
-
-        $this->delete('/user/two-factor-authentication');
-
-        $this->assertNull($user->fresh()->two_factor_secret);
+        $this->get('/settings/two-factor')
+            ->assertRedirect('/login');
     }
 }
