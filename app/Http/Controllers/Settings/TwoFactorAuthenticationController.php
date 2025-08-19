@@ -21,8 +21,8 @@ class TwoFactorAuthenticationController extends Controller
         return Inertia::render('settings/TwoFactor', [
             'confirmed' => $confirmed,
             'recoveryCodes' => $hasTwoFactorSecret ? json_decode(decrypt($user->two_factor_recovery_codes)) : [],
-            'qrCodeSvg' => $hasTwoFactorSecret ? $user->twoFactorQrCodeSvg() : null,
-            'secretKey' => $hasTwoFactorSecret ? decrypt($user->two_factor_secret) : null,
+            'qrCodeSvg' => !$confirmed && $hasTwoFactorSecret ? $user->twoFactorQrCodeSvg() : null,
+            'secretKey' => !$confirmed && $hasTwoFactorSecret ? decrypt($user->two_factor_secret) : null,
         ]);
     }
 }
