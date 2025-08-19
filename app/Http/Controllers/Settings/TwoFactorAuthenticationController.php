@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Settings;
 
+use App\Http\Controllers\Concerns\ConfirmsTwoFactorAuthentication;
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Http\Controllers\Concerns\ConfirmsTwoFactorAuthentication;
+use Laravel\Fortify\Features;
 
 class TwoFactorAuthenticationController extends Controller
 {
@@ -20,16 +20,9 @@ class TwoFactorAuthenticationController extends Controller
     {
         $this->validateTwoFactorAuthenticationState($request);
 
-        /** @var User $user */
-        $user = $request->user();
-
-        $confirmed = filled($user->two_factor_confirmed_at);
-
         return Inertia::render('settings/TwoFactor', [
-            'confirmed' => $confirmed,
-            'recoveryCodes' => filled($user->two_factor_secret) ? json_decode(decrypt($user->two_factor_recovery_codes)) : [],
-            'qrCodeSvg' => !$confirmed && filled($user->two_factor_secret) ? $user->twoFactorQrCodeSvg() : null,
-            'secretKey' => !$confirmed && filled($user->two_factor_secret) ? decrypt($user->two_factor_secret) : null,
+            'requiresConfirmation' => Features::optionEnabled(Features::twoFactorAuthentication(), 'confirm'),
+            'twoFactorEnabled' => filled($request->user()->two_factor_confirmed_at),
         ]);
     }
 }

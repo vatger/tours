@@ -23,7 +23,7 @@ class TwoFactorAuthenticationTest extends TestCase
         $inertiaProps = $response->original?->getData() ?? [];
         $props = $inertiaProps['page']['props'];
         $this->assertArrayHasKey('confirmed', $props);
-        $this->assertArrayHasKey('recoveryCodes', $props);
+        $this->assertArrayHasKey('requiresConfirmation', $props);
         $this->assertFalse($props['confirmed']);
     }
 
