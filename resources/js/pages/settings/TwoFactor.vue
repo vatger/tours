@@ -39,22 +39,8 @@ const verifyStep = ref(false);
 const showingRecoveryCodes = ref(false);
 const showModal = ref(false);
 
-// Form refs
-const enableFormRef = ref();
-const confirmFormRef = ref();
-const disableFormRef = ref();
-const regenerateFormRef = ref();
-
-const handleEnableSuccess = (): void => {
+const showTwoFactorEnableModal = (): void => {
     showModal.value = true;
-};
-
-const handleEnableError = (): void => {
-    error.value = 'Failed to enable two-factor authentication';
-};
-
-const handleEnableFinish = (): void => {
-    // Form component handles loading state automatically
 };
 
 const handleConfirmSuccess = (): void => {
@@ -68,14 +54,6 @@ const handleConfirmSuccess = (): void => {
 const handleConfirmError = (errors: any): void => {
     error.value = errors.message || 'Invalid verification code';
     pinValue.value = [];
-};
-
-const handleDisableSuccess = (): void => {
-    showingRecoveryCodes.value = false;
-};
-
-const handleDisableError = (): void => {
-    console.error('Error disabling 2FA');
 };
 
 const copyToClipboard = (text: string): void => {
@@ -100,20 +78,17 @@ const toggleRecoveryCodes = () => {
                 <HeadingSmall title="Two-Factor Authentication" description="Manage your two-factor authentication settings" />
                 <div v-if="!props.confirmed" class="flex flex-col items-start justify-start space-y-5">
                     <Badge variant="outline" class="border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-50"> Disabled </Badge>
-                    <p class="-translate-y-1 text-stone-500 dark:text-stone-400">
+                    <p class="-translate-y-1 text-muted-foreground">
                         When you enable 2FA, you'll be prompted for a secure code during login, which can be retrieved from your phone's TOTP
                         supported app.
                     </p>
                     <Dialog :open="showModal" @update:open="showModal = $event">
                         <DialogTrigger as-child>
                             <Form
-                                ref="enableFormRef"
                                 :async="false"
                                 :action="route('two-factor.enable')"
                                 method="post"
-                                @success="handleEnableSuccess"
-                                @error="handleEnableError"
-                                @finish="handleEnableFinish"
+                                @success="showTwoFactorEnableModal"
                                 #default="{ processing }"
                             >
                                 <Button type="submit" :disabled="processing">
@@ -123,15 +98,19 @@ const toggleRecoveryCodes = () => {
                         </DialogTrigger>
                         <DialogContent class="sm:max-w-md">
                             <DialogHeader class="flex items-center justify-center">
-                                <div class="mb-3 w-auto rounded-full border border-stone-100 bg-white p-0.5 shadow-sm dark:border-stone-600 dark:bg-stone-800">
-                                    <div class="relative overflow-hidden rounded-full border border-stone-200 bg-stone-100 p-2.5 dark:border-stone-600 dark:bg-stone-200">
-                                        <div class="absolute inset-0 flex h-full w-full items-stretch justify-around divide-x divide-stone-200 opacity-50 dark:divide-stone-300 [&>div]:flex-1">
+                                <div class="mb-3 w-auto rounded-full border border-border bg-card p-0.5 shadow-sm">
+                                    <div class="relative overflow-hidden rounded-full border border-border bg-muted p-2.5">
+                                        <div
+                                            class="absolute inset-0 flex size-full items-stretch justify-around divide-x divide-border opacity-50 [&>div]:flex-1"
+                                        >
                                             <div v-for="i in 5" :key="i"></div>
                                         </div>
-                                        <div class="absolute inset-0 flex h-full w-full flex-col items-stretch justify-around divide-y divide-stone-200 opacity-50 dark:divide-stone-300 [&>div]:flex-1">
+                                        <div
+                                            class="absolute inset-0 flex size-full flex-col items-stretch justify-around divide-y divide-border opacity-50 [&>div]:flex-1"
+                                        >
                                             <div v-for="i in 5" :key="i"></div>
                                         </div>
-                                        <ScanLine class="relative z-20 size-6 dark:text-black" />
+                                        <ScanLine class="relative z-20 size-6 text-foreground" />
                                     </div>
                                 </div>
                                 <DialogTitle>
@@ -149,19 +128,17 @@ const toggleRecoveryCodes = () => {
                             <div class="relative flex w-auto flex-col items-center justify-center space-y-5">
                                 <template v-if="!verifyStep">
                                     <div class="relative mx-auto flex max-w-md items-center overflow-hidden">
-                                        <div
-                                            class="relative mx-auto aspect-square w-64 overflow-hidden rounded-lg border border-stone-200 dark:border-stone-700"
-                                        >
+                                        <div class="relative mx-auto aspect-square w-64 overflow-hidden rounded-lg border border-border">
                                             <div
                                                 v-if="!props.qrCodeSvg"
-                                                class="absolute inset-0 z-10 flex aspect-square h-auto w-full animate-pulse items-center justify-center bg-white dark:bg-stone-700"
+                                                class="absolute inset-0 z-10 flex aspect-square h-auto w-full animate-pulse items-center justify-center bg-background"
                                             >
                                                 <Loader2 class="size-6 animate-spin" />
                                             </div>
                                             <div v-else class="relative z-10 overflow-hidden border p-5">
                                                 <div
                                                     v-html="props.qrCodeSvg"
-                                                    class="flex aspect-square h-full w-full items-center justify-center"
+                                                    class="flex aspect-square size-full items-center justify-center"
                                                 ></div>
                                                 <div v-if="props.qrCodeSvg" class="animate-scanning-line absolute inset-0 h-full w-full">
                                                     <div
@@ -192,16 +169,13 @@ const toggleRecoveryCodes = () => {
                                     </div>
 
                                     <div class="relative flex w-full items-center justify-center">
-                                        <div class="absolute inset-0 top-1/2 h-px w-full bg-stone-200 dark:bg-stone-600"></div>
-                                        <span class="relative bg-white px-2 py-1 dark:bg-stone-800"> or, enter the code manually </span>
+                                        <div class="absolute inset-0 top-1/2 h-px w-full bg-border"></div>
+                                        <span class="relative bg-card px-2 py-1"> or, enter the code manually </span>
                                     </div>
 
                                     <div class="flex w-full items-center justify-center space-x-2">
-                                        <div class="flex w-full items-stretch overflow-hidden rounded-xl border dark:border-stone-700">
-                                            <div
-                                                v-if="!props.secretKey"
-                                                class="flex h-full w-full items-center justify-center bg-stone-100 p-3 dark:bg-stone-700"
-                                            >
+                                        <div class="flex w-full items-stretch overflow-hidden rounded-xl border border-border">
+                                            <div v-if="!props.secretKey" class="flex h-full w-full items-center justify-center bg-muted p-3">
                                                 <Loader2 class="size-4 animate-spin" />
                                             </div>
                                             <template v-else>
@@ -209,11 +183,11 @@ const toggleRecoveryCodes = () => {
                                                     type="text"
                                                     readonly
                                                     :value="props.secretKey"
-                                                    class="h-full w-full bg-white p-3 text-black dark:bg-stone-800 dark:text-stone-100"
+                                                    class="h-full w-full bg-background p-3 text-foreground"
                                                 />
                                                 <button
                                                     @click="copyToClipboard(props.secretKey || '')"
-                                                    class="relative block h-auto border-l border-stone-200 px-3 hover:bg-stone-100 dark:border-stone-600 dark:hover:bg-stone-600"
+                                                    class="relative block h-auto border-l border-border px-3 hover:bg-muted"
                                                 >
                                                     <Check v-if="copied" class="w-4 text-green-500" />
                                                     <Copy v-else class="w-4" />
@@ -225,9 +199,9 @@ const toggleRecoveryCodes = () => {
 
                                 <template v-else>
                                     <Form
-                                        ref="confirmFormRef"
                                         :action="route('two-factor.confirm')"
                                         method="post"
+                                        :async="false"
                                         @success="handleConfirmSuccess"
                                         @error="handleConfirmError"
                                         #default="{ processing }"
@@ -279,23 +253,23 @@ const toggleRecoveryCodes = () => {
 
                 <div v-if="props.confirmed" class="flex flex-col items-start justify-start space-y-5">
                     <Badge variant="outline" class="border-green-200 bg-green-50 text-green-700 hover:bg-green-50"> Enabled </Badge>
-                    <p class="text-stone-500 dark:text-stone-400">
+                    <p class="text-muted-foreground">
                         With two factor authentication enabled, you'll be prompted for a secure, random token during login, which you can retrieve
                         from your TOTP Authenticator app.
                     </p>
 
                     <div>
-                        <div class="flex items-start rounded-t-xl border border-stone-200 bg-stone-50 p-4 dark:border-stone-700 dark:bg-stone-800">
+                        <div class="flex items-start rounded-t-xl border border-muted p-4">
                             <LockKeyhole class="mr-2 size-5 text-stone-500" />
                             <div class="space-y-1">
                                 <h3 class="font-medium">2FA Recovery Codes</h3>
-                                <p class="text-sm text-stone-500 dark:text-stone-400">
+                                <p class="text-sm text-muted-foreground">
                                     Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password manager.
                                 </p>
                             </div>
                         </div>
 
-                        <div class="rounded-b-xl border border-t-0 border-stone-200 bg-stone-100 text-sm dark:border-stone-700 dark:bg-stone-800">
+                        <div class="rounded-b-xl border border-t-0 border-stone-200 bg-secondary dark:border-stone-700 text-sm">
                             <div
                                 @click="toggleRecoveryCodes"
                                 class="group flex h-10 cursor-pointer items-center justify-between px-5 text-xs select-none"
@@ -311,12 +285,14 @@ const toggleRecoveryCodes = () => {
 
                                 <Form
                                     v-if="showingRecoveryCodes"
-                                    ref="regenerateFormRef"
                                     :action="route('two-factor.recovery-codes')"
                                     method="post"
                                     #default="{ processing }"
+                                    :options="{
+                                        preserveScroll: true,
+                                    }"
                                 >
-                                    <Button size="sm" variant="outline" class="text-stone-600" type="submit" :disabled="processing" @click.stop>
+                                    <Button size="sm" variant="ghost" class="text-underline" type="submit" :disabled="processing" @click.stop>
                                         {{ processing ? 'Regenerating...' : 'Regenerate Codes' }}
                                     </Button>
                                 </Form>
@@ -329,10 +305,10 @@ const toggleRecoveryCodes = () => {
                                     opacity: showingRecoveryCodes ? 1 : 0,
                                 }"
                             >
-                                <div class="grid max-w-xl gap-1 bg-stone-200 px-4 py-4 font-mono text-sm dark:bg-stone-900 dark:text-stone-100">
+                                <div class="grid max-w-xl gap-1 bg-secondary p-4 font-mono text-sm">
                                     <div v-for="(code, index) in props.recoveryCodes" :key="index">{{ code }}</div>
                                 </div>
-                                <p class="px-4 py-3 text-xs text-stone-500 select-none dark:text-stone-400">
+                                <p class="px-4 py-3 text-xs text-muted-foreground select-none">
                                     You have {{ props.recoveryCodes.length }} recovery codes left. Each can be used once to access your account and
                                     will be removed after use. If you need more, click <span class="font-bold">Regenerate Codes</span> above.
                                 </p>
@@ -342,11 +318,9 @@ const toggleRecoveryCodes = () => {
 
                     <div class="relative inline">
                         <Form
-                            ref="disableFormRef"
                             :action="route('two-factor.disable')"
                             method="delete"
-                            @success="handleDisableSuccess"
-                            @error="handleDisableError"
+                            async="true"
                             #default="{ processing }"
                         >
                             <Button variant="destructive" type="submit" :disabled="processing">
