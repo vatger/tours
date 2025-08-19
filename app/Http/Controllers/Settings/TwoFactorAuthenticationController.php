@@ -7,14 +7,19 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Http\Controllers\Concerns\ConfirmsTwoFactorAuthentication;
 
 class TwoFactorAuthenticationController extends Controller
 {
+    use ConfirmsTwoFactorAuthentication;
+
     /**
      * Show the user's two-factor authentication settings page.
      */
     public function show(Request $request): Response
     {
+        $this->validateTwoFactorAuthenticationState($request);
+
         /** @var User $user */
         $user = $request->user();
 

@@ -77,7 +77,7 @@ const toggleRecoveryCodes = () => {
             <div class="space-y-6">
                 <HeadingSmall title="Two-Factor Authentication" description="Manage your two-factor authentication settings" />
                 <div v-if="!props.confirmed" class="flex flex-col items-start justify-start space-y-5">
-                    <Badge variant="outline" class="border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-50"> Disabled </Badge>
+                    <Badge variant="destructive"> Disabled </Badge>
                     <p class="-translate-y-1 text-muted-foreground">
                         When you enable 2FA, you'll be prompted for a secure code during login, which can be retrieved from your phone's TOTP
                         supported app.
@@ -245,15 +245,15 @@ const toggleRecoveryCodes = () => {
                 </div>
 
                 <div v-if="props.confirmed" class="flex flex-col items-start justify-start space-y-5">
-                    <Badge variant="outline" class="border-green-200 bg-green-50 text-green-700 hover:bg-green-50"> Enabled </Badge>
+                    <Badge variant="default"> Enabled </Badge>
                     <p class="text-muted-foreground">
                         With two factor authentication enabled, you'll be prompted for a secure, random token during login, which you can retrieve
                         from your TOTP Authenticator app.
                     </p>
 
                     <div>
-                        <div class="flex items-start rounded-t-xl border border-muted p-4">
-                            <LockKeyhole class="mr-2 size-5 text-stone-500" />
+                        <div class="flex items-start rounded-t-xl border border-secondary p-4">
+                            <LockKeyhole class="mr-2 size-5 text-muted-foreground" />
                             <div class="space-y-1">
                                 <h3 class="font-medium">2FA Recovery Codes</h3>
                                 <p class="text-sm text-muted-foreground">
