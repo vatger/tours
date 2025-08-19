@@ -3,6 +3,7 @@ import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { PinInput, PinInputGroup, PinInputSlot } from '@/components/ui/pin-input';
 import { useClipboard } from '@/composables/useClipboard';
@@ -10,7 +11,7 @@ import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { Form, Head } from '@inertiajs/vue3';
-import { Check, Copy, Eye, EyeOff, Loader2, LockKeyhole, ScanLine } from 'lucide-vue-next';
+import { Check, Copy, Eye, EyeOff, Loader2, LockKeyhole, RefreshCw, ScanLine, ShieldBan } from 'lucide-vue-next';
 import { computed, ComputedRef, nextTick, reactive, ref } from 'vue';
 
 const props = withDefaults(
@@ -85,7 +86,7 @@ const modalConfig = computed(() => {
         return {
             title: 'You have enabled two factor authentication.',
             description: 'Two factor authentication is now enabled, scan the QR code or enter the setup key',
-            buttonText: 'Close'
+            buttonText: 'Close',
         };
     }
 
@@ -93,14 +94,14 @@ const modalConfig = computed(() => {
         return {
             title: 'Verify Authentication Code',
             description: 'Enter the 6-digit code from your authenticator app',
-            buttonText: 'Continue'
+            buttonText: 'Continue',
         };
     }
 
     return {
         title: 'Turn on 2-step Verification',
         description: 'To finish enabling two factor authentication, scan the QR code or enter the setup key',
-        buttonText: 'Continue'
+        buttonText: 'Continue',
     };
 });
 
@@ -131,9 +132,9 @@ const handleSetupAction = (): void => {
         <SettingsLayout>
             <div class="space-y-6">
                 <HeadingSmall title="Two-Factor Authentication" description="Manage your two-factor authentication settings" />
-                <div v-if="!twoFactorEnabled" class="flex flex-col items-start justify-start space-y-5">
+                <div v-if="!twoFactorEnabled" class="flex flex-col items-start justify-start space-y-4">
                     <Badge variant="destructive"> Disabled </Badge>
-                    <p class="-translate-y-1 text-muted-foreground">
+                    <p class="text-muted-foreground">
                         When you enable 2FA, you'll be prompted for a secure code during login, which can be retrieved from your phone's TOTP
                         supported app.
                     </p>
@@ -153,38 +154,27 @@ const handleSetupAction = (): void => {
                     </Dialog>
                 </div>
 
-                <div v-if="twoFactorEnabled" class="flex flex-col items-start justify-start space-y-5">
+                <div v-if="twoFactorEnabled" class="flex flex-col items-start justify-start space-y-4">
                     <Badge variant="default"> Enabled </Badge>
                     <p class="text-muted-foreground">
                         With two factor authentication enabled, you'll be prompted for a secure, random token during login, which you can retrieve
                         from your TOTP Authenticator app.
                     </p>
                     <Dialog v-model:open="modalState.isOpen"></Dialog>
-                    <div>
-                        <div class="flex items-start rounded-t-xl border border-secondary p-4">
-                            <LockKeyhole class="mr-2 size-5 text-muted-foreground" />
-                            <div class="space-y-1">
-                                <h3 class="font-medium">2FA Recovery Codes</h3>
-                                <p class="text-sm text-muted-foreground">
-                                    Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password manager.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="rounded-b-xl border border-t-0 text-sm">
-                            <div
-                                @click="toggleRecoveryCodesVisibility"
-                                class="group flex h-10 cursor-pointer items-center justify-between px-5 text-xs select-none"
+                    <Card>
+                        <CardHeader>
+                            <CardTitle class="flex gap-3"><LockKeyhole class="size-4" /> 2FA Recovery Codes</CardTitle>
+                            <CardDescription
+                                >Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password
+                                manager.</CardDescription
                             >
-                                <div :class="`relative ${!recoveryCodes.isVisible ? 'opacity-40 hover:opacity-60' : 'opacity-60'}`">
-                                    <span v-if="!recoveryCodes.isVisible" class="flex items-center space-x-1">
-                                        <Eye class="size-4" /> <span>View My Recovery Codes</span>
-                                    </span>
-                                    <span v-else class="flex items-center space-x-1">
-                                        <EyeOff class="size-4" /> <span>Hide Recovery Codes</span>
-                                    </span>
-                                </div>
-
+                        </CardHeader>
+                        <CardContent>
+                            <div class="group flex items-center justify-between select-none">
+                                <Button @click="toggleRecoveryCodesVisibility">
+                                    <component :is="recoveryCodes.isVisible ? EyeOff : Eye" class="size-4" />
+                                    {{ recoveryCodes.isVisible ? 'Hide' : 'View' }} Recovery Codes
+                                </Button>
                                 <Form
                                     v-if="recoveryCodes.isVisible"
                                     :action="route('two-factor.recovery-codes')"
@@ -194,29 +184,31 @@ const handleSetupAction = (): void => {
                                         preserveScroll: true,
                                     }"
                                 >
-                                    <Button size="sm" variant="secondary" type="submit" :disabled="processing" @click.stop="toggleRecoveryCodesVisibility">
+                                    <Button variant="secondary" type="submit" :disabled="processing" @click.stop="toggleRecoveryCodesVisibility">
+                                        <RefreshCw />
                                         {{ processing ? 'Regenerating...' : 'Regenerate Codes' }}
                                     </Button>
                                 </Form>
                             </div>
 
                             <div
-                                class="relative overflow-hidden transition-all duration-300"
-                                :style="{
-                                    height: recoveryCodes.isVisible ? 'auto' : '0',
-                                    opacity: recoveryCodes.isVisible ? 1 : 0,
-                                }"
+                                :class="[
+                                    'relative overflow-hidden transition-all duration-300',
+                                    recoveryCodes.isVisible ? 'h-auto opacity-100' : 'h-0 opacity-0',
+                                ]"
                             >
-                                <div class="grid max-w-xl gap-1 bg-muted p-4 font-mono text-sm">
-                                    <div v-for="(code, index) in recoveryCodes.list" :key="index">{{ code }}</div>
+                                <div class="space-y-3 mt-3">
+                                    <div class="grid gap-1 rounded-lg bg-muted p-4 font-mono text-sm">
+                                        <div v-for="(code, index) in recoveryCodes.list" :key="index">{{ code }}</div>
+                                    </div>
+                                    <p class="text-xs text-muted-foreground select-none">
+                                        You have {{ recoveryCodes.list?.length }} recovery codes left. Each can be used once to access your account
+                                        and will be removed after use. If you need more, click <span class="font-bold">Regenerate Codes</span> above.
+                                    </p>
                                 </div>
-                                <p class="text-xs text-muted-foreground select-none">
-                                    You have {{ recoveryCodes.list?.length }} recovery codes left. Each can be used once to access your account and
-                                    will be removed after use. If you need more, click <span class="font-bold">Regenerate Codes</span> above.
-                                </p>
                             </div>
-                        </div>
-                    </div>
+                        </CardContent>
+                    </Card>
 
                     <div class="relative inline">
                         <Form
@@ -227,6 +219,7 @@ const handleSetupAction = (): void => {
                             @success="disableTwoFactorAuthenticationSuccess"
                         >
                             <Button variant="destructive" type="submit" :disabled="processing">
+                                <ShieldBan />
                                 {{ processing ? 'Disabling...' : 'Disable 2FA' }}
                             </Button>
                         </Form>
@@ -238,15 +231,11 @@ const handleSetupAction = (): void => {
                         <DialogHeader class="flex items-center justify-center">
                             <div class="mb-3 w-auto rounded-full border border-border bg-card p-0.5 shadow-sm">
                                 <div class="relative overflow-hidden rounded-full border border-border bg-muted p-2.5">
-                                    <div
-                                        class="absolute inset-0 flex size-full items-stretch justify-around divide-x divide-border opacity-50 [&>div]:flex-1"
-                                    >
-                                        <div v-for="i in 5" :key="i"></div>
+                                    <div class="absolute inset-0 grid grid-cols-5 opacity-50">
+                                        <div v-for="i in 5" :key="`col-${i}`" class="border-r border-border last:border-r-0"></div>
                                     </div>
-                                    <div
-                                        class="absolute inset-0 flex size-full flex-col items-stretch justify-around divide-y divide-border opacity-50 [&>div]:flex-1"
-                                    >
-                                        <div v-for="i in 5" :key="i"></div>
+                                    <div class="absolute inset-0 grid grid-rows-5 opacity-50">
+                                        <div v-for="i in 5" :key="`row-${i}`" class="border-b border-border last:border-b-0"></div>
                                     </div>
                                     <ScanLine class="relative z-20 size-6 text-foreground" />
                                 </div>
