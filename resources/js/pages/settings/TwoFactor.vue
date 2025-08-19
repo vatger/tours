@@ -29,30 +29,15 @@ const breadcrumbs = [
     },
 ];
 
-const twoFactorEnabling = ref(false);
 const qrCodeSvg = ref<string | null>(null);
 const manualSetupKey = ref<string | null>(null);
 const isTwoFactorSetupModalOpen = ref(false);
 const isInVerificationStep = ref(false);
 
-const enableTwoFactorAuthentication = (): void => {
-    router.post(
-        route('two-factor.enable'),
-        {},
-        {
-            preserveScroll: true,
-            onBefore: () => {
-                twoFactorEnabling.value = true;
-            },
-            onSuccess: () =>
-                Promise.all([fetchQRCode(), fetchManualSetupKey(), fetchRecoveryCodes()]).then(() => {
-                    isTwoFactorSetupModalOpen.value = true;
-                }),
-            onFinish: () => {
-                twoFactorEnabling.value = false;
-            },
-        },
-    );
+const enableTwoFactorAuthenticationSuccess = (): void => {
+    Promise.all([fetchQRCode(), fetchManualSetupKey(), fetchRecoveryCodes()]).then(() => {
+        isTwoFactorSetupModalOpen.value = true;
+    });
 };
 
 const fetchQRCode = async () => {
@@ -71,7 +56,6 @@ const code = ref<number[]>([]);
 const pinInputContainerRef = ref<HTMLElement | null>(null);
 const verificationCode: ComputedRef<string> = computed(() => code.value.join(''));
 
-
 const recoveryCodesList = ref<string[]>([]);
 const showingRecoveryCodes = ref(false);
 
@@ -87,18 +71,20 @@ const toggleRecoveryCodesVisibility = () => {
     showingRecoveryCodes.value = !showingRecoveryCodes.value;
 };
 
+const disableTwoFactorAuthenticationSuccess = (): void => {
+    isInVerificationStep.value = false;
+    isTwoFactorSetupModalOpen.value = false;
+    qrCodeSvg.value = null;
+    manualSetupKey.value = null;
+    recoveryCodesList.value = [];
+    code.value = [];
+};
 
 const disableTwoFactorAuthentication = (): void => {
     router.delete(route('two-factor.disable'), {
         preserveScroll: true,
-        onSuccess: () => {
-            isInVerificationStep.value = false;
-            isTwoFactorSetupModalOpen.value = false;
-            qrCodeSvg.value = null;
-            manualSetupKey.value = null;
-            recoveryCodesList.value = [];
-            code.value = [];
-        }
+        async: false,
+        onSuccess: () => disableTwoFactorAuthenticationSuccess(),
     });
 };
 
@@ -122,14 +108,18 @@ const copyToClipboard = (text: string): void => {
                         When you enable 2FA, you'll be prompted for a secure code during login, which can be retrieved from your phone's TOTP
                         supported app.
                     </p>
-                    <Dialog
-                        :open="isTwoFactorSetupModalOpen"
-                        @update:open="(value) => { isTwoFactorSetupModalOpen = value}"
-                    >
+                    <Dialog v-model:open="isTwoFactorSetupModalOpen" :close="() => disableTwoFactorAuthentication()">
                         <DialogTrigger as-child>
-                            <Button type="button" @click="enableTwoFactorAuthentication" :disabled="twoFactorEnabling">
-                                {{ twoFactorEnabling ? 'Enabling...' : 'Enable' }}
-                            </Button>
+                            <Form
+                                :action="route('two-factor.enable')"
+                                method="post"
+                                @success="enableTwoFactorAuthenticationSuccess"
+                                #default="{ processing }"
+                            >
+                                <Button type="submit" :disabled="processing">
+                                    {{ processing ? 'Enabling...' : 'Enable' }}
+                                </Button>
+                            </Form>
                         </DialogTrigger>
                         <DialogContent class="sm:max-w-md">
                             <DialogHeader class="flex items-center justify-center">
@@ -149,20 +139,12 @@ const copyToClipboard = (text: string): void => {
                                     </div>
                                 </div>
                                 <DialogTitle>
-                                    {{
-                                        !isInVerificationStep
-                                            ? requiresConfirmation
-                                                ? 'Finish Enabling 2-step Verification'
-                                                : 'Turn on 2-step Verification'
-                                            : 'Verify Authentication Code'
-                                    }}
+                                    {{ !isInVerificationStep ? 'Finish Enabling 2-step Verification' : 'Verify Authentication Code' }}
                                 </DialogTitle>
                                 <DialogDescription class="text-center">
                                     {{
                                         !isInVerificationStep
-                                            ? requiresConfirmation
-                                                ? 'To finish enabling two factor authentication, scan the QR code or enter the setup key'
-                                                : 'Open your authenticator app and choose Scan QR code'
+                                            ? 'To finish enabling two factor authentication, scan the QR code or enter the setup key'
                                             : 'Enter the 6-digit code from your authenticator app'
                                     }}
                                 </DialogDescription>
@@ -204,7 +186,7 @@ const copyToClipboard = (text: string): void => {
                                                 }
                                             "
                                         >
-                                            {{ requiresConfirmation ? 'Continue to Verify' : 'Continue' }}
+                                            {{ requiresConfirmation ? 'Continue to Verify' : 'Finish Setup' }}
                                         </Button>
                                     </div>
 
@@ -238,11 +220,7 @@ const copyToClipboard = (text: string): void => {
                                 </template>
 
                                 <template v-else>
-                                    <Form
-                                        :action="route('two-factor.confirm')"
-                                        method="post"
-                                        #default="{ error, processing }"
-                                    >
+                                    <Form :action="route('two-factor.confirm')" method="post" #default="{ error, processing }">
                                         <input type="hidden" name="code" :value="code" />
                                         <div ref="pinInputContainerRef" class="relative w-full space-y-3">
                                             <div class="flex w-full flex-col items-center justify-center space-y-3 py-2">
@@ -350,7 +328,7 @@ const copyToClipboard = (text: string): void => {
                     </div>
 
                     <div class="relative inline">
-                        <Form :action="route('two-factor.disable')" method="delete" #default="{ processing }">
+                        <Form :action="route('two-factor.disable')" :async="false" method="delete" #default="{ processing }">
                             <Button variant="destructive" type="submit" :disabled="processing">
                                 {{ processing ? 'Disabling...' : 'Disable 2FA' }}
                             </Button>
