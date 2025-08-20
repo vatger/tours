@@ -11,7 +11,7 @@ import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { Form, Head } from '@inertiajs/vue3';
-import { Check, Copy, Eye, EyeOff, Loader2, LockKeyhole, RefreshCw, ScanLine, ShieldBan } from 'lucide-vue-next';
+import { Check, Copy, Eye, EyeOff, Loader2, LockKeyhole, RefreshCw, ScanLine, ShieldBan, ShieldCheck } from 'lucide-vue-next';
 import { computed, ComputedRef, nextTick, reactive, ref } from 'vue';
 
 const props = withDefaults(
@@ -140,16 +140,21 @@ const handleSetupAction = (): void => {
                     </p>
                     <Dialog v-model:open="modalState.isOpen">
                         <DialogTrigger as-child>
-                            <Form
-                                :action="route('two-factor.enable')"
-                                method="post"
-                                @success="enableTwoFactorAuthenticationSuccess"
-                                #default="{ processing }"
-                            >
-                                <Button type="submit" :disabled="processing">
-                                    {{ processing ? 'Enabling...' : 'Enable' }}
-                                </Button>
-                            </Form>
+                            <template v-if="setupData.qrCodeSvg && setupData.manualSetupKey">
+                                <Button @click="modalState.isOpen = true"> <ShieldCheck />Enable </Button>
+                            </template>
+                            <template v-else>
+                                <Form
+                                    :action="route('two-factor.enable')"
+                                    method="post"
+                                    @success="enableTwoFactorAuthenticationSuccess"
+                                    #default="{ processing }"
+                                >
+                                    <Button type="submit" :disabled="processing">
+                                        {{ processing ? 'Enabling...' : 'Enable' }}
+                                    </Button>
+                                </Form>
+                            </template>
                         </DialogTrigger>
                     </Dialog>
                 </div>
@@ -160,7 +165,6 @@ const handleSetupAction = (): void => {
                         With two factor authentication enabled, you'll be prompted for a secure, random token during login, which you can retrieve
                         from your TOTP Authenticator app.
                     </p>
-                    <Dialog v-model:open="modalState.isOpen"></Dialog>
                     <Card>
                         <CardHeader>
                             <CardTitle class="flex gap-3"><LockKeyhole class="size-4" /> 2FA Recovery Codes</CardTitle>
@@ -183,8 +187,13 @@ const handleSetupAction = (): void => {
                                     :options="{
                                         preserveScroll: true,
                                     }"
+                                    @success="
+                                        () => {
+                                            fetchRecoveryCodes().then((codes) => (recoveryCodes.list = codes));
+                                        }
+                                    "
                                 >
-                                    <Button variant="secondary" type="submit" :disabled="processing" @click.stop="toggleRecoveryCodesVisibility">
+                                    <Button variant="secondary" type="submit" :disabled="processing">
                                         <RefreshCw />
                                         {{ processing ? 'Regenerating...' : 'Regenerate Codes' }}
                                     </Button>
@@ -197,7 +206,7 @@ const handleSetupAction = (): void => {
                                     recoveryCodes.isVisible ? 'h-auto opacity-100' : 'h-0 opacity-0',
                                 ]"
                             >
-                                <div class="space-y-3 mt-3">
+                                <div class="mt-3 space-y-3">
                                     <div class="grid gap-1 rounded-lg bg-muted p-4 font-mono text-sm">
                                         <div v-for="(code, index) in recoveryCodes.list" :key="index">{{ code }}</div>
                                     </div>
