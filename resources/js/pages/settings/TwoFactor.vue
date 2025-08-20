@@ -204,11 +204,12 @@ const verificationCode = computed(() => code.value.join(''));
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div class="group flex items-center justify-between select-none">
-                                <Button @click="toggleRecoveryCodesVisibility">
+                            <div class="flex flex-col gap-3 select-none sm:flex-row sm:items-center sm:justify-between">
+                                <Button @click="toggleRecoveryCodesVisibility" class="w-fit">
                                     <component :is="recoveryCodes.isVisible ? EyeOff : Eye" class="size-4" />
                                     {{ recoveryCodes.isVisible ? 'Hide' : 'View' }} Recovery Codes
                                 </Button>
+
                                 <Form
                                     v-if="recoveryCodes.isVisible"
                                     :action="route('two-factor.recovery-codes')"
@@ -218,12 +219,11 @@ const verificationCode = computed(() => code.value.join(''));
                                     #default="{ processing }"
                                 >
                                     <Button variant="secondary" type="submit" :disabled="processing">
-                                        <RefreshCw />
+                                        <RefreshCw class="mr-2 size-4" :class="{ 'animate-spin': processing }" />
                                         {{ processing ? 'Regenerating...' : 'Regenerate Codes' }}
                                     </Button>
                                 </Form>
                             </div>
-
                             <div
                                 :class="[
                                     'relative overflow-hidden transition-all duration-300',
