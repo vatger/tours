@@ -69,6 +69,8 @@ const modalConfig = computed(() => {
 const handleModalNextStep = () => {
     if (props.twoFactorEnabled) {
         modalState.isOpen = false;
+        setupData.qrCodeSvg = null;
+        setupData.manualSetupKey = null;
         return;
     }
 
@@ -336,6 +338,8 @@ const verificationCode = computed(() => code.value.join(''));
                                         () => {
                                             modalState.isOpen = false;
                                             modalState.isInVerificationStep = false;
+                                            setupData.manualSetupKey = null;
+                                            setupData.qrCodeSvg = null;
                                         }
                                     "
                                     v-slot="{ errors, processing }"
@@ -343,14 +347,13 @@ const verificationCode = computed(() => code.value.join(''));
                                     <input type="hidden" name="code" :value="verificationCode" />
                                     <div ref="pinInputContainerRef" class="relative w-full space-y-3">
                                         <div class="flex w-full flex-col items-center justify-center space-y-3 py-2">
-                                            <PinInput id="otp" placeholder="○" v-model="code" class="mt-1" type="number" otp>
-                                                <PinInputGroup class="gap-2">
+                                            <PinInput id="otp" placeholder="○" v-model="code" type="number" otp autofocus>
+                                                <PinInputGroup>
                                                     <PinInputSlot
                                                         v-for="(id, index) in 6"
                                                         :key="id"
                                                         :index="index"
                                                         :disabled="processing"
-                                                        class="h-10 w-10 rounded-lg"
                                                     />
                                                 </PinInputGroup>
                                             </PinInput>
