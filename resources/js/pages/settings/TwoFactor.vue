@@ -4,25 +4,24 @@ import InputError from '@/components/InputError.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { PinInput, PinInputGroup, PinInputSlot } from '@/components/ui/pin-input';
 import { useClipboard } from '@/composables/useClipboard';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { Form, Head } from '@inertiajs/vue3';
 import { Check, Copy, Eye, EyeOff, Loader2, LockKeyhole, RefreshCw, ScanLine, ShieldBan, ShieldCheck } from 'lucide-vue-next';
-import { computed, ComputedRef, nextTick, reactive, ref } from 'vue';
+import { computed, nextTick, reactive, ref } from 'vue';
 
-const props = withDefaults(
-    defineProps<{
-        requiresConfirmation?: boolean;
-        twoFactorEnabled?: boolean;
-    }>(),
-    {
-        requiresConfirmation: false,
-        twoFactorEnabled: false,
-    },
-);
+interface Props {
+    requiresConfirmation?: boolean;
+    twoFactorEnabled?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+    requiresConfirmation: false,
+    twoFactorEnabled: false,
+});
 
 const breadcrumbs = [
     {
@@ -33,21 +32,6 @@ const breadcrumbs = [
 
 const { copied, copyToClipboard } = useClipboard();
 
-const fetchQRCode = async (): Promise<{ svg: string }> => {
-    const response = await fetch(route('two-factor.qr-code'));
-    return await response.json();
-};
-
-const fetchManualSetupKey = async (): Promise<{ secretKey: string }> => {
-    const response = await fetch(route('two-factor.secret-key'));
-    return await response.json();
-};
-
-const fetchRecoveryCodes = async (): Promise<string[]> => {
-    const response = await fetch(route('two-factor.recovery-codes'));
-    return await response.json();
-};
-
 const setupData = reactive({
     qrCodeSvg: null as string | null,
     manualSetupKey: null as string | null,
@@ -57,42 +41,6 @@ const modalState = reactive({
     isOpen: false,
     isInVerificationStep: false,
 });
-
-const recoveryCodes = reactive({
-    list: [] as string[],
-    isVisible: false,
-});
-
-const enableTwoFactorAuthenticationSuccess = (): void => {
-    Promise.all([
-        fetchQRCode().then((data) => (setupData.qrCodeSvg = data.svg)),
-        fetchManualSetupKey().then((data) => (setupData.manualSetupKey = data.secretKey)),
-        fetchRecoveryCodes().then((codes) => (recoveryCodes.list = codes)),
-    ]).then(() => {
-        modalState.isOpen = true;
-    });
-};
-
-const code = ref<number[]>([]);
-const pinInputContainerRef = ref<HTMLElement | null>(null);
-const verificationCode: ComputedRef<string> = computed(() => code.value.join(''));
-
-const toggleRecoveryCodesVisibility = () => {
-    if (!recoveryCodes.isVisible && recoveryCodes.list.length === 0) {
-        fetchRecoveryCodes().then((codes) => (recoveryCodes.list = codes));
-    }
-    recoveryCodes.isVisible = !recoveryCodes.isVisible;
-};
-
-const disableTwoFactorAuthenticationSuccess = (): void => {
-    modalState.isInVerificationStep = false;
-    modalState.isOpen = false;
-    setupData.qrCodeSvg = null;
-    setupData.manualSetupKey = null;
-    recoveryCodes.list = [];
-    recoveryCodes.isVisible = false;
-    code.value = [];
-};
 
 const modalConfig = computed(() => {
     if (props.twoFactorEnabled) {
@@ -118,7 +66,7 @@ const modalConfig = computed(() => {
     };
 });
 
-const handleSetupAction = (): void => {
+const handleModalNextStep = () => {
     if (props.twoFactorEnabled) {
         modalState.isOpen = false;
         return;
@@ -127,16 +75,78 @@ const handleSetupAction = (): void => {
     if (props.requiresConfirmation) {
         modalState.isInVerificationStep = true;
         nextTick(() => {
-            if (pinInputContainerRef.value) {
-                const firstInput = pinInputContainerRef.value.querySelector('input');
-                if (firstInput) firstInput.focus();
-            }
+            const firstInput = pinInputContainerRef.value?.querySelector('input');
+            firstInput?.focus();
         });
         return;
     }
 
     modalState.isOpen = false;
 };
+
+const enableTwoFactorAuthenticationSuccess = async () => {
+    try {
+        modalState.isOpen = true;
+        const [qrResponse, keyResponse, codesResponse] = await Promise.all([
+            fetch(route('two-factor.qr-code'), { headers: { Accept: 'application/json' } }),
+            fetch(route('two-factor.secret-key'), { headers: { Accept: 'application/json' } }),
+            fetch(route('two-factor.recovery-codes'), { headers: { Accept: 'application/json' } }),
+        ]);
+
+        const { svg } = await qrResponse.json();
+        const { secretKey } = await keyResponse.json();
+        const codes = await codesResponse.json();
+
+        setupData.qrCodeSvg = svg;
+        setupData.manualSetupKey = secretKey;
+        recoveryCodes.list = codes;
+    } catch (error) {
+        console.error('Failed to enable 2FA:', error);
+    }
+};
+
+const disableTwoFactorAuthenticationSuccess = () => {
+    modalState.isInVerificationStep = false;
+    modalState.isOpen = false;
+    setupData.qrCodeSvg = null;
+    setupData.manualSetupKey = null;
+    recoveryCodes.list = [];
+    recoveryCodes.isVisible = false;
+    code.value = [];
+};
+
+const recoveryCodes = reactive({
+    list: [] as string[],
+    isVisible: false,
+});
+const recoveryCodeSectionRef = ref<HTMLDivElement | null>(null);
+
+const fetchRecoveryCodes = async () => {
+    try {
+        const response = await fetch(route('two-factor.recovery-codes'), {
+            headers: { Accept: 'application/json' },
+        });
+        recoveryCodes.list = await response.json();
+    } catch (error) {
+        console.error('Failed to fetch recovery codes:', error);
+    }
+};
+
+const toggleRecoveryCodesVisibility = async () => {
+    if (!recoveryCodes.isVisible && recoveryCodes.list.length === 0) {
+        await fetchRecoveryCodes();
+    }
+    recoveryCodes.isVisible = !recoveryCodes.isVisible;
+
+    if (recoveryCodes.isVisible) {
+        await nextTick();
+        recoveryCodeSectionRef.value?.scrollIntoView({ behavior: 'smooth', });
+    }
+};
+
+const code = ref<number[]>([]);
+const pinInputContainerRef = ref<HTMLElement | null>(null);
+const verificationCode = computed(() => code.value.join(''));
 </script>
 
 <template>
@@ -145,46 +155,43 @@ const handleSetupAction = (): void => {
         <SettingsLayout>
             <div class="space-y-6">
                 <HeadingSmall title="Two-Factor Authentication" description="Manage your two-factor authentication settings" />
+
                 <div v-if="!twoFactorEnabled" class="flex flex-col items-start justify-start space-y-4">
-                    <Badge variant="destructive"> Disabled </Badge>
+                    <Badge variant="destructive">Disabled</Badge>
                     <p class="text-muted-foreground">
                         When you enable 2FA, you'll be prompted for a secure code during login, which can be retrieved from your phone's TOTP
                         supported app.
                     </p>
+
                     <Dialog v-model:open="modalState.isOpen">
-                        <DialogTrigger as-child>
-                            <template v-if="setupData.qrCodeSvg && setupData.manualSetupKey">
-                                <Button @click="modalState.isOpen = true"> <ShieldCheck />Enable </Button>
-                            </template>
-                            <template v-else>
-                                <Form
-                                    :action="route('two-factor.enable')"
-                                    method="post"
-                                    @success="enableTwoFactorAuthenticationSuccess"
-                                    #default="{ processing }"
-                                >
-                                    <Button type="submit" :disabled="processing">
-                                      <ShieldCheck />  {{ processing ? 'Enabling...' : 'Enable' }}
-                                    </Button>
-                                </Form>
-                            </template>
-                        </DialogTrigger>
+                        <Button v-if="setupData.qrCodeSvg && setupData.manualSetupKey" @click="modalState.isOpen = true">
+                            <ShieldCheck />Enable
+                        </Button>
+                        <Form
+                            v-else
+                            :action="route('two-factor.enable')"
+                            method="post"
+                            @success="enableTwoFactorAuthenticationSuccess"
+                            #default="{ processing }"
+                        >
+                            <Button type="submit" :disabled="processing"> <ShieldCheck />{{ processing ? 'Enabling...' : 'Enable' }} </Button>
+                        </Form>
                     </Dialog>
                 </div>
 
-                <div v-if="twoFactorEnabled" class="flex flex-col items-start justify-start space-y-4">
-                    <Badge variant="default"> Enabled </Badge>
+                <div v-else class="flex flex-col items-start justify-start space-y-4">
+                    <Badge variant="default">Enabled</Badge>
                     <p class="text-muted-foreground">
                         With two factor authentication enabled, you'll be prompted for a secure, random token during login, which you can retrieve
                         from your TOTP Authenticator app.
                     </p>
+
                     <Card>
                         <CardHeader>
-                            <CardTitle class="flex gap-3"><LockKeyhole class="size-4" /> 2FA Recovery Codes</CardTitle>
-                            <CardDescription
-                                >Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password
-                                manager.</CardDescription
-                            >
+                            <CardTitle class="flex gap-3"> <LockKeyhole class="size-4" />2FA Recovery Codes </CardTitle>
+                            <CardDescription>
+                                Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password manager.
+                            </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div class="group flex items-center justify-between select-none">
@@ -196,15 +203,9 @@ const handleSetupAction = (): void => {
                                     v-if="recoveryCodes.isVisible"
                                     :action="route('two-factor.recovery-codes')"
                                     method="post"
+                                    :options="{ preserveScroll: true }"
+                                    @success="fetchRecoveryCodes"
                                     #default="{ processing }"
-                                    :options="{
-                                        preserveScroll: true,
-                                    }"
-                                    @success="
-                                        () => {
-                                            fetchRecoveryCodes().then((codes) => (recoveryCodes.list = codes));
-                                        }
-                                    "
                                 >
                                     <Button variant="secondary" type="submit" :disabled="processing">
                                         <RefreshCw />
@@ -220,12 +221,14 @@ const handleSetupAction = (): void => {
                                 ]"
                             >
                                 <div class="mt-3 space-y-3">
-                                    <div class="grid gap-1 rounded-lg bg-muted p-4 font-mono text-sm">
-                                        <div v-for="(code, index) in recoveryCodes.list" :key="index">{{ code }}</div>
+                                    <div ref="recoveryCodeSectionRef" class="grid gap-1 rounded-lg bg-muted p-4 font-mono text-sm">
+                                        <div v-for="(code, index) in recoveryCodes.list" :key="index">
+                                            {{ code }}
+                                        </div>
                                     </div>
                                     <p class="text-xs text-muted-foreground select-none">
-                                        You have {{ recoveryCodes.list?.length }} recovery codes left. Each can be used once to access your account
-                                        and will be removed after use. If you need more, click <span class="font-bold">Regenerate Codes</span> above.
+                                        You have {{ recoveryCodes.list.length }} recovery codes left. Each can be used once to access your account and
+                                        will be removed after use. If you need more, click <span class="font-bold">Regenerate Codes</span> above.
                                     </p>
                                 </div>
                             </div>
@@ -237,8 +240,8 @@ const handleSetupAction = (): void => {
                             :action="route('two-factor.disable')"
                             :async="false"
                             method="delete"
-                            #default="{ processing }"
                             @success="disableTwoFactorAuthenticationSuccess"
+                            #default="{ processing }"
                         >
                             <Button variant="destructive" type="submit" :disabled="processing">
                                 <ShieldBan />
@@ -254,17 +257,15 @@ const handleSetupAction = (): void => {
                             <div class="mb-3 w-auto rounded-full border border-border bg-card p-0.5 shadow-sm">
                                 <div class="relative overflow-hidden rounded-full border border-border bg-muted p-2.5">
                                     <div class="absolute inset-0 grid grid-cols-5 opacity-50">
-                                        <div v-for="i in 5" :key="`col-${i}`" class="border-r border-border last:border-r-0"></div>
+                                        <div v-for="i in 5" :key="`col-${i}`" class="border-r border-border last:border-r-0" />
                                     </div>
                                     <div class="absolute inset-0 grid grid-rows-5 opacity-50">
-                                        <div v-for="i in 5" :key="`row-${i}`" class="border-b border-border last:border-b-0"></div>
+                                        <div v-for="i in 5" :key="`row-${i}`" class="border-b border-border last:border-b-0" />
                                     </div>
                                     <ScanLine class="relative z-20 size-6 text-foreground" />
                                 </div>
                             </div>
-                            <DialogTitle>
-                                {{ modalConfig.title }}
-                            </DialogTitle>
+                            <DialogTitle>{{ modalConfig.title }}</DialogTitle>
                             <DialogDescription class="text-center">
                                 {{ modalConfig.description }}
                             </DialogDescription>
@@ -281,25 +282,25 @@ const handleSetupAction = (): void => {
                                             <Loader2 class="size-6 animate-spin" />
                                         </div>
                                         <div v-else class="relative z-10 overflow-hidden border p-5">
-                                            <div v-html="setupData.qrCodeSvg" class="flex aspect-square size-full items-center justify-center"></div>
+                                            <div v-html="setupData.qrCodeSvg" class="flex aspect-square size-full items-center justify-center" />
                                             <div v-if="setupData.qrCodeSvg" class="animate-scanning-line absolute inset-0 h-full w-full">
                                                 <div
                                                     class="absolute inset-x-0 h-0.5 bg-blue-500 opacity-60 transition-all duration-300 ease-in-out"
-                                                ></div>
+                                                />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="flex w-full items-center space-x-5">
-                                    <Button class="w-full" @click="handleSetupAction">
+                                    <Button class="w-full" @click="handleModalNextStep">
                                         {{ modalConfig.buttonText }}
                                     </Button>
                                 </div>
 
                                 <div class="relative flex w-full items-center justify-center">
-                                    <div class="absolute inset-0 top-1/2 h-px w-full bg-border"></div>
-                                    <span class="relative bg-card px-2 py-1"> or, enter the code manually </span>
+                                    <div class="absolute inset-0 top-1/2 h-px w-full bg-border" />
+                                    <span class="relative bg-card px-2 py-1">or, enter the code manually</span>
                                 </div>
 
                                 <div class="flex w-full items-center justify-center space-x-2">
@@ -330,7 +331,6 @@ const handleSetupAction = (): void => {
                                 <Form
                                     :action="route('two-factor.confirm')"
                                     method="post"
-                                    v-slot="{ errors, processing }"
                                     reset-on-error
                                     @success="
                                         () => {
@@ -338,6 +338,7 @@ const handleSetupAction = (): void => {
                                             modalState.isInVerificationStep = false;
                                         }
                                     "
+                                    v-slot="{ errors, processing }"
                                 >
                                     <input type="hidden" name="code" :value="verificationCode" />
                                     <div ref="pinInputContainerRef" class="relative w-full space-y-3">
