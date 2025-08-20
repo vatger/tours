@@ -18,6 +18,9 @@ class TwoFactorAuthenticationController extends Controller
      */
     public function show(Request $request): Response
     {
+        if (! Features::enabled(Features::twoFactorAuthentication())) {
+            abort(403, 'Two factor authentication is disabled.');
+        }
         $this->validateTwoFactorAuthenticationState($request);
 
         return Inertia::render('settings/TwoFactor', [
