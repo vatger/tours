@@ -35,11 +35,19 @@ const { copied, copyToClipboard } = useClipboard();
 const setupData = reactive({
     qrCodeSvg: null as string | null,
     manualSetupKey: null as string | null,
+    reset() {
+        this.qrCodeSvg = null;
+        this.manualSetupKey = null;
+    },
 });
 
 const modalState = reactive({
     isOpen: false,
     isInVerificationStep: false,
+    reset() {
+        this.isOpen = false;
+        this.isInVerificationStep = false;
+    },
 });
 
 const modalConfig = computed(() => {
@@ -69,8 +77,7 @@ const modalConfig = computed(() => {
 const handleModalNextStep = () => {
     if (props.twoFactorEnabled) {
         modalState.isOpen = false;
-        setupData.qrCodeSvg = null;
-        setupData.manualSetupKey = null;
+        setupData.reset();
         return;
     }
 
@@ -108,18 +115,19 @@ const enableTwoFactorAuthenticationSuccess = async () => {
 };
 
 const disableTwoFactorAuthenticationSuccess = () => {
-    modalState.isInVerificationStep = false;
-    modalState.isOpen = false;
-    setupData.qrCodeSvg = null;
-    setupData.manualSetupKey = null;
-    recoveryCodes.list = [];
-    recoveryCodes.isVisible = false;
+    modalState.reset();
+    setupData.reset();
+    recoveryCodes.reset();
     code.value = [];
 };
 
 const recoveryCodes = reactive({
     list: [] as string[],
     isVisible: false,
+    reset() {
+        this.list = [];
+        this.isVisible = false;
+    },
 });
 const recoveryCodeSectionRef = ref<HTMLDivElement | null>(null);
 
@@ -142,7 +150,7 @@ const toggleRecoveryCodesVisibility = async () => {
 
     if (recoveryCodes.isVisible) {
         await nextTick();
-        recoveryCodeSectionRef.value?.scrollIntoView({ behavior: 'smooth', });
+        recoveryCodeSectionRef.value?.scrollIntoView({ behavior: 'smooth' });
     }
 };
 
@@ -336,10 +344,8 @@ const verificationCode = computed(() => code.value.join(''));
                                     reset-on-error
                                     @success="
                                         () => {
-                                            modalState.isOpen = false;
-                                            modalState.isInVerificationStep = false;
-                                            setupData.manualSetupKey = null;
-                                            setupData.qrCodeSvg = null;
+                                            modalState.reset();
+                                            setupData.reset();
                                         }
                                     "
                                     v-slot="{ errors, processing }"
@@ -347,9 +353,10 @@ const verificationCode = computed(() => code.value.join(''));
                                     <input type="hidden" name="code" :value="verificationCode" />
                                     <div ref="pinInputContainerRef" class="relative w-full space-y-3">
                                         <div class="flex w-full flex-col items-center justify-center space-y-3 py-2">
-                                            <PinInput id="otp" placeholder="○" v-model="code" type="number" otp autofocus>
+                                            <PinInput id="otp" placeholder="○" v-model="code" type="number" otp>
                                                 <PinInputGroup>
                                                     <PinInputSlot
+                                                        autofocus
                                                         v-for="(id, index) in 6"
                                                         :key="id"
                                                         :index="index"

@@ -47,7 +47,7 @@ const codeValue: ComputedRef<string> = computed(() => code.value.join(''));
                         <div class="flex w-full items-center justify-center">
                             <PinInput id="otp" placeholder="○" v-model="code" type="number" otp>
                                 <PinInputGroup>
-                                    <PinInputSlot v-for="(id, index) in 6" :key="id" :index="index" autofocus />
+                                    <PinInputSlot v-for="(id, index) in 6" :key="id" :index="index" :disabled="processing" autofocus />
                                 </PinInputGroup>
                             </PinInput>
                         </div>
