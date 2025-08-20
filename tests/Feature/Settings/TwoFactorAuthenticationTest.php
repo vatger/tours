@@ -12,6 +12,13 @@ class TwoFactorAuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_two_factor_settings_page_requires_authentication()
+    {
+        $this->get('/settings/two-factor')
+            ->assertRedirect('/login');
+    }
+
+
     public function test_renders_two_factor_settings_component()
     {
         $user = User::factory()->create();
@@ -27,6 +34,7 @@ class TwoFactorAuthenticationTest extends TestCase
     public function test_passes_correct_props_to_two_factor_component()
     {
         $user = User::factory()->create();
+
         $expectedRequiresConfirmation = Features::optionEnabled(Features::twoFactorAuthentication(), 'confirm');
 
         $this->actingAs($user)
@@ -60,9 +68,11 @@ class TwoFactorAuthenticationTest extends TestCase
         }
 
         $user = User::factory()->create();
+
         $this->actingAs($user);
 
         $this->withSession(['auth.password_confirmed_at' => time()]);
+
         $this->post('/user/two-factor-authentication');
 
         $this->get('/settings/two-factor')
@@ -74,6 +84,7 @@ class TwoFactorAuthenticationTest extends TestCase
     public function test_requires_confirmation_prop_matches_fortify_config()
     {
         $user = User::factory()->create();
+
         $expectedRequiresConfirmation = Features::optionEnabled(Features::twoFactorAuthentication(), 'confirm');
 
         $this->actingAs($user)
@@ -84,12 +95,6 @@ class TwoFactorAuthenticationTest extends TestCase
             );
     }
 
-    public function test_two_factor_settings_page_requires_authentication()
-    {
-        $this->get('/settings/two-factor')
-            ->assertRedirect('/login');
-    }
-
     public function test_two_factor_settings_page_requires_password_confirmation()
     {
         $user = User::factory()->create();
@@ -97,7 +102,6 @@ class TwoFactorAuthenticationTest extends TestCase
         $response = $this->actingAs($user)
             ->get('/settings/two-factor');
 
-        // Should redirect to the password confirmation page
         $response->assertRedirect();
         $this->assertTrue(
             str_contains($response->headers->get('location'), 'confirm-password'),
@@ -109,10 +113,8 @@ class TwoFactorAuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $this->actingAs($user)
-            ->withSession(['auth.password_confirmed_at' => time()])
-            ->get('/settings/two-factor')
-            ->assertOk();
+        $this->actingAs($user)->withSession(['auth.password_confirmed_at' => time()]);
+        $this->get('/settings/two-factor')->assertOk();
     }
 
     public function test_two_factor_authentication_disabled_returns_403_when_feature_disabled()
