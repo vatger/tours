@@ -7,7 +7,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { PinInput, PinInputGroup, PinInputSlot } from '@/components/ui/pin-input';
 import { useClipboard } from '@/composables/useClipboard';
-import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { Form, Head } from '@inertiajs/vue3';
@@ -33,7 +32,21 @@ const breadcrumbs = [
 ];
 
 const { copied, copyToClipboard } = useClipboard();
-const { fetchQRCode, fetchManualSetupKey, fetchRecoveryCodes } = useTwoFactorAuth();
+
+const fetchQRCode = async (): Promise<{ svg: string }> => {
+    const response = await fetch(route('two-factor.qr-code'));
+    return await response.json();
+};
+
+const fetchManualSetupKey = async (): Promise<{ secretKey: string }> => {
+    const response = await fetch(route('two-factor.secret-key'));
+    return await response.json();
+};
+
+const fetchRecoveryCodes = async (): Promise<string[]> => {
+    const response = await fetch(route('two-factor.recovery-codes'));
+    return await response.json();
+};
 
 const setupData = reactive({
     qrCodeSvg: null as string | null,
