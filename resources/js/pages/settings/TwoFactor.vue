@@ -151,7 +151,7 @@ const handleSetupAction = (): void => {
                                     #default="{ processing }"
                                 >
                                     <Button type="submit" :disabled="processing">
-                                        {{ processing ? 'Enabling...' : 'Enable' }}
+                                      <ShieldCheck />  {{ processing ? 'Enabling...' : 'Enable' }}
                                     </Button>
                                 </Form>
                             </template>
