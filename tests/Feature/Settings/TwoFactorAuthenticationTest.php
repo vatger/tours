@@ -18,7 +18,6 @@ class TwoFactorAuthenticationTest extends TestCase
             ->assertRedirect('/login');
     }
 
-
     public function test_renders_two_factor_settings_component()
     {
         $user = User::factory()->create();
