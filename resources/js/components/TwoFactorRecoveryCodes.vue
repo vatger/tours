@@ -11,10 +11,7 @@ const isRecoveryCodesVisible = ref(false);
 const recoveryCodeSectionRef = ref<HTMLDivElement | null>(null);
 
 const toggleRecoveryCodesVisibility = async () => {
-    const isCurrentlyHidden = !isRecoveryCodesVisible.value;
-    const hasNoCodes = !recoveryCodesList.value.length;
-
-    if (isCurrentlyHidden && hasNoCodes) {
+    if (!isRecoveryCodesVisible.value && !recoveryCodesList.value.length) {
         await fetchRecoveryCodes();
     }
 
