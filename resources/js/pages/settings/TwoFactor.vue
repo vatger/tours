@@ -4,6 +4,7 @@ import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.vue';
 import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { BreadcrumbItem } from '@/types';
@@ -28,6 +29,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+const { qrCodeSvg, manualSetupKey } = useTwoFactorAuth();
 const showSetupModal = ref(false);
 const setupModalRef = ref<InstanceType<typeof TwoFactorSetupModal>>();
 </script>
@@ -47,7 +49,7 @@ const setupModalRef = ref<InstanceType<typeof TwoFactorSetupModal>>();
                     </p>
 
                     <div>
-                        <Button v-if="requiresConfirmation && setupModalRef?.hasSetupData" @click="showSetupModal = true">
+                        <Button v-if="requiresConfirmation && qrCodeSvg && manualSetupKey" @click="showSetupModal = true">
                             <ShieldCheck />Enable
                         </Button>
                         <Form v-else :action="route('two-factor.enable')" method="post" @success="showSetupModal = true" #default="{ processing }">
@@ -66,12 +68,7 @@ const setupModalRef = ref<InstanceType<typeof TwoFactorSetupModal>>();
                     <TwoFactorRecoveryCodes />
 
                     <div class="relative inline">
-                        <Form
-                            :action="route('two-factor.disable')"
-                            :async="false"
-                            method="delete"
-                            #default="{ processing }"
-                        >
+                        <Form :action="route('two-factor.disable')" :async="false" method="delete" #default="{ processing }">
                             <Button variant="destructive" type="submit" :disabled="processing">
                                 <ShieldBan />
                                 {{ processing ? 'Disabling...' : 'Disable 2FA' }}

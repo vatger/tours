@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { PinInput, PinInputGroup, PinInputSlot } from '@/components/ui/pin-input';
 import { useClipboard } from '@/composables/useClipboard';
+import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import { Form } from '@inertiajs/vue3';
 import { Check, Copy, Loader2, ScanLine } from 'lucide-vue-next';
 import { computed, nextTick, ref, watch } from 'vue';
@@ -22,12 +23,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const { recentlyCopied, copyToClipboard } = useClipboard();
-
-const qrCodeSvg = ref<string | null>(null);
-const manualSetupKey = ref<string | null>(null);
-const hasSetupData = computed(() => {
-    return qrCodeSvg.value !== null && manualSetupKey.value !== null;
-});
+const { qrCodeSvg, manualSetupKey, fetchSetupData } = useTwoFactorAuth();
 
 const showVerificationStep = ref(false);
 const code = ref<number[]>([]);
@@ -72,23 +68,6 @@ const handleModalNextStep = () => {
     return;
 };
 
-const fetchSetupData = async () => {
-    try {
-        const [qrResponse, keyResponse] = await Promise.all([
-            fetch(route('two-factor.qr-code'), { headers: { Accept: 'application/json' } }),
-            fetch(route('two-factor.secret-key'), { headers: { Accept: 'application/json' } }),
-        ]);
-
-        const { svg } = await qrResponse.json();
-        const { secretKey } = await keyResponse.json();
-
-        qrCodeSvg.value = svg;
-        manualSetupKey.value = secretKey;
-    } catch (error) {
-        console.error('Failed to fetch 2FA setup data:', error);
-    }
-};
-
 watch(
     () => props.isOpen,
     (isOpen) => {
@@ -97,8 +76,6 @@ watch(
         }
     },
 );
-
-defineExpose({ hasSetupData });
 </script>
 
 <template>

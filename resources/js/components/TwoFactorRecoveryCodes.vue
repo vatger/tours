@@ -1,24 +1,14 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import { Form } from '@inertiajs/vue3';
 import { Eye, EyeOff, LockKeyhole, RefreshCw } from 'lucide-vue-next';
 import { nextTick, onMounted, ref } from 'vue';
 
-const recoveryCodesList = ref<string[]>([]);
+const { recoveryCodesList, fetchRecoveryCodes } = useTwoFactorAuth();
 const isRecoveryCodesVisible = ref(false);
 const recoveryCodeSectionRef = ref<HTMLDivElement | null>(null);
-
-const fetchRecoveryCodes = async () => {
-    try {
-        const response = await fetch(route('two-factor.recovery-codes'), {
-            headers: { Accept: 'application/json' },
-        });
-        recoveryCodesList.value = await response.json();
-    } catch (error) {
-        console.error('Failed to fetch recovery codes:', error);
-    }
-};
 
 const toggleRecoveryCodesVisibility = async () => {
     const isCurrentlyHidden = !isRecoveryCodesVisible.value;
@@ -46,9 +36,7 @@ onMounted(async () => {
 <template>
     <Card>
         <CardHeader>
-            <CardTitle class="flex gap-3">
-                <LockKeyhole class="size-4" />2FA Recovery Codes
-            </CardTitle>
+            <CardTitle class="flex gap-3"> <LockKeyhole class="size-4" />2FA Recovery Codes </CardTitle>
             <CardDescription>
                 Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password manager.
             </CardDescription>
@@ -65,7 +53,6 @@ onMounted(async () => {
                     :action="route('two-factor.recovery-codes')"
                     method="post"
                     :options="{ preserveScroll: true }"
-                    @before="recoveryCodesList = []"
                     @success="fetchRecoveryCodes"
                     #default="{ processing }"
                 >
@@ -75,24 +62,19 @@ onMounted(async () => {
                     </Button>
                 </Form>
             </div>
-            <div
-                :class="[
-                    'relative overflow-hidden transition-all duration-300',
-                    isRecoveryCodesVisible ? 'h-auto opacity-100' : 'h-0 opacity-0',
-                ]"
-            >
+            <div :class="['relative overflow-hidden transition-all duration-300', isRecoveryCodesVisible ? 'h-auto opacity-100' : 'h-0 opacity-0']">
                 <div class="mt-3 space-y-3">
                     <div ref="recoveryCodeSectionRef" class="grid gap-1 rounded-lg bg-muted p-4 font-mono text-sm">
                         <div v-if="!recoveryCodesList.length" class="space-y-2">
-                            <div v-for="n in 8" :key="n" class="h-4 bg-muted-foreground/20 rounded animate-pulse"></div>
+                            <div v-for="n in 8" :key="n" class="h-4 animate-pulse rounded bg-muted-foreground/20"></div>
                         </div>
                         <div v-else v-for="(code, index) in recoveryCodesList" :key="index">
                             {{ code }}
                         </div>
                     </div>
                     <p class="text-xs text-muted-foreground select-none">
-                        Each can be used once to access your account and
-                        will be removed after use. If you need more, click <span class="font-bold">Regenerate Codes</span> above.
+                        Each can be used once to access your account and will be removed after use. If you need more, click
+                        <span class="font-bold">Regenerate Codes</span> above.
                     </p>
                 </div>
             </div>
