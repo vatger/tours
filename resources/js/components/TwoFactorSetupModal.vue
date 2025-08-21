@@ -3,9 +3,9 @@ import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { PinInput, PinInputGroup, PinInputSlot } from '@/components/ui/pin-input';
-import { useClipboard } from '@/composables/useClipboard';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import { Form } from '@inertiajs/vue3';
+import { useClipboard } from '@vueuse/core';
 import { Check, Copy, Loader2, ScanLine } from 'lucide-vue-next';
 import { computed, nextTick, ref, watch } from 'vue';
 
@@ -22,7 +22,7 @@ interface Emits {
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const { recentlyCopied, copyToClipboard } = useClipboard();
+const { copy, copied } = useClipboard();
 const { qrCodeSvg, manualSetupKey, fetchSetupData } = useTwoFactorAuth();
 
 const showVerificationStep = ref(false);
@@ -133,11 +133,8 @@ watch(
                             </div>
                             <template v-else>
                                 <input type="text" readonly :value="manualSetupKey" class="h-full w-full bg-background p-3 text-foreground" />
-                                <button
-                                    @click="copyToClipboard(manualSetupKey || '')"
-                                    class="relative block h-auto border-l border-border px-3 hover:bg-muted"
-                                >
-                                    <Check v-if="recentlyCopied" class="w-4 text-green-500" />
+                                <button @click="copy(manualSetupKey || '')" class="relative block h-auto border-l border-border px-3 hover:bg-muted">
+                                    <Check v-if="copied" class="w-4 text-green-500" />
                                     <Copy v-else class="w-4" />
                                 </button>
                             </template>
