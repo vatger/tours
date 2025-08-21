@@ -9,6 +9,7 @@ import { PinInput, PinInputGroup, PinInputSlot } from '@/components/ui/pin-input
 import { useClipboard } from '@/composables/useClipboard';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
+import { BreadcrumbItem } from '@/types';
 import { Form, Head } from '@inertiajs/vue3';
 import { Check, Copy, Eye, EyeOff, Loader2, LockKeyhole, RefreshCw, ScanLine, ShieldBan, ShieldCheck } from 'lucide-vue-next';
 import { computed, nextTick, reactive, ref } from 'vue';
@@ -23,25 +24,33 @@ const props = withDefaults(defineProps<Props>(), {
     twoFactorEnabled: false,
 });
 
-const breadcrumbs = [
+const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Two-Factor Authentication',
         href: '/settings/two-factor',
     },
 ];
 
-const { copied, copyToClipboard } = useClipboard();
+const { recentlyCopied, copyToClipboard } = useClipboard();
 
-const setupData = reactive({
-    qrCodeSvg: null as string | null,
-    manualSetupKey: null as string | null,
+const setupData: {
+    qrCodeSvg: string | null;
+    manualSetupKey: string | null;
+    reset(): void;
+} = reactive({
+    qrCodeSvg: null,
+    manualSetupKey: null,
     reset() {
         this.qrCodeSvg = null;
         this.manualSetupKey = null;
     },
 });
 
-const modalState = reactive({
+const modalState: {
+    isOpen: boolean;
+    isInVerificationStep: boolean;
+    reset(): void;
+} = reactive({
     isOpen: false,
     isInVerificationStep: false,
     reset() {
@@ -99,7 +108,7 @@ const enableTwoFactorAuthenticationSuccess = async () => {
         const [qrResponse, keyResponse, codesResponse] = await Promise.all([
             fetch(route('two-factor.qr-code'), { headers: { Accept: 'application/json' } }),
             fetch(route('two-factor.secret-key'), { headers: { Accept: 'application/json' } }),
-            fetch(route('two-factor.recovery-codes'), { headers: { Accept: 'application/json' } }),
+            fetchRecoveryCodes(),
         ]);
 
         const { svg } = await qrResponse.json();
@@ -121,8 +130,12 @@ const disableTwoFactorAuthenticationSuccess = () => {
     code.value = [];
 };
 
-const recoveryCodes = reactive({
-    list: [] as string[],
+const recoveryCodes: {
+    list: string[];
+    isVisible: boolean;
+    reset(): void;
+} = reactive({
+    list: [],
     isVisible: false,
     reset() {
         this.list = [];
@@ -293,11 +306,6 @@ const verificationCode = computed(() => code.value.join(''));
                                         </div>
                                         <div v-else class="relative z-10 overflow-hidden border p-5">
                                             <div v-html="setupData.qrCodeSvg" class="flex aspect-square size-full items-center justify-center" />
-                                            <div v-if="setupData.qrCodeSvg" class="animate-scanning-line absolute inset-0 h-full w-full">
-                                                <div
-                                                    class="absolute inset-x-0 h-0.5 bg-blue-500 opacity-60 transition-all duration-300 ease-in-out"
-                                                />
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -329,7 +337,7 @@ const verificationCode = computed(() => code.value.join(''));
                                                 @click="copyToClipboard(setupData.manualSetupKey || '')"
                                                 class="relative block h-auto border-l border-border px-3 hover:bg-muted"
                                             >
-                                                <Check v-if="copied" class="w-4 text-green-500" />
+                                                <Check v-if="recentlyCopied" class="w-4 text-green-500" />
                                                 <Copy v-else class="w-4" />
                                             </button>
                                         </template>
@@ -391,21 +399,3 @@ const verificationCode = computed(() => code.value.join(''));
         </SettingsLayout>
     </AppLayout>
 </template>
-
-<style scoped>
-@keyframes scan {
-    0% {
-        top: 0;
-    }
-    50% {
-        top: 100%;
-    }
-    100% {
-        top: 0;
-    }
-}
-
-.animate-scanning-line div {
-    animation: scan 3s ease-in-out infinite;
-}
-</style>

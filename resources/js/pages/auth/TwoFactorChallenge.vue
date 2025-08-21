@@ -7,13 +7,25 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 import { Form, Head } from '@inertiajs/vue3';
 import { computed, ComputedRef, ref } from 'vue';
 
-const authConfig = computed(() => {
+interface AuthConfigContent {
+    title: string;
+    description: string;
+    toggleText: string;
+}
+
+const authConfigContent: ComputedRef<AuthConfigContent> = computed((): AuthConfigContent => {
+    if (showRecoveryInput.value) {
+        return {
+            title: 'Recovery Code',
+            description: 'Please confirm access to your account by entering one of your emergency recovery codes.',
+            toggleText: 'login using an authentication code',
+        };
+    }
+
     return {
-        title: showRecoveryInput.value ? 'Recovery Code' : 'Authentication Code',
-        description: showRecoveryInput.value
-            ? 'Please confirm access to your account by entering one of your emergency recovery codes.'
-            : 'Enter the authentication code provided by your authenticator application.',
-        toggleText: showRecoveryInput.value ? 'login using an authentication code' : 'login using a recovery code',
+        title: 'Authentication Code',
+        description: 'Enter the authentication code provided by your authenticator application.',
+        toggleText: 'login using a recovery code',
     };
 });
 
@@ -30,7 +42,7 @@ const codeValue: ComputedRef<string> = computed(() => code.value.join(''));
 </script>
 
 <template>
-    <AuthLayout :title="authConfig.title" :description="authConfig.description">
+    <AuthLayout :title="authConfigContent.title" :description="authConfigContent.description">
         <Head title="Two Factor Authentication" />
 
         <div class="space-y-6">
@@ -61,7 +73,7 @@ const codeValue: ComputedRef<string> = computed(() => code.value.join(''));
                             class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                             @click="() => toggleRecoveryMode(clearErrors)"
                         >
-                            {{ authConfig.toggleText }}
+                            {{ authConfigContent.toggleText }}
                         </button>
                     </div>
                 </Form>
@@ -80,7 +92,7 @@ const codeValue: ComputedRef<string> = computed(() => code.value.join(''));
                             class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                             @click="() => toggleRecoveryMode(clearErrors)"
                         >
-                            {{ authConfig.toggleText }}
+                            {{ authConfigContent.toggleText }}
                         </button>
                     </div>
                 </Form>
