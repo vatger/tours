@@ -19,7 +19,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-const passwordInput = ref<HTMLInputElement | null>(null);
+const passwordInput = ref<InstanceType<typeof Input> | null>(null);
 </script>
 
 <template>
@@ -39,7 +39,7 @@ const passwordInput = ref<HTMLInputElement | null>(null);
                         method="delete"
                         :action="route('profile.destroy')"
                         reset-on-success
-                        @error="() => passwordInput?.focus()"
+                        @error="() => passwordInput?.$el?.focus()"
                         :options="{
                             preserveScroll: true,
                         }"
