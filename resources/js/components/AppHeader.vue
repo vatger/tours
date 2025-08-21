@@ -12,7 +12,7 @@ import UserMenuContent from '@/components/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
 import { dashboard } from '@/routes';
 import type { BreadcrumbItem, NavItem } from '@/types';
-import { Link, usePage } from '@inertiajs/vue3';
+import { InertiaLinkProps, Link, usePage } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
 import { computed } from 'vue';
 
@@ -27,16 +27,17 @@ const props = withDefaults(defineProps<Props>(), {
 const page = usePage();
 const auth = computed(() => page.props.auth);
 
-const isCurrentRoute = computed(() => (url: string) => page.url === url);
+const isCurrentRoute = computed(() => (url: NonNullable<InertiaLinkProps['href']>) => page.url === (typeof url === 'string' ? url : url.url));
 
 const activeItemStyles = computed(
-    () => (url: string) => (isCurrentRoute.value(url) ? 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100' : ''),
+    () => (url: NonNullable<InertiaLinkProps['href']>) =>
+        isCurrentRoute.value(typeof url === 'string' ? url : url.url) ? 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100' : '',
 );
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: dashboard().url,
+        href: dashboard(),
         icon: LayoutGrid,
     },
 ];
@@ -89,7 +90,7 @@ const rightNavItems: NavItem[] = [
                                     <a
                                         v-for="item in rightNavItems"
                                         :key="item.title"
-                                        :href="item.href"
+                                        :href="typeof item.href === 'string' ? item.href : item.href?.url"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class="flex items-center space-x-2 text-sm font-medium"
@@ -140,7 +141,11 @@ const rightNavItems: NavItem[] = [
                                     <Tooltip>
                                         <TooltipTrigger>
                                             <Button variant="ghost" size="icon" as-child class="group h-9 w-9 cursor-pointer">
-                                                <a :href="item.href" target="_blank" rel="noopener noreferrer">
+                                                <a
+                                                    :href="typeof item.href === 'string' ? item.href : item.href?.url"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
                                                     <span class="sr-only">{{ item.title }}</span>
                                                     <component :is="item.icon" class="size-5 opacity-80 group-hover:opacity-100" />
                                                 </a>
