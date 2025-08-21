@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { PinInput, PinInputGroup, PinInputSlot } from '@/components/ui/pin-input';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { Form, Head } from '@inertiajs/vue3';
-import { computed, ComputedRef, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 interface AuthConfigContent {
     title: string;
@@ -38,7 +38,7 @@ const toggleRecoveryMode = (clearErrors: () => void): void => {
 };
 
 const code = ref<number[]>([]);
-const codeValue: ComputedRef<string> = computed(() => code.value.join(''));
+const codeValue = computed((): string => code.value.join(''));
 </script>
 
 <template>
@@ -52,7 +52,7 @@ const codeValue: ComputedRef<string> = computed(() => code.value.join(''));
                     method="post"
                     class="space-y-4"
                     reset-on-error
-                    @error="code=[]"
+                    @error="code = []"
                     #default="{ errors, processing, clearErrors }"
                 >
                     <input type="hidden" name="code" :value="codeValue" />
@@ -81,7 +81,13 @@ const codeValue: ComputedRef<string> = computed(() => code.value.join(''));
             </template>
 
             <template v-else>
-                <Form :action="route('two-factor.login')" method="post" class="space-y-4" reset-on-error #default="{ errors, processing, clearErrors }">
+                <Form
+                    :action="route('two-factor.login')"
+                    method="post"
+                    class="space-y-4"
+                    reset-on-error
+                    #default="{ errors, processing, clearErrors }"
+                >
                     <Input name="recovery_code" type="text" placeholder="Enter recovery code" :autofocus="showRecoveryInput" required />
                     <InputError :message="errors.recovery_code" />
                     <Button type="submit" class="w-full" :disabled="processing">Continue</Button>
