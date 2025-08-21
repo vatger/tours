@@ -13,7 +13,7 @@ interface AuthConfigContent {
     toggleText: string;
 }
 
-const authConfigContent: ComputedRef<AuthConfigContent> = computed((): AuthConfigContent => {
+const authConfigContent = computed((): AuthConfigContent => {
     if (showRecoveryInput.value) {
         return {
             title: 'Recovery Code',
@@ -52,6 +52,7 @@ const codeValue: ComputedRef<string> = computed(() => code.value.join(''));
                     method="post"
                     class="space-y-4"
                     reset-on-error
+                    @error="code=[]"
                     #default="{ errors, processing, clearErrors }"
                 >
                     <input type="hidden" name="code" :value="codeValue" />
@@ -80,7 +81,7 @@ const codeValue: ComputedRef<string> = computed(() => code.value.join(''));
             </template>
 
             <template v-else>
-                <Form :action="route('two-factor.login')" method="post" class="space-y-4" #default="{ errors, processing, clearErrors }">
+                <Form :action="route('two-factor.login')" method="post" class="space-y-4" reset-on-error #default="{ errors, processing, clearErrors }">
                     <Input name="recovery_code" type="text" placeholder="Enter recovery code" :autofocus="showRecoveryInput" required />
                     <InputError :message="errors.recovery_code" />
                     <Button type="submit" class="w-full" :disabled="processing">Continue</Button>
