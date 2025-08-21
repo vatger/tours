@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { destroy } from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import { Form } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
@@ -25,7 +26,7 @@ const passwordInput = ref<HTMLInputElement | null>(null);
 <template>
     <div class="space-y-6">
         <HeadingSmall title="Delete account" description="Delete your account and all of its resources" />
-        <div class="p-4 space-y-4 border border-red-100 rounded-lg bg-red-50 dark:border-red-200/10 dark:bg-red-700/10">
+        <div class="space-y-4 rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
             <div class="relative space-y-0.5 text-red-600 dark:text-red-100">
                 <p class="font-medium">Warning</p>
                 <p class="text-sm">Please proceed with caution, this cannot be undone.</p>
@@ -36,8 +37,7 @@ const passwordInput = ref<HTMLInputElement | null>(null);
                 </DialogTrigger>
                 <DialogContent>
                     <Form
-                        method="delete"
-                        :action="route('profile.destroy')"
+                        v-bind="destroy.form()"
                         reset-on-success
                         @error="() => passwordInput?.focus()"
                         :options="{

@@ -2,27 +2,28 @@
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { appearance } from '@/routes';
+import { edit as editPassword } from '@/routes/password';
+import { edit } from '@/routes/profile';
 import { type NavItem } from '@/types';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 
 const sidebarNavItems: NavItem[] = [
     {
         title: 'Profile',
-        href: '/settings/profile',
+        href: edit().url,
     },
     {
         title: 'Password',
-        href: '/settings/password',
+        href: editPassword().url,
     },
     {
         title: 'Appearance',
-        href: '/settings/appearance',
+        href: appearance().url,
     },
 ];
 
-const page = usePage();
-
-const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.location).pathname : '';
+const currentPath = typeof window !== undefined ? window.location.pathname : '';
 </script>
 
 <template>
