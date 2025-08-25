@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { store } from '@/actions/Laravel/Fortify/Http/Controllers/RecoveryCodeController'; // Update with route
+import { regenerateRecoveryCodes } from '@/routes/two-factor'; // Update with route
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
@@ -48,7 +48,7 @@ onMounted(async () => {
 
                 <Form
                     v-if="isRecoveryCodesVisible"
-                    v-bind="store.form()"
+                    v-bind="regenerateRecoveryCodes.form()"
                     method="post"
                     :options="{ preserveScroll: true }"
                     @success="fetchRecoveryCodes"

@@ -38,9 +38,8 @@ class TwoFactorChallengeTest extends TestCase
             'password' => 'password',
         ]);
 
-        $response = $this->get(route('two-factor.login'));
-
-        $response->assertOk()
+        $this->get(route('two-factor.login'))
+            ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('auth/TwoFactorChallenge')
             );
@@ -65,7 +64,7 @@ class TwoFactorChallengeTest extends TestCase
             'password' => 'password',
         ]);
 
-        foreach (range(0,4) as $ignored) {
+        foreach (range(0, 4) as $ignored) {
             $this->post(route('two-factor.login.store'), [
                 'code' => '000000',
             ])->assertStatus(302)->assertSessionHasErrors([

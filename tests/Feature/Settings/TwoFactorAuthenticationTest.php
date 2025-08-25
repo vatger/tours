@@ -25,7 +25,7 @@ class TwoFactorAuthenticationTest extends TestCase
         $this->actingAs($user)
             ->withSession(['auth.password_confirmed_at' => time()])
             ->get(route('two-factor.show'))
-            ->assertInertia(fn(Assert $page) => $page
+            ->assertInertia(fn (Assert $page) => $page
                 ->component('settings/TwoFactor')
             );
     }
@@ -39,7 +39,7 @@ class TwoFactorAuthenticationTest extends TestCase
         $this->actingAs($user)
             ->withSession(['auth.password_confirmed_at' => time()])
             ->get(route('two-factor.show'))
-            ->assertInertia(fn(Assert $page) => $page
+            ->assertInertia(fn (Assert $page) => $page
                 ->component('settings/TwoFactor')
                 ->has('requiresConfirmation')
                 ->where('requiresConfirmation', $expectedRequiresConfirmation)
@@ -50,7 +50,7 @@ class TwoFactorAuthenticationTest extends TestCase
 
     public function test_shows_two_factor_status_reflects_user_state()
     {
-        if (!Features::canManageTwoFactorAuthentication()) {
+        if (! Features::canManageTwoFactorAuthentication()) {
             $this->markTestSkipped('Two factor authentication is not enabled.');
         }
 
@@ -63,7 +63,7 @@ class TwoFactorAuthenticationTest extends TestCase
         $this->post(route('two-factor.enable'));
 
         $this->get(route('two-factor.show'))
-            ->assertInertia(fn(Assert $page) => $page
+            ->assertInertia(fn (Assert $page) => $page
                 ->where('twoFactorEnabled', $user->fresh()->hasEnabledTwoFactorAuthentication())
             );
     }
@@ -110,7 +110,7 @@ class TwoFactorAuthenticationTest extends TestCase
 
     public function test_validates_two_factor_authentication_state_when_confirmation_required_and_transitioning()
     {
-        if (!Features::canManageTwoFactorAuthentication()) {
+        if (! Features::canManageTwoFactorAuthentication()) {
             $this->markTestSkipped('Two factor authentication is not enabled.');
         }
 
@@ -134,7 +134,7 @@ class TwoFactorAuthenticationTest extends TestCase
 
     public function test_validates_two_factor_authentication_state_when_user_never_finished_confirming()
     {
-        if (!Features::canManageTwoFactorAuthentication()) {
+        if (! Features::canManageTwoFactorAuthentication()) {
             $this->markTestSkipped('Two factor authentication is not enabled.');
         }
 
@@ -166,7 +166,7 @@ class TwoFactorAuthenticationTest extends TestCase
 
     public function test_validates_two_factor_authentication_state_when_confirmation_not_required()
     {
-        if (!Features::canManageTwoFactorAuthentication()) {
+        if (! Features::canManageTwoFactorAuthentication()) {
             $this->markTestSkipped('Two factor authentication is not enabled.');
         }
 
