@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { regenerateRecoveryCodes } from '@/routes/two-factor'; // Update with route
+import { regenerateRecoveryCodes } from '@/routes/two-factor';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
