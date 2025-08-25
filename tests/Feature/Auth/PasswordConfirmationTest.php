@@ -4,6 +4,7 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
 class PasswordConfirmationTest extends TestCase
@@ -14,14 +15,25 @@ class PasswordConfirmationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->get('/user/confirm-password');
+        $response = $this->actingAs($user)->get(route('password.confirm'));
 
         $response->assertStatus(200);
     }
 
     public function test_password_confirmation_requires_authentication()
     {
-        $response = $this->get('/user/confirm-password');
-        $response->assertRedirect('/login');
+        $response = $this->get(route('password.confirm'));
+        $response->assertRedirect(route('login'));
+    }
+
+    public function test_confirm_password_view_callback_is_called(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get(route('password.confirm'))
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('auth/ConfirmPassword')
+            );
     }
 }
