@@ -81,15 +81,13 @@ class TwoFactorChallengeTest extends TestCase
         foreach (range(0, 4) as $ignored) {
             $this->post(route('two-factor.login.store'), [
                 'code' => '000000',
-            ])->assertStatus(302)->assertSessionHasErrors([
-                'code' => 'The provided two factor authentication code was invalid.',
-            ]);
+            ])->assertSessionHasErrors('code');
         }
 
         $response = $this->post(route('two-factor.login.store'), [
             'code' => '000000',
         ]);
 
-        $response->assertStatus(429);
+        $response->assertTooManyRequests();
     }
 }

@@ -31,7 +31,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const { qrCodeSvg, manualSetupKey } = useTwoFactorAuth();
-const showSetupModal = ref(false);
+const showSetupModal = ref<boolean>(false);
 const setupModalRef = ref<InstanceType<typeof TwoFactorSetupModal>>();
 </script>
 
