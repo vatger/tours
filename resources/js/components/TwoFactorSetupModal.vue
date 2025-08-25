@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { PinInput, PinInputGroup, PinInputSlot } from '@/components/ui/pin-input';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
+import { confirm } from '@/routes/two-factor';
 import { Form } from '@inertiajs/vue3';
 import { useClipboard } from '@vueuse/core';
 import { Check, Copy, Loader2, ScanLine } from 'lucide-vue-next';
@@ -31,7 +32,7 @@ const codeValue = computed(() => code.value.join(''));
 
 const pinInputContainerRef = ref<HTMLElement | null>(null);
 
-const modalConfig = computed(() => {
+const modalConfig = computed<{ title: string; description: string; buttonText: string }>(() => {
     if (props.twoFactorEnabled) {
         return {
             title: 'You have enabled two factor authentication.',
@@ -65,7 +66,6 @@ const handleModalNextStep = () => {
     }
 
     emit('update:isOpen', false);
-    return;
 };
 
 watch(
@@ -144,8 +144,7 @@ watch(
 
                 <template v-else>
                     <Form
-                        :action="route('two-factor.confirm')"
-                        method="post"
+                        v-bind="confirm.form()"
                         reset-on-error
                         @error="code = []"
                         @success="emit('update:isOpen', false)"

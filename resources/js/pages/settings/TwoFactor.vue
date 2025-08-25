@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
+import { disable, enable, show } from '@/routes/two-factor';
 import { BreadcrumbItem } from '@/types';
 import { Form, Head } from '@inertiajs/vue3';
 import { ShieldBan, ShieldCheck } from 'lucide-vue-next';
@@ -25,7 +26,7 @@ withDefaults(defineProps<Props>(), {
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Two-Factor Authentication',
-        href: '/settings/two-factor',
+        href: show.url(),
     },
 ];
 
@@ -49,10 +50,8 @@ const setupModalRef = ref<InstanceType<typeof TwoFactorSetupModal>>();
                     </p>
 
                     <div>
-                        <Button v-if="requiresConfirmation && qrCodeSvg && manualSetupKey" @click="showSetupModal = true">
-                            <ShieldCheck />Enable
-                        </Button>
-                        <Form v-else :action="route('two-factor.enable')" method="post" @success="showSetupModal = true" #default="{ processing }">
+                        <Button v-if="qrCodeSvg && manualSetupKey" @click="showSetupModal = true"> <ShieldCheck />Enable </Button>
+                        <Form v-else v-bind="enable.form()" @success="showSetupModal = true" #default="{ processing }">
                             <Button type="submit" :disabled="processing"> <ShieldCheck />{{ processing ? 'Enabling...' : 'Enable' }} </Button>
                         </Form>
                     </div>
@@ -68,7 +67,7 @@ const setupModalRef = ref<InstanceType<typeof TwoFactorSetupModal>>();
                     <TwoFactorRecoveryCodes />
 
                     <div class="relative inline">
-                        <Form :action="route('two-factor.disable')" :async="false" method="delete" #default="{ processing }">
+                        <Form v-bind="disable.form()" method="delete" #default="{ processing }">
                             <Button variant="destructive" type="submit" :disabled="processing">
                                 <ShieldBan />
                                 {{ processing ? 'Disabling...' : 'Disable 2FA' }}

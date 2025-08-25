@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { PinInput, PinInputGroup, PinInputSlot } from '@/components/ui/pin-input';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { Form, Head } from '@inertiajs/vue3';
+import { store } from '@/routes/two-factor/login';
 import { computed, ref } from 'vue';
 
 interface AuthConfigContent {
@@ -13,7 +14,7 @@ interface AuthConfigContent {
     toggleText: string;
 }
 
-const authConfigContent = computed((): AuthConfigContent => {
+const authConfigContent = computed<AuthConfigContent>((): AuthConfigContent => {
     if (showRecoveryInput.value) {
         return {
             title: 'Recovery Code',
@@ -38,7 +39,7 @@ const toggleRecoveryMode = (clearErrors: () => void): void => {
 };
 
 const code = ref<number[]>([]);
-const codeValue = computed((): string => code.value.join(''));
+const codeValue = computed<string>((): string => code.value.join(''));
 </script>
 
 <template>
@@ -48,8 +49,7 @@ const codeValue = computed((): string => code.value.join(''));
         <div class="space-y-6">
             <template v-if="!showRecoveryInput">
                 <Form
-                    :action="route('two-factor.login')"
-                    method="post"
+                    v-bind="store.form()"
                     class="space-y-4"
                     reset-on-error
                     @error="code = []"
@@ -82,8 +82,7 @@ const codeValue = computed((): string => code.value.join(''));
 
             <template v-else>
                 <Form
-                    :action="route('two-factor.login')"
-                    method="post"
+                    v-bind="store.form()"
                     class="space-y-4"
                     reset-on-error
                     #default="{ errors, processing, clearErrors }"

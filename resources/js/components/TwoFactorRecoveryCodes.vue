@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { store } from '@/actions/Laravel/Fortify/Http/Controllers/RecoveryCodeController'; // Update with route
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
@@ -7,10 +8,10 @@ import { Eye, EyeOff, LockKeyhole, RefreshCw } from 'lucide-vue-next';
 import { nextTick, onMounted, ref } from 'vue';
 
 const { recoveryCodesList, fetchRecoveryCodes } = useTwoFactorAuth();
-const isRecoveryCodesVisible = ref(false);
+const isRecoveryCodesVisible = ref<boolean>(false);
 const recoveryCodeSectionRef = ref<HTMLDivElement | null>(null);
 
-const toggleRecoveryCodesVisibility = async () => {
+const toggleRecoveryCodesVisibility = async (): Promise<void> => {
     if (!isRecoveryCodesVisible.value && !recoveryCodesList.value.length) {
         await fetchRecoveryCodes();
     }
@@ -47,7 +48,7 @@ onMounted(async () => {
 
                 <Form
                     v-if="isRecoveryCodesVisible"
-                    :action="route('two-factor.recovery-codes')"
+                    v-bind="store.form()"
                     method="post"
                     :options="{ preserveScroll: true }"
                     @success="fetchRecoveryCodes"

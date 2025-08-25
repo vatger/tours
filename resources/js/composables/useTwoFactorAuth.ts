@@ -1,6 +1,7 @@
+import { qrCode, recoveryCodes, secretKey } from '@/routes/two-factor';
 import { ref } from 'vue';
 
-async function fetchApi<T>(url: string): Promise<T> {
+const fetchJson = async <T>(url: string): Promise<T> => {
     const response = await fetch(url, {
         headers: { Accept: 'application/json' },
     });
@@ -10,7 +11,7 @@ async function fetchApi<T>(url: string): Promise<T> {
     }
 
     return response.json();
-}
+};
 
 export const useTwoFactorAuth = () => {
     const qrCodeSvg = ref<string | null>(null);
@@ -18,18 +19,18 @@ export const useTwoFactorAuth = () => {
     const recoveryCodesList = ref<string[]>([]);
 
     const fetchQrCode = async (): Promise<void> => {
-        const { svg } = await fetchApi<{ svg: string; url: string }>(route('two-factor.qr-code'));
+        const { svg } = await fetchJson<{ svg: string; url: string }>(qrCode.url());
         qrCodeSvg.value = svg;
     };
 
     const fetchSetupKey = async (): Promise<void> => {
-        const { secretKey } = await fetchApi<{ secretKey: string }>(route('two-factor.secret-key'));
-        manualSetupKey.value = secretKey;
+        const { secretKey: key } = await fetchJson<{ secretKey: string }>(secretKey.url());
+        manualSetupKey.value = key;
     };
 
     const fetchRecoveryCodes = async (): Promise<void> => {
         try {
-            recoveryCodesList.value = await fetchApi<string[]>(route('two-factor.recovery-codes'));
+            recoveryCodesList.value = await fetchJson<string[]>(recoveryCodes.url());
         } catch (error) {
             console.error('Failed to fetch recovery codes:', error);
             recoveryCodesList.value = [];
