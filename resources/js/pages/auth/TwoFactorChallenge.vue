@@ -14,7 +14,7 @@ interface AuthConfigContent {
     toggleText: string;
 }
 
-const authConfigContent = computed<AuthConfigContent>((): AuthConfigContent => {
+const authConfigContent = computed<AuthConfigContent>(() => {
     if (showRecoveryInput.value) {
         return {
             title: 'Recovery Code',
