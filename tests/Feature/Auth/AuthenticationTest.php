@@ -55,7 +55,7 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
     }
 
-    public function test_users_without_two_factor_login_normally()
+    public function test_users_without_two_factor_enabled_login_normally()
     {
         $user = User::factory()->create();
 

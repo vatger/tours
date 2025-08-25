@@ -18,22 +18,14 @@ class PasswordConfirmationTest extends TestCase
         $response = $this->actingAs($user)->get(route('password.confirm'));
 
         $response->assertStatus(200);
+        $response->assertInertia(fn(Assert $page) => $page
+            ->component('auth/ConfirmPassword')
+        );
     }
 
     public function test_password_confirmation_requires_authentication()
     {
         $response = $this->get(route('password.confirm'));
         $response->assertRedirect(route('login'));
-    }
-
-    public function test_confirm_password_view_callback_is_called(): void
-    {
-        $user = User::factory()->create();
-
-        $this->actingAs($user)
-            ->get(route('password.confirm'))
-            ->assertInertia(fn (Assert $page) => $page
-                ->component('auth/ConfirmPassword')
-            );
     }
 }

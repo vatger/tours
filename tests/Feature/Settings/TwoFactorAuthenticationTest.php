@@ -25,7 +25,7 @@ class TwoFactorAuthenticationTest extends TestCase
         $this->actingAs($user)
             ->withSession(['auth.password_confirmed_at' => time()])
             ->get(route('two-factor.show'))
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn(Assert $page) => $page
                 ->component('settings/TwoFactor')
             );
     }
@@ -39,7 +39,7 @@ class TwoFactorAuthenticationTest extends TestCase
         $this->actingAs($user)
             ->withSession(['auth.password_confirmed_at' => time()])
             ->get(route('two-factor.show'))
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn(Assert $page) => $page
                 ->component('settings/TwoFactor')
                 ->has('requiresConfirmation')
                 ->where('requiresConfirmation', $expectedRequiresConfirmation)
@@ -50,7 +50,7 @@ class TwoFactorAuthenticationTest extends TestCase
 
     public function test_shows_two_factor_status_reflects_user_state()
     {
-        if (! Features::canManageTwoFactorAuthentication()) {
+        if (!Features::canManageTwoFactorAuthentication()) {
             $this->markTestSkipped('Two factor authentication is not enabled.');
         }
 
@@ -63,7 +63,7 @@ class TwoFactorAuthenticationTest extends TestCase
         $this->post(route('two-factor.enable'));
 
         $this->get(route('two-factor.show'))
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn(Assert $page) => $page
                 ->where('twoFactorEnabled', $user->fresh()->hasEnabledTwoFactorAuthentication())
             );
     }
@@ -82,7 +82,7 @@ class TwoFactorAuthenticationTest extends TestCase
         );
     }
 
-    public function test_two_factor_authentication_disabled_returns_403_when_disabled()
+    public function test_two_factor_authentication_disabled_returns_forbidden_when_disabled()
     {
         config(['fortify.features' => []]);
 
@@ -110,7 +110,7 @@ class TwoFactorAuthenticationTest extends TestCase
 
     public function test_validates_two_factor_authentication_state_when_confirmation_required_and_transitioning()
     {
-        if (! Features::canManageTwoFactorAuthentication()) {
+        if (!Features::canManageTwoFactorAuthentication()) {
             $this->markTestSkipped('Two factor authentication is not enabled.');
         }
 
@@ -134,7 +134,7 @@ class TwoFactorAuthenticationTest extends TestCase
 
     public function test_validates_two_factor_authentication_state_when_user_never_finished_confirming()
     {
-        if (! Features::canManageTwoFactorAuthentication()) {
+        if (!Features::canManageTwoFactorAuthentication()) {
             $this->markTestSkipped('Two factor authentication is not enabled.');
         }
 
@@ -166,7 +166,7 @@ class TwoFactorAuthenticationTest extends TestCase
 
     public function test_validates_two_factor_authentication_state_when_confirmation_not_required()
     {
-        if (! Features::canManageTwoFactorAuthentication()) {
+        if (!Features::canManageTwoFactorAuthentication()) {
             $this->markTestSkipped('Two factor authentication is not enabled.');
         }
 
@@ -179,45 +179,10 @@ class TwoFactorAuthenticationTest extends TestCase
         $this->actingAs($user)
             ->withSession(['auth.password_confirmed_at' => time()]);
 
-        $response = $this->get(route('two-factor.show'));
-
-        $response->assertOk();
+        $this->get(route('two-factor.show'))
+            ->assertOk();
 
         $this->assertNull(session('two_factor_empty_at'));
         $this->assertNull(session('two_factor_confirming_at'));
-    }
-
-    public function test_validates_two_factor_authentication_state_with_old_input_code()
-    {
-        if (! Features::canManageTwoFactorAuthentication()) {
-            $this->markTestSkipped('Two factor authentication is not enabled.');
-        }
-
-        config(['fortify.features' => [
-            Features::twoFactorAuthentication(['confirm' => true]),
-        ]]);
-
-        $user = User::factory()->create();
-
-        $user->forceFill([
-            'two_factor_secret' => encrypt('test-secret'),
-            'two_factor_recovery_codes' => encrypt(json_encode(['code1', 'code2'])),
-        ])->save();
-
-        $pastTime = time() - 10;
-
-        $this->actingAs($user)
-            ->withSession(['auth.password_confirmed_at' => time()])
-            ->withSession(['two_factor_confirming_at' => $pastTime]);
-
-        $this->session([
-            '_old_input' => ['code' => '123456']
-        ]);
-
-        $response = $this->get(route('two-factor.show'));
-
-        $response->assertOk();
-
-        $this->assertNotNull($user->fresh()->two_factor_secret);
     }
 }

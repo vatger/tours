@@ -11,12 +11,12 @@ use Tests\TestCase;
 class TwoFactorChallengeTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     public function test_two_factor_challenge_redirects_when_not_authenticated(): void
     {
-        $response = $this->get('/two-factor-challenge');
+        $response = $this->get(route('two-factor.login'));
 
-        $response->assertRedirect('/login');
+        $response->assertRedirect(route('login'));
     }
 
     public function test_two_factor_challenge_renders_correct_inertia_component(): void
@@ -33,16 +33,50 @@ class TwoFactorChallengeTest extends TestCase
             'two_factor_confirmed_at' => now(),
         ])->save();
 
-        $this->post('/login', [
+        $this->post(route('login'), [
             'email' => $user->email,
             'password' => 'password',
         ]);
 
-        $response = $this->get('/two-factor-challenge');
+        $response = $this->get(route('two-factor.login'));
 
         $response->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('auth/TwoFactorChallenge')
             );
+    }
+
+    public function test_two_factor_authentication_is_rate_limited(): void
+    {
+        if (! Features::enabled(Features::twoFactorAuthentication())) {
+            $this->markTestSkipped('Two factor authentication is not enabled.');
+        }
+
+        $user = User::factory()->create();
+
+        $user->forceFill([
+            'two_factor_secret' => encrypt('JBSWY3DPEHPK3PXP'),
+            'two_factor_recovery_codes' => encrypt(json_encode(['recovery-code-1', 'recovery-code-2'])),
+            'two_factor_confirmed_at' => now(),
+        ])->save();
+
+        $this->post(route('login'), [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        foreach (range(0,4) as $ignored) {
+            $this->post(route('two-factor.login.store'), [
+                'code' => '000000',
+            ])->assertStatus(302)->assertSessionHasErrors([
+                'code' => 'The provided two factor authentication code was invalid.',
+            ]);
+        }
+
+        $response = $this->post(route('two-factor.login.store'), [
+            'code' => '000000',
+        ]);
+
+        $response->assertStatus(429);
     }
 }
