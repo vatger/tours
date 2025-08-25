@@ -29,7 +29,7 @@ class TwoFactorAuthenticationController extends Controller implements HasMiddlew
     /**
      * Show the user's two-factor authentication settings page.
      */
-    public function show(Request $request): Response
+    public function edit(Request $request): Response
     {
         if (! Features::enabled(Features::twoFactorAuthentication())) {
             abort(HttpResponse::HTTP_FORBIDDEN, 'Two factor authentication is disabled.');

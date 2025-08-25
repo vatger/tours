@@ -28,7 +28,7 @@ const { qrCodeSvg, manualSetupKey, fetchSetupData } = useTwoFactorAuth();
 
 const showVerificationStep = ref(false);
 const code = ref<number[]>([]);
-const codeValue = computed(() => code.value.join(''));
+const codeValue = computed<string>(() => code.value.join(''));
 
 const pinInputContainerRef = ref<HTMLElement | null>(null);
 
