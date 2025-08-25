@@ -2,27 +2,28 @@
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { appearance } from '@/routes';
+import { edit as editPassword } from '@/routes/password';
+import { edit } from '@/routes/profile';
 import { type NavItem } from '@/types';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 
 const sidebarNavItems: NavItem[] = [
     {
         title: 'Profile',
-        href: '/settings/profile',
+        href: edit(),
     },
     {
         title: 'Password',
-        href: '/settings/password',
+        href: editPassword(),
     },
     {
         title: 'Appearance',
-        href: '/settings/appearance',
+        href: appearance(),
     },
 ];
 
-const page = usePage();
-
-const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.location).pathname : '';
+const currentPath = typeof window !== undefined ? window.location.pathname : '';
 </script>
 
 <template>
@@ -34,9 +35,12 @@ const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.locati
                 <nav class="flex flex-col space-y-1 space-x-0">
                     <Button
                         v-for="item in sidebarNavItems"
-                        :key="item.href"
+                        :key="typeof item.href === 'string' ? item.href : item.href?.url"
                         variant="ghost"
-                        :class="['w-full justify-start', { 'bg-muted': currentPath === item.href }]"
+                        :class="[
+                            'w-full justify-start',
+                            { 'bg-muted': currentPath === (typeof item.href === 'string' ? item.href : item.href?.url) },
+                        ]"
                         as-child
                     >
                         <Link :href="item.href">

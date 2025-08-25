@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { update } from '@/actions/App/Http/Controllers/Settings/ProfileController';
+import { edit } from '@/routes/profile';
+import { send } from '@/routes/verification';
 import { Form, Head, Link, usePage } from '@inertiajs/vue3';
 
 import DeleteUser from '@/components/DeleteUser.vue';
@@ -21,7 +24,7 @@ defineProps<Props>();
 const breadcrumbItems: BreadcrumbItem[] = [
     {
         title: 'Profile settings',
-        href: '/settings/profile',
+        href: edit().url,
     },
 ];
 
@@ -37,7 +40,7 @@ const user = page.props.auth.user;
             <div class="flex flex-col space-y-6">
                 <HeadingSmall title="Profile information" description="Update your name and email address" />
 
-                <Form method="patch" :action="route('profile.update')" class="space-y-6" v-slot="{ errors, processing, recentlySuccessful }">
+                <Form v-bind="update.form()" class="space-y-6" v-slot="{ errors, processing, recentlySuccessful }">
                     <div class="grid gap-2">
                         <Label for="name">Name</Label>
                         <Input
@@ -71,8 +74,7 @@ const user = page.props.auth.user;
                         <p class="-mt-4 text-sm text-muted-foreground">
                             Your email address is unverified.
                             <Link
-                                :href="route('verification.send')"
-                                method="post"
+                                :href="send()"
                                 as="button"
                                 class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                             >
