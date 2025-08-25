@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { update } from '@/actions/App/Http/Controllers/Settings/PasswordController';
 import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
+import { edit } from '@/routes/password';
 import { Form, Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
@@ -14,7 +16,7 @@ import { type BreadcrumbItem } from '@/types';
 const breadcrumbItems: BreadcrumbItem[] = [
     {
         title: 'Password settings',
-        href: '/settings/password',
+        href: edit().url,
     },
 ];
 
@@ -31,8 +33,7 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                 <HeadingSmall title="Update password" description="Ensure your account is using a long, random password to stay secure" />
 
                 <Form
-                    method="put"
-                    :action="route('password.update')"
+                    v-bind="update.form()"
                     :options="{
                         preserveScroll: true,
                     }"
@@ -48,7 +49,7 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                             ref="currentPasswordInput"
                             name="current_password"
                             type="password"
-                            class="block w-full mt-1"
+                            class="mt-1 block w-full"
                             autocomplete="current-password"
                             placeholder="Current password"
                         />
@@ -62,7 +63,7 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                             ref="passwordInput"
                             name="password"
                             type="password"
-                            class="block w-full mt-1"
+                            class="mt-1 block w-full"
                             autocomplete="new-password"
                             placeholder="New password"
                         />
@@ -75,7 +76,7 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                             id="password_confirmation"
                             name="password_confirmation"
                             type="password"
-                            class="block w-full mt-1"
+                            class="mt-1 block w-full"
                             autocomplete="new-password"
                             placeholder="Confirm password"
                         />
