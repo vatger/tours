@@ -37,6 +37,11 @@ class AuthenticationTest extends TestCase
             $this->markTestSkipped('Two factor authentication is not enabled.');
         }
 
+        Features::twoFactorAuthentication([
+            'confirm' => true,
+            'confirmPassword' => true,
+        ]);
+
         $user = User::factory()->create();
 
         $user->forceFill([

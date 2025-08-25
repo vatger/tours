@@ -14,6 +14,10 @@ class TwoFactorChallengeTest extends TestCase
 
     public function test_two_factor_challenge_redirects_when_not_authenticated(): void
     {
+        if (! Features::canManageTwoFactorAuthentication()) {
+            $this->markTestSkipped('Two factor authentication is not enabled.');
+        }
+
         $response = $this->get(route('two-factor.login'));
 
         $response->assertRedirect(route('login'));
@@ -24,6 +28,11 @@ class TwoFactorChallengeTest extends TestCase
         if (! Features::canManageTwoFactorAuthentication()) {
             $this->markTestSkipped('Two factor authentication is not enabled.');
         }
+
+        Features::twoFactorAuthentication([
+            'confirm' => true,
+            'confirmPassword' => true,
+        ]);
 
         $user = User::factory()->create();
 
@@ -51,10 +60,15 @@ class TwoFactorChallengeTest extends TestCase
             $this->markTestSkipped('Two factor authentication is not enabled.');
         }
 
+        Features::twoFactorAuthentication([
+            'confirm' => true,
+            'confirmPassword' => true,
+        ]);
+
         $user = User::factory()->create();
 
         $user->forceFill([
-            'two_factor_secret' => encrypt('JBSWY3DPEHPK3PXP'),
+            'two_factor_secret' => encrypt(implode(range('A', 'P'))),
             'two_factor_recovery_codes' => encrypt(json_encode(['recovery-code-1', 'recovery-code-2'])),
             'two_factor_confirmed_at' => now(),
         ])->save();
