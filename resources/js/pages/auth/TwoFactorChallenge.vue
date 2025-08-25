@@ -30,7 +30,7 @@ const authConfigContent = computed<AuthConfigContent>(() => {
     };
 });
 
-const showRecoveryInput = ref(false);
+const showRecoveryInput = ref<boolean>(false);
 
 const toggleRecoveryMode = (clearErrors: () => void): void => {
     showRecoveryInput.value = !showRecoveryInput.value;
