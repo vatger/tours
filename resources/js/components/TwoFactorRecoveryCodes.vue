@@ -11,7 +11,7 @@ const { recoveryCodesList, fetchRecoveryCodes } = useTwoFactorAuth();
 const isRecoveryCodesVisible = ref<boolean>(false);
 const recoveryCodeSectionRef = ref<HTMLDivElement | null>(null);
 
-const toggleRecoveryCodesVisibility = async (): Promise<void> => {
+const toggleRecoveryCodesVisibility = async () => {
     if (!isRecoveryCodesVisible.value && !recoveryCodesList.value.length) {
         await fetchRecoveryCodes();
     }
