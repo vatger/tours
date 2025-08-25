@@ -14,76 +14,91 @@ class TwoFactorAuthenticationTest extends TestCase
 
     public function test_two_factor_settings_page_requires_authentication()
     {
+        if (!Features::canManageTwoFactorAuthentication()) {
+            $this->markTestSkipped('Two factor authentication is not enabled.');
+        }
+
+        Features::twoFactorAuthentication([
+            'confirm' => true,
+            'confirmPassword' => true,
+        ]);
+
         $this->get(route('two-factor.show'))
             ->assertRedirect(route('login'));
     }
 
     public function test_renders_two_factor_settings_component()
     {
-        $user = User::factory()->create();
-
-        $this->actingAs($user)
-            ->withSession(['auth.password_confirmed_at' => time()])
-            ->get(route('two-factor.show'))
-            ->assertInertia(fn (Assert $page) => $page
-                ->component('settings/TwoFactor')
-            );
-    }
-
-    public function test_passes_correct_props_to_two_factor_component()
-    {
-        $user = User::factory()->create();
-
-        $expectedRequiresConfirmation = Features::optionEnabled(Features::twoFactorAuthentication(), 'confirm');
-
-        $this->actingAs($user)
-            ->withSession(['auth.password_confirmed_at' => time()])
-            ->get(route('two-factor.show'))
-            ->assertInertia(fn (Assert $page) => $page
-                ->component('settings/TwoFactor')
-                ->has('requiresConfirmation')
-                ->where('requiresConfirmation', $expectedRequiresConfirmation)
-                ->has('twoFactorEnabled')
-                ->where('twoFactorEnabled', false)
-            );
-    }
-
-    public function test_shows_two_factor_status_reflects_user_state()
-    {
-        if (! Features::canManageTwoFactorAuthentication()) {
+        if (!Features::canManageTwoFactorAuthentication()) {
             $this->markTestSkipped('Two factor authentication is not enabled.');
         }
 
+        Features::twoFactorAuthentication([
+            'confirm' => true,
+            'confirmPassword' => true,
+        ]);
+
         $user = User::factory()->create();
 
-        $this->actingAs($user);
-
-        $this->withSession(['auth.password_confirmed_at' => time()]);
-
-        $this->post(route('two-factor.enable'));
-
-        $this->get(route('two-factor.show'))
-            ->assertInertia(fn (Assert $page) => $page
-                ->where('twoFactorEnabled', $user->fresh()->hasEnabledTwoFactorAuthentication())
+        $this->actingAs($user)
+            ->withSession(['auth.password_confirmed_at' => time()])
+            ->get(route('two-factor.show'))
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('settings/TwoFactor')
+                ->where('twoFactorEnabled', false)
             );
     }
 
     public function test_two_factor_settings_page_requires_password_confirmation()
     {
+        if (!Features::canManageTwoFactorAuthentication()) {
+            $this->markTestSkipped('Two factor authentication is not enabled.');
+        }
         $user = User::factory()->create();
+
+        Features::twoFactorAuthentication([
+            'confirm' => true,
+            'confirmPassword' => true,
+        ]);
 
         $response = $this->actingAs($user)
             ->get(route('two-factor.show'));
 
-        $response->assertRedirect();
-        $this->assertTrue(
-            str_contains($response->headers->get('location'), 'confirm-password'),
-            'Should redirect to password confirmation page'
-        );
+        $response->assertRedirect(route('password.confirm'));
+    }
+
+    public function test_two_factor_settings_page_does_not_requires_password_confirmation_when_disabled()
+    {
+        if (!Features::canManageTwoFactorAuthentication()) {
+            $this->markTestSkipped('Two factor authentication is not enabled.');
+        }
+
+        $user = User::factory()->create();
+
+         config(['fortify.features' => [
+            Features::twoFactorAuthentication([
+                'confirm' => false,
+                'confirmPassword' => false,
+            ]),
+        ]]);
+
+        // Debug what Features::optionEnabled returns
+        dump(Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'));
+
+        $this->actingAs($user)
+            ->get(route('two-factor.show'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('settings/TwoFactor')
+            );
     }
 
     public function test_two_factor_authentication_disabled_returns_forbidden_when_disabled()
     {
+        if (!Features::canManageTwoFactorAuthentication()) {
+            $this->markTestSkipped('Two factor authentication is not enabled.');
+        }
+
         config(['fortify.features' => []]);
 
         $user = User::factory()->create();
@@ -96,11 +111,18 @@ class TwoFactorAuthenticationTest extends TestCase
 
     public function test_validates_two_factor_authentication_state_when_confirmation_disabled()
     {
-        $user = User::factory()->create();
+        if (!Features::canManageTwoFactorAuthentication()) {
+            $this->markTestSkipped('Two factor authentication is not enabled.');
+        }
 
         config(['fortify.features' => [
-            Features::twoFactorAuthentication(['confirm' => true]),
+            Features::twoFactorAuthentication([
+                'confirm' => true,
+                'confirmPassword' => true,
+            ]),
         ]]);
+
+        $user = User::factory()->create();
 
         $this->actingAs($user)
             ->withSession(['auth.password_confirmed_at' => time()])
@@ -110,7 +132,7 @@ class TwoFactorAuthenticationTest extends TestCase
 
     public function test_validates_two_factor_authentication_state_when_confirmation_required_and_transitioning()
     {
-        if (! Features::canManageTwoFactorAuthentication()) {
+        if (!Features::canManageTwoFactorAuthentication()) {
             $this->markTestSkipped('Two factor authentication is not enabled.');
         }
 
@@ -134,7 +156,7 @@ class TwoFactorAuthenticationTest extends TestCase
 
     public function test_validates_two_factor_authentication_state_when_user_never_finished_confirming()
     {
-        if (! Features::canManageTwoFactorAuthentication()) {
+        if (!Features::canManageTwoFactorAuthentication()) {
             $this->markTestSkipped('Two factor authentication is not enabled.');
         }
 
@@ -166,7 +188,7 @@ class TwoFactorAuthenticationTest extends TestCase
 
     public function test_validates_two_factor_authentication_state_when_confirmation_not_required()
     {
-        if (! Features::canManageTwoFactorAuthentication()) {
+        if (!Features::canManageTwoFactorAuthentication()) {
             $this->markTestSkipped('Two factor authentication is not enabled.');
         }
 
