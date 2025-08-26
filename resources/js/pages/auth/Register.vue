@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { store } from '@/actions/App/Http/Controllers/Auth/RegisteredUserController';
+import RegisteredUserController from '@/actions/App/Http/Controllers/Auth/RegisteredUserController';
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
@@ -16,7 +16,7 @@ import { LoaderCircle } from 'lucide-vue-next';
         <Head title="Register" />
 
         <Form
-            v-bind="store.form()"
+            v-bind="RegisteredUserController.store.form()"
             :reset-on-success="['password', 'password_confirmation']"
             v-slot="{ errors, processing }"
             class="flex flex-col gap-6"

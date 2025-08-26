@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { store } from '@/actions/App/Http/Controllers/Auth/PasswordResetLinkController';
+import PasswordResetLinkController from '@/actions/App/Http/Controllers/Auth/PasswordResetLinkController';
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
@@ -24,7 +24,7 @@ defineProps<{
         </div>
 
         <div class="space-y-6">
-            <Form v-bind="store.form()" v-slot="{ errors, processing }">
+            <Form v-bind="PasswordResetLinkController.store.form()" v-slot="{ errors, processing }">
                 <div class="grid gap-2">
                     <Label for="email">Email address</Label>
                     <Input id="email" type="email" name="email" autocomplete="off" autofocus placeholder="email@example.com" />
