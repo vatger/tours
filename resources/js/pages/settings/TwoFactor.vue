@@ -11,7 +11,7 @@ import { disable, enable, show } from '@/routes/two-factor';
 import { BreadcrumbItem } from '@/types';
 import { Form, Head } from '@inertiajs/vue3';
 import { ShieldBan, ShieldCheck } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { onUnmounted, ref } from 'vue';
 
 interface Props {
     requiresConfirmation?: boolean;
@@ -30,8 +30,12 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const { hasSetupData } = useTwoFactorAuth();
+const { hasSetupData, clearTwoFactorAuthData } = useTwoFactorAuth();
 const showSetupModal = ref<boolean>(false);
+
+onUnmounted(() => {
+    clearTwoFactorAuthData();
+});
 </script>
 
 <template>
