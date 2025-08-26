@@ -152,13 +152,7 @@ watch(
                 </template>
 
                 <template v-else>
-                    <Form
-                        v-bind="confirm.form()"
-                        reset-on-error
-                        @finish="resetModalState"
-                        @success="isOpen = false"
-                        v-slot="{ errors, processing }"
-                    >
+                    <Form v-bind="confirm.form()" reset-on-error @finish="code = []" @success="isOpen = false" v-slot="{ errors, processing }">
                         <input type="hidden" name="code" :value="codeValue" />
                         <div ref="pinInputContainerRef" class="relative w-full space-y-3">
                             <div class="flex w-full flex-col items-center justify-center space-y-3 py-2">
