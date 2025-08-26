@@ -66,7 +66,7 @@ const showSetupModal = ref<boolean>(false);
                     <TwoFactorRecoveryCodes />
 
                     <div class="relative inline">
-                        <Form v-bind="disable.form()" :async="false" method="delete" #default="{ processing }">
+                        <Form v-bind="disable.form()" method="delete" #default="{ processing }">
                             <Button variant="destructive" type="submit" :disabled="processing">
                                 <ShieldBan />
                                 {{ processing ? 'Disabling...' : 'Disable 2FA' }}
