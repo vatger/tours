@@ -11,20 +11,15 @@ import { Check, Copy, Loader2, ScanLine } from 'lucide-vue-next';
 import { computed, nextTick, ref, watch } from 'vue';
 
 interface Props {
-    isOpen: boolean;
     requiresConfirmation: boolean;
     twoFactorEnabled: boolean;
 }
 
-interface Emits {
-    (e: 'update:isOpen', value: boolean): void;
-}
-
 const props = defineProps<Props>();
-const emit = defineEmits<Emits>();
+const isOpen = defineModel<boolean>('isOpen');
 
 const { copy, copied } = useClipboard();
-const { qrCodeSvg, manualSetupKey, fetchSetupData } = useTwoFactorAuth();
+const { qrCodeSvg, manualSetupKey, clearSetupData, fetchSetupData } = useTwoFactorAuth();
 
 const showVerificationStep = ref(false);
 const code = ref<number[]>([]);
@@ -65,21 +60,35 @@ const handleModalNextStep = () => {
         return;
     }
 
-    emit('update:isOpen', false);
+    clearSetupData();
+    isOpen.value = false;
+};
+
+const resetModalState = () => {
+    if (props.twoFactorEnabled) {
+        clearSetupData();
+    }
+    showVerificationStep.value = false;
+    code.value = [];
 };
 
 watch(
-    () => props.isOpen,
-    (isOpen) => {
-        if (isOpen && !qrCodeSvg.value) {
-            fetchSetupData();
+    () => isOpen.value,
+    async (isOpen) => {
+        if (!isOpen) {
+            resetModalState();
+            return;
+        }
+
+        if (!qrCodeSvg.value) {
+            await fetchSetupData();
         }
     },
 );
 </script>
 
 <template>
-    <Dialog :open="isOpen" @update:open="emit('update:isOpen', $event)">
+    <Dialog :open="isOpen" @update:open="isOpen = $event">
         <DialogContent class="sm:max-w-md">
             <DialogHeader class="flex items-center justify-center">
                 <div class="mb-3 w-auto rounded-full border border-border bg-card p-0.5 shadow-sm">
@@ -146,8 +155,8 @@ watch(
                     <Form
                         v-bind="confirm.form()"
                         reset-on-error
-                        @error="code = []"
-                        @success="emit('update:isOpen', false)"
+                        @finish="resetModalState"
+                        @success="isOpen = false"
                         v-slot="{ errors, processing }"
                     >
                         <input type="hidden" name="code" :value="codeValue" />

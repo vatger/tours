@@ -30,9 +30,8 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const { qrCodeSvg, manualSetupKey } = useTwoFactorAuth();
+const { hasSetupData } = useTwoFactorAuth();
 const showSetupModal = ref<boolean>(false);
-const setupModalRef = ref<InstanceType<typeof TwoFactorSetupModal>>();
 </script>
 
 <template>
@@ -50,9 +49,9 @@ const setupModalRef = ref<InstanceType<typeof TwoFactorSetupModal>>();
                     </p>
 
                     <div>
-                        <Button v-if="qrCodeSvg && manualSetupKey" @click="showSetupModal = true"> <ShieldCheck />Enable </Button>
+                        <Button v-if="hasSetupData" @click="showSetupModal = true"> <ShieldCheck />Continue Setup </Button>
                         <Form v-else v-bind="enable.form()" @success="showSetupModal = true" #default="{ processing }">
-                            <Button type="submit" :disabled="processing"> <ShieldCheck />{{ processing ? 'Enabling...' : 'Enable' }} </Button>
+                            <Button type="submit" :disabled="processing"> <ShieldCheck />{{ processing ? 'Enabling...' : 'Enable 2FA' }} </Button>
                         </Form>
                     </div>
                 </div>
@@ -67,7 +66,7 @@ const setupModalRef = ref<InstanceType<typeof TwoFactorSetupModal>>();
                     <TwoFactorRecoveryCodes />
 
                     <div class="relative inline">
-                        <Form v-bind="disable.form()" method="delete" #default="{ processing }">
+                        <Form v-bind="disable.form()" :async="false" method="delete" #default="{ processing }">
                             <Button variant="destructive" type="submit" :disabled="processing">
                                 <ShieldBan />
                                 {{ processing ? 'Disabling...' : 'Disable 2FA' }}
@@ -77,7 +76,6 @@ const setupModalRef = ref<InstanceType<typeof TwoFactorSetupModal>>();
                 </div>
 
                 <TwoFactorSetupModal
-                    ref="setupModalRef"
                     v-model:isOpen="showSetupModal"
                     :requiresConfirmation="requiresConfirmation"
                     :twoFactorEnabled="twoFactorEnabled"

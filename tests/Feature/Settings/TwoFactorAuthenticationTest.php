@@ -135,4 +135,75 @@ class TwoFactorAuthenticationTest extends TestCase
                 ->where('requiresConfirmation', false)
             );
     }
+
+    public function test_sets_empty_session_when_transitioning_to_disabled_state()
+    {
+        if (! Features::canManageTwoFactorAuthentication()) {
+            $this->markTestSkipped('Two factor authentication is not enabled.');
+        }
+
+        Features::twoFactorAuthentication([
+            'confirm' => true,
+            'confirmPassword' => false,
+        ]);
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get(route('two-factor.show'))
+            ->assertSessionHas('two_factor_empty_at');
+    }
+
+    public function test_removes_confirming_session_when_cleanup_triggered()
+    {
+        if (! Features::canManageTwoFactorAuthentication()) {
+            $this->markTestSkipped('Two factor authentication is not enabled.');
+        }
+
+        Features::twoFactorAuthentication([
+            'confirm' => true,
+            'confirmPassword' => false,
+        ]);
+
+        $user = User::factory()->create();
+        $user->forceFill([
+            'two_factor_secret' => encrypt('test-secret'),
+            'two_factor_recovery_codes' => encrypt(json_encode(['code1', 'code2'])),
+        ])->save();
+
+        $this->actingAs($user)
+            ->withSession(['two_factor_confirming_at' => time() - 100])
+            ->get(route('two-factor.show'))
+            ->assertSessionMissing('two_factor_confirming_at')
+            ->assertSessionHas('two_factor_empty_at');
+    }
+
+    public function test_disables_two_factor_when_confirmation_abandoned_between_requests()
+    {
+        if (! Features::canManageTwoFactorAuthentication()) {
+            $this->markTestSkipped('Two factor authentication is not enabled.');
+        }
+
+        Features::twoFactorAuthentication([
+            'confirm' => true,
+            'confirmPassword' => false,
+        ]);
+
+        $user = User::factory()->create();
+        $user->forceFill([
+            'two_factor_secret' => encrypt('test-secret'),
+            'two_factor_recovery_codes' => encrypt(json_encode(['code1', 'code2'])),
+            'two_factor_confirmed_at' => null,
+        ])->save();
+
+        $this->actingAs($user)
+            ->withSession(['two_factor_confirming_at' => time() - 100])
+            ->get(route('two-factor.show'));
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'two_factor_secret' => null,
+            'two_factor_recovery_codes' => null,
+        ]);
+    }
 }

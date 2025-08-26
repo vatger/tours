@@ -21,19 +21,21 @@ class TwoFactorAuthenticationController extends Controller implements HasMiddlew
      */
     public static function middleware(): array
     {
-        return Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword') ? [
-            new Middleware('password.confirm', only: ['show']),
-        ] : [];
+        return Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword')
+            ? [new Middleware('password.confirm', only: ['show'])]
+            : [];
     }
 
     /**
      * Show the user's two-factor authentication settings page.
      */
-    public function edit(Request $request): Response
+    public function show(Request $request): Response
     {
-        if (! Features::enabled(Features::twoFactorAuthentication())) {
-            abort(HttpResponse::HTTP_FORBIDDEN, 'Two factor authentication is disabled.');
-        }
+        abort_if(
+            ! Features::enabled(Features::twoFactorAuthentication()),
+            HttpResponse::HTTP_FORBIDDEN,
+            'Two factor authentication is disabled.'
+        );
 
         $this->validateTwoFactorAuthenticationState($request);
 
