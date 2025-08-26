@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { store } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
+import AuthenticatedSessionController from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
@@ -26,7 +26,12 @@ defineProps<{
             {{ status }}
         </div>
 
-        <Form v-bind="store.form()" :reset-on-success="['password']" v-slot="{ errors, processing }" class="flex flex-col gap-6">
+        <Form
+            v-bind="AuthenticatedSessionController.store.form()"
+            :reset-on-success="['password']"
+            v-slot="{ errors, processing }"
+            class="flex flex-col gap-6"
+        >
             <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="email">Email address</Label>
