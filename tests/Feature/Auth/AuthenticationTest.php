@@ -57,7 +57,7 @@ class AuthenticationTest extends TestCase
         $user = User::factory()->create();
 
         for ($i = 0; $i < 5; $i++) {
-            $this->post(route('login'), [
+            $this->post(route('login.store'), [
                 'email' => $user->email,
                 'password' => 'wrong-password',
             ])->assertStatus(302)->assertSessionHasErrors([
@@ -65,7 +65,7 @@ class AuthenticationTest extends TestCase
             ]);
         }
 
-        $response = $this->post(route('login'), [
+        $response = $this->post(route('login.store'), [
             'email' => $user->email,
             'password' => 'wrong-password',
         ]);
