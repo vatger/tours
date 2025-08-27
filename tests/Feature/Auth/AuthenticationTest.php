@@ -21,7 +21,7 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->post(route('login'), [
+        $response = $this->post(route('login.store'), [
             'email' => $user->email,
             'password' => 'password',
         ]);
