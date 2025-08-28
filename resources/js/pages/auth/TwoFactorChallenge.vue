@@ -44,7 +44,7 @@ const codeValue = computed<string>(() => code.value.join(''));
 
 <template>
     <AuthLayout :title="authConfigContent.title" :description="authConfigContent.description">
-        <Head title="Two Factor Authentication" />
+        <Head title="Two-Factor Authentication" />
 
         <div class="space-y-6">
             <template v-if="!showRecoveryInput">

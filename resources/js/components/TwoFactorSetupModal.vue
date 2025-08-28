@@ -30,8 +30,8 @@ const pinInputContainerRef = ref<HTMLElement | null>(null);
 const modalConfig = computed<{ title: string; description: string; buttonText: string }>(() => {
     if (props.twoFactorEnabled) {
         return {
-            title: 'You have enabled two factor authentication.',
-            description: 'Two factor authentication is now enabled, scan the QR code or enter the setup key in authenticator app.',
+            title: 'Two-Factor Authentication Enabled',
+            description: 'Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.',
             buttonText: 'Close',
         };
     }
@@ -45,8 +45,8 @@ const modalConfig = computed<{ title: string; description: string; buttonText: s
     }
 
     return {
-        title: 'Turn on 2-step Verification',
-        description: 'To finish enabling two factor authentication, scan the QR code or enter the setup key in authenticator app',
+        title: 'Enable Two-Factor Authentication',
+        description: 'To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app',
         buttonText: 'Continue',
     };
 });

@@ -47,9 +47,10 @@ onUnmounted(() => {
 
                 <div v-if="!twoFactorEnabled" class="flex flex-col items-start justify-start space-y-4">
                     <Badge variant="destructive">Disabled</Badge>
+
                     <p class="text-muted-foreground">
-                        When you enable 2FA, you'll be prompted for a secure code during login, which can be retrieved from your phone's TOTP
-                        supported app.
+                        When you enable two-factor authentication, you will be prompted for a secure pin during login. This pin can
+                        be retrieved from a TOTP-supported application on your phone.
                     </p>
 
                     <div>
@@ -62,9 +63,10 @@ onUnmounted(() => {
 
                 <div v-else class="flex flex-col items-start justify-start space-y-4">
                     <Badge variant="default">Enabled</Badge>
+
                     <p class="text-muted-foreground">
-                        With two factor authentication enabled, you'll be prompted for a secure, random token during login, which you can retrieve
-                        from your TOTP Authenticator app.
+                        With two-factor authentication enabled, you will be prompted for a secure, random pin during login, which you
+                        can retrieve from the TOTP-supported application on your phone.
                     </p>
 
                     <TwoFactorRecoveryCodes />

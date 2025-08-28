@@ -38,17 +38,14 @@ class TwoFactorAuthenticationRequest extends FormRequest
 
         $currentTime = time();
 
-        // Notate totally disabled state in session...
         if ($this->twoFactorAuthenticationDisabled()) {
             $this->session()->put('two_factor_empty_at', $currentTime);
         }
 
-        // If was previously totally disabled this session but is now confirming, notate time...
         if ($this->hasJustBegunConfirmingTwoFactorAuthentication()) {
             $this->session()->put('two_factor_confirming_at', $currentTime);
         }
 
-        // If the profile is reloaded and is not confirmed but was previously in confirming state, disable...
         if ($this->neverFinishedConfirmingTwoFactorAuthentication($currentTime)) {
             app(DisableTwoFactorAuthentication::class)(Auth::user());
 
@@ -67,7 +64,7 @@ class TwoFactorAuthenticationRequest extends FormRequest
     }
 
     /**
-     * Determine if two-factor authentication is just now being confirmed within the last request cycle.
+     * Determine if two-factor authentication is being confirmed within the last request cycle.
      */
     protected function hasJustBegunConfirmingTwoFactorAuthentication(): bool
     {
