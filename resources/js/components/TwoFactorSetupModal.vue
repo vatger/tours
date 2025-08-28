@@ -54,9 +54,11 @@ const modalConfig = computed<{ title: string; description: string; buttonText: s
 const handleModalNextStep = () => {
     if (props.requiresConfirmation) {
         showVerificationStep.value = true;
+
         nextTick(() => {
             pinInputContainerRef.value?.querySelector('input')?.focus();
         });
+
         return;
     }
 
@@ -68,6 +70,7 @@ const resetModalState = () => {
     if (props.twoFactorEnabled) {
         clearSetupData();
     }
+
     showVerificationStep.value = false;
     code.value = [];
 };
