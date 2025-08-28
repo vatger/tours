@@ -24,16 +24,12 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Fortify::twoFactorChallengeView(function () {
-            return Inertia::render('auth/TwoFactorChallenge');
-        });
+        Fortify::twoFactorChallengeView(fn() => Inertia::render('auth/TwoFactorChallenge'));
 
-        Fortify::confirmPasswordView(function () {
-            return Inertia::render('auth/ConfirmPassword');
-        });
+        Fortify::confirmPasswordView(fn() => Inertia::render('auth/ConfirmPassword'));
 
-        RateLimiter::for('two-factor', function (Request $request) {
-            return Limit::perMinute(5)->by($request->session()->get('login.id'));
-        });
+        RateLimiter::for(
+            'two-factor',
+            fn(Request $request) => Limit::perMinute(5)->by($request->session()->get('login.id')));
     }
 }
