@@ -71,7 +71,7 @@ onMounted(async () => {
                         </div>
                     </div>
                     <p class="text-xs text-muted-foreground select-none">
-                        Each can be used once to access your account and will be removed after use. If you need more, click
+                        Each recovery code can be used once to access your account and will be removed after use. If you need more, click
                         <span class="font-bold">Regenerate Codes</span> above.
                     </p>
                 </div>
