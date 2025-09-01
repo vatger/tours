@@ -8,6 +8,14 @@ defineProps<{
 }>();
 
 const page = usePage();
+
+const isActive = (item: NavItem): boolean => {
+    if (typeof item.href === 'string') {
+        return item.href === page.url;
+    }
+
+    return item.href?.url === page.url;
+}
 </script>
 
 <template>
@@ -15,7 +23,7 @@ const page = usePage();
         <SidebarGroupLabel>Platform</SidebarGroupLabel>
         <SidebarMenu>
             <SidebarMenuItem v-for="item in items" :key="item.title">
-                <SidebarMenuButton as-child :is-active="item.href === page.url" :tooltip="item.title">
+                <SidebarMenuButton as-child :is-active="isActive(item)" :tooltip="item.title">
                     <Link :href="item.href">
                         <component :is="item.icon" />
                         <span>{{ item.title }}</span>
