@@ -90,10 +90,10 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->post('/logout');
+        $response = $this->actingAs($user)->post(route('logout'));
 
         $this->assertGuest();
-        $response->assertRedirect('/');
+        $response->assertRedirect(route('home'));
     }
 
     public function test_users_are_rate_limited()
