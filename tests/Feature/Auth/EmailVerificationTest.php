@@ -61,9 +61,9 @@ class EmailVerificationTest extends TestCase
 
     public function test_email_is_not_verified_with_invalid_user_id(): void
     {
-        $user = User::factory()->create([
-            'email_verified_at' => null,
-        ]);
+        $user = User::factory()->unverified()->create();
+
+        Event::fake();
 
         $verificationUrl = URL::temporarySignedRoute(
             'verification.verify',
@@ -73,6 +73,7 @@ class EmailVerificationTest extends TestCase
 
         $this->actingAs($user)->get($verificationUrl);
 
+        Event::assertNotDispatched(Verified::class);
         $this->assertFalse($user->fresh()->hasVerifiedEmail());
     }
 
@@ -82,8 +83,11 @@ class EmailVerificationTest extends TestCase
             'email_verified_at' => now(),
         ]);
 
+        Event::fake();
+
         $response = $this->actingAs($user)->get(route('verification.notice'));
 
+        Event::assertNotDispatched(Verified::class);
         $response->assertRedirect(route('dashboard', absolute: false));
     }
 
@@ -104,7 +108,7 @@ class EmailVerificationTest extends TestCase
         $this->actingAs($user)->get($verificationUrl)
             ->assertRedirect(route('dashboard', absolute: false).'?verified=1');
 
-        $this->assertTrue($user->fresh()->hasVerifiedEmail());
         Event::assertNotDispatched(Verified::class);
+        $this->assertTrue($user->fresh()->hasVerifiedEmail());
     }
 }
