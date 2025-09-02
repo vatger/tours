@@ -45,6 +45,8 @@ class EmailVerificationTest extends TestCase
     {
         $user = User::factory()->unverified()->create();
 
+        Event::fake();
+
         $verificationUrl = URL::temporarySignedRoute(
             'verification.verify',
             now()->addMinutes(60),
@@ -53,6 +55,7 @@ class EmailVerificationTest extends TestCase
 
         $this->actingAs($user)->get($verificationUrl);
 
+        Event::assertNotDispatched(Verified::class);
         $this->assertFalse($user->fresh()->hasVerifiedEmail());
     }
 
