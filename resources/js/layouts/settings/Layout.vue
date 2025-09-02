@@ -2,6 +2,7 @@
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { toUrl, urlIsActive } from '@/lib/utils';
 import { appearance } from '@/routes';
 import { edit as editPassword } from '@/routes/password';
 import { edit } from '@/routes/profile';
@@ -35,12 +36,9 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
                 <nav class="flex flex-col space-y-1 space-x-0">
                     <Button
                         v-for="item in sidebarNavItems"
-                        :key="typeof item.href === 'string' ? item.href : item.href?.url"
+                        :key="toUrl(item.href)"
                         variant="ghost"
-                        :class="[
-                            'w-full justify-start',
-                            { 'bg-muted': currentPath === (typeof item.href === 'string' ? item.href : item.href?.url) },
-                        ]"
+                        :class="['w-full justify-start', { 'bg-muted': urlIsActive(item.href, currentPath) }]"
                         as-child
                     >
                         <Link :href="item.href">
