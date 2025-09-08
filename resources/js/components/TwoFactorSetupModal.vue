@@ -177,9 +177,7 @@ watch(
                                 >
                                     Back
                                 </Button>
-                                <Button type="submit" class="w-auto flex-1" :disabled="processing || codeValue.length < 6">
-                                    {{ processing ? 'Confirming...' : 'Confirm' }}
-                                </Button>
+                                <Button type="submit" class="w-auto flex-1" :disabled="processing || codeValue.length < 6"> Confirm </Button>
                             </div>
                         </div>
                     </Form>

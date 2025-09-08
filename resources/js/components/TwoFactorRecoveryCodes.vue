@@ -54,10 +54,7 @@ onMounted(async () => {
                     @success="fetchRecoveryCodes"
                     #default="{ processing }"
                 >
-                    <Button variant="secondary" type="submit" :disabled="processing">
-                        <RefreshCw class="mr-2 size-4" :class="{ 'animate-spin': processing }" />
-                        {{ processing ? 'Regenerating...' : 'Regenerate Codes' }}
-                    </Button>
+                    <Button variant="secondary" type="submit" :disabled="processing"> <RefreshCw /> Regenerate Codes </Button>
                 </Form>
             </div>
             <div :class="['relative overflow-hidden transition-all duration-300', isRecoveryCodesVisible ? 'h-auto opacity-100' : 'h-0 opacity-0']">

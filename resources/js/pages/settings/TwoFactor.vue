@@ -30,7 +30,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const { hasSetupData, clearTwoFactorAuthData } = useTwoFactorAuth();
+const { clearTwoFactorAuthData } = useTwoFactorAuth();
 const showSetupModal = ref<boolean>(false);
 
 onUnmounted(() => {
@@ -54,9 +54,8 @@ onUnmounted(() => {
                     </p>
 
                     <div>
-                        <Button v-if="hasSetupData" @click="showSetupModal = true"> <ShieldCheck />Continue Setup </Button>
-                        <Form v-else v-bind="enable.form()" @success="showSetupModal = true" #default="{ processing }">
-                            <Button type="submit" :disabled="processing"> <ShieldCheck />{{ processing ? 'Enabling...' : 'Enable 2FA' }} </Button>
+                        <Form v-bind="enable.form()" @success="showSetupModal = true" #default="{ processing }">
+                            <Button type="submit" :disabled="processing"> <ShieldCheck />Enable 2FA</Button>
                         </Form>
                     </div>
                 </div>
@@ -75,7 +74,7 @@ onUnmounted(() => {
                         <Form v-bind="disable.form()" #default="{ processing }">
                             <Button variant="destructive" type="submit" :disabled="processing">
                                 <ShieldBan />
-                                {{ processing ? 'Disabling...' : 'Disable 2FA' }}
+                                Disable 2FA
                             </Button>
                         </Form>
                     </div>
