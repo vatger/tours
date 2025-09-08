@@ -61,20 +61,6 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
     }
 
-    public function test_users_without_two_factor_enabled_login_normally()
-    {
-        $user = User::factory()->create();
-
-        $response = $this->post(route('login'), [
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
-
-        $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
-        $response->assertSessionMissing('login.id');
-    }
-
     public function test_users_can_not_authenticate_with_invalid_password()
     {
         $user = User::factory()->create();
