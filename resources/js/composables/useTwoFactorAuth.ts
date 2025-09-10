@@ -22,11 +22,13 @@ const hasSetupData = computed<boolean>(() => qrCodeSvg.value !== null && manualS
 export const useTwoFactorAuth = () => {
     const fetchQrCode = async (): Promise<void> => {
         const { svg } = await fetchJson<{ svg: string; url: string }>(qrCode.url());
+
         qrCodeSvg.value = svg;
     };
 
     const fetchSetupKey = async (): Promise<void> => {
         const { secretKey: key } = await fetchJson<{ secretKey: string }>(secretKey.url());
+
         manualSetupKey.value = key;
     };
 
@@ -37,6 +39,7 @@ export const useTwoFactorAuth = () => {
 
     const clearTwoFactorAuthData = (): void => {
         clearSetupData();
+
         recoveryCodesList.value = [];
     };
 
@@ -45,6 +48,7 @@ export const useTwoFactorAuth = () => {
             recoveryCodesList.value = await fetchJson<string[]>(recoveryCodes.url());
         } catch (error) {
             console.error('Failed to fetch recovery codes:', error);
+
             recoveryCodesList.value = [];
         }
     };
@@ -54,6 +58,7 @@ export const useTwoFactorAuth = () => {
             await Promise.all([fetchQrCode(), fetchSetupKey()]);
         } catch (error) {
             console.error('Failed to fetch setup data:', error);
+
             qrCodeSvg.value = null;
             manualSetupKey.value = null;
         }
