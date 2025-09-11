@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import PasswordResetLinkController from '@/actions/App/Http/Controllers/Auth/PasswordResetLinkController';
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/AuthLayout.vue';
-import { login } from '@/routes';
 import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
+import { email as forgotPasswordEmail } from '@/routes/password';
+import { login } from '@/routes';
 
 defineProps<{
     status?: string;
@@ -24,7 +24,7 @@ defineProps<{
         </div>
 
         <div class="space-y-6">
-            <Form v-bind="PasswordResetLinkController.store.form()" v-slot="{ errors, processing }">
+            <Form :action="forgotPasswordEmail()" v-slot="{ errors, processing }">
                 <div class="grid gap-2">
                     <Label for="email">Email address</Label>
                     <Input id="email" type="email" name="email" autocomplete="off" autofocus placeholder="email@example.com" />
