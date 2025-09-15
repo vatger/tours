@@ -3,9 +3,9 @@ import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { toUrl, urlIsActive } from '@/lib/utils';
-import { appearance } from '@/routes';
+import { edit as editAppearance } from '@/routes/appearance';
 import { edit as editPassword } from '@/routes/password';
-import { edit } from '@/routes/profile';
+import { edit as editProfile } from '@/routes/profile';
 import { show } from '@/routes/two-factor';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
@@ -13,7 +13,7 @@ import { Link } from '@inertiajs/vue3';
 const sidebarNavItems: NavItem[] = [
     {
         title: 'Profile',
-        href: edit(),
+        href: editProfile(),
     },
     {
         title: 'Password',
@@ -25,7 +25,7 @@ const sidebarNavItems: NavItem[] = [
     },
     {
         title: 'Appearance',
-        href: appearance(),
+        href: editAppearance(),
     },
 ];
 
