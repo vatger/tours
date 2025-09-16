@@ -3,12 +3,10 @@ name: browser-tests
 on:
   push:
     branches:
-      - pest-ci
       - develop
       - main
   pull_request:
     branches:
-      - pest-ci
       - develop
       - main
 
