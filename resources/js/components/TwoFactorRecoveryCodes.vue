@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AlertError from '@/components/AlertError.vue';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -13,7 +14,7 @@ import { Form } from '@inertiajs/vue3';
 import { Eye, EyeOff, LockKeyhole, RefreshCw } from 'lucide-vue-next';
 import { nextTick, onMounted, ref } from 'vue';
 
-const { recoveryCodesList, fetchRecoveryCodes } = useTwoFactorAuth();
+const { recoveryCodesList, fetchRecoveryCodes, errors } = useTwoFactorAuth();
 const isRecoveryCodesVisible = ref<boolean>(false);
 const recoveryCodeSectionRef = ref<HTMLDivElement | null>(null);
 
@@ -38,7 +39,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <Card>
+    <Card class="w-full">
         <CardHeader>
             <CardTitle class="flex gap-3">
                 <LockKeyhole class="size-4" />2FA Recovery Codes
@@ -62,7 +63,7 @@ onMounted(async () => {
                 </Button>
 
                 <Form
-                    v-if="isRecoveryCodesVisible"
+                    v-if="isRecoveryCodesVisible && recoveryCodesList.length"
                     v-bind="regenerateRecoveryCodes.form()"
                     method="post"
                     :options="{ preserveScroll: true }"
@@ -86,7 +87,10 @@ onMounted(async () => {
                         : 'h-0 opacity-0',
                 ]"
             >
-                <div class="mt-3 space-y-3">
+                <div v-if="errors?.length" class="mt-6">
+                    <AlertError :errors="errors" />
+                </div>
+                <div v-else class="mt-3 space-y-3">
                     <div
                         ref="recoveryCodeSectionRef"
                         class="grid gap-1 rounded-lg bg-muted p-4 font-mono text-sm"

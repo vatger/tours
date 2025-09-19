@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AlertError from '@/components/AlertError.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import {
@@ -29,7 +30,7 @@ const props = defineProps<Props>();
 const isOpen = defineModel<boolean>('isOpen');
 
 const { copy, copied } = useClipboard();
-const { qrCodeSvg, manualSetupKey, clearSetupData, fetchSetupData } =
+const { qrCodeSvg, manualSetupKey, clearSetupData, fetchSetupData, errors } =
     useTwoFactorAuth();
 
 const showVerificationStep = ref(false);
@@ -150,79 +151,82 @@ watch(
                 class="relative flex w-auto flex-col items-center justify-center space-y-5"
             >
                 <template v-if="!showVerificationStep">
-                    <div
-                        class="relative mx-auto flex max-w-md items-center overflow-hidden"
-                    >
+                    <AlertError v-if="errors?.length" :errors="errors" />
+                    <template v-else>
                         <div
-                            class="relative mx-auto aspect-square w-64 overflow-hidden rounded-lg border border-border"
+                            class="relative mx-auto flex max-w-md items-center overflow-hidden"
                         >
                             <div
-                                v-if="!qrCodeSvg"
-                                class="absolute inset-0 z-10 flex aspect-square h-auto w-full animate-pulse items-center justify-center bg-background"
-                            >
-                                <Loader2 class="size-6 animate-spin" />
-                            </div>
-                            <div
-                                v-else
-                                class="relative z-10 overflow-hidden border p-5"
+                                class="relative mx-auto aspect-square w-64 overflow-hidden rounded-lg border border-border"
                             >
                                 <div
-                                    v-html="qrCodeSvg"
-                                    class="flex aspect-square size-full items-center justify-center"
-                                />
+                                    v-if="!qrCodeSvg"
+                                    class="absolute inset-0 z-10 flex aspect-square h-auto w-full animate-pulse items-center justify-center bg-background"
+                                >
+                                    <Loader2 class="size-6 animate-spin" />
+                                </div>
+                                <div
+                                    v-else
+                                    class="relative z-10 overflow-hidden border p-5"
+                                >
+                                    <div
+                                        v-html="qrCodeSvg"
+                                        class="flex aspect-square size-full items-center justify-center"
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="flex w-full items-center space-x-5">
-                        <Button class="w-full" @click="handleModalNextStep">
-                            {{ modalConfig.buttonText }}
-                        </Button>
-                    </div>
+                        <div class="flex w-full items-center space-x-5">
+                            <Button class="w-full" @click="handleModalNextStep">
+                                {{ modalConfig.buttonText }}
+                            </Button>
+                        </div>
 
-                    <div
-                        class="relative flex w-full items-center justify-center"
-                    >
                         <div
-                            class="absolute inset-0 top-1/2 h-px w-full bg-border"
-                        />
-                        <span class="relative bg-card px-2 py-1"
-                            >or, enter the code manually</span
-                        >
-                    </div>
-
-                    <div
-                        class="flex w-full items-center justify-center space-x-2"
-                    >
-                        <div
-                            class="flex w-full items-stretch overflow-hidden rounded-xl border border-border"
+                            class="relative flex w-full items-center justify-center"
                         >
                             <div
-                                v-if="!manualSetupKey"
-                                class="flex h-full w-full items-center justify-center bg-muted p-3"
+                                class="absolute inset-0 top-1/2 h-px w-full bg-border"
+                            />
+                            <span class="relative bg-card px-2 py-1"
+                                >or, enter the code manually</span
                             >
-                                <Loader2 class="size-4 animate-spin" />
-                            </div>
-                            <template v-else>
-                                <input
-                                    type="text"
-                                    readonly
-                                    :value="manualSetupKey"
-                                    class="h-full w-full bg-background p-3 text-foreground"
-                                />
-                                <button
-                                    @click="copy(manualSetupKey || '')"
-                                    class="relative block h-auto border-l border-border px-3 hover:bg-muted"
-                                >
-                                    <Check
-                                        v-if="copied"
-                                        class="w-4 text-green-500"
-                                    />
-                                    <Copy v-else class="w-4" />
-                                </button>
-                            </template>
                         </div>
-                    </div>
+
+                        <div
+                            class="flex w-full items-center justify-center space-x-2"
+                        >
+                            <div
+                                class="flex w-full items-stretch overflow-hidden rounded-xl border border-border"
+                            >
+                                <div
+                                    v-if="!manualSetupKey"
+                                    class="flex h-full w-full items-center justify-center bg-muted p-3"
+                                >
+                                    <Loader2 class="size-4 animate-spin" />
+                                </div>
+                                <template v-else>
+                                    <input
+                                        type="text"
+                                        readonly
+                                        :value="manualSetupKey"
+                                        class="h-full w-full bg-background p-3 text-foreground"
+                                    />
+                                    <button
+                                        @click="copy(manualSetupKey || '')"
+                                        class="relative block h-auto border-l border-border px-3 hover:bg-muted"
+                                    >
+                                        <Check
+                                            v-if="copied"
+                                            class="w-4 text-green-500"
+                                        />
+                                        <Copy v-else class="w-4" />
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
                 </template>
 
                 <template v-else>
