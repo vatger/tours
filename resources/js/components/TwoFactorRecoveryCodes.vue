@@ -39,7 +39,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <Card>
+    <Card class="w-full">
         <CardHeader>
             <CardTitle class="flex gap-3">
                 <LockKeyhole class="size-4" />2FA Recovery Codes
@@ -87,7 +87,7 @@ onMounted(async () => {
                         : 'h-0 opacity-0',
                 ]"
             >
-                <div v-if="errors?.length" class="mt-3">
+                <div v-if="errors?.length" class="mt-6">
                     <AlertError :errors="errors" />
                 </div>
                 <div v-else class="mt-3 space-y-3">
