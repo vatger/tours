@@ -46,7 +46,7 @@ class UserFactory extends Factory
     }
 
     /**
-     * IIndicate that the model does not have two-factor authentication configured.
+     * Indicate that the model does not have two-factor authentication configured.
      */
     public function withoutTwoFactor(): static
     {
