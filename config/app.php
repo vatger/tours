@@ -15,8 +15,6 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
-    'heartbeat_url' => env('HEARTBEAT_URL'),
-
     /*
     |--------------------------------------------------------------------------
     | Application Environment
