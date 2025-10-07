@@ -11,9 +11,5 @@ Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('error', function () {
-    abort(500);
-});
-
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
