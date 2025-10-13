@@ -27,6 +27,24 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->configureActions();
+        $this->configureViews();
+        $this->configureRateLimiting();
+    }
+
+    /**
+     * Configure Fortify actions.
+     */
+    private function configureActions(): void
+    {
+        Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
+    }
+
+    /**
+     * Configure Fortify views.
+     */
+    private function configureViews(): void
+    {
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
         Fortify::loginView(fn (Request $request) => Inertia::render('auth/Login', [
@@ -38,10 +56,6 @@ class FortifyServiceProvider extends ServiceProvider
             'status' => $request->session()->get('status'),
         ]));
 
-        Fortify::twoFactorChallengeView(fn () => Inertia::render('auth/TwoFactorChallenge'));
-
-        Fortify::confirmPasswordView(fn () => Inertia::render('auth/ConfirmPassword'));
-
         Fortify::requestPasswordResetLinkView(fn (Request $request) => Inertia::render('auth/ForgotPassword', [
             'status' => $request->session()->get('status'),
         ]));
@@ -51,6 +65,16 @@ class FortifyServiceProvider extends ServiceProvider
             'token' => $request->route('token'),
         ]));
 
+        Fortify::twoFactorChallengeView(fn () => Inertia::render('auth/TwoFactorChallenge'));
+
+        Fortify::confirmPasswordView(fn () => Inertia::render('auth/ConfirmPassword'));
+    }
+
+    /**
+     * Configure rate limiting.
+     */
+    private function configureRateLimiting(): void
+    {
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
