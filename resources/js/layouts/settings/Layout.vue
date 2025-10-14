@@ -27,6 +27,10 @@ const sidebarNavItems: NavItem[] = [
         title: 'Appearance',
         href: editAppearance(),
     },
+    {
+        title: 'Team',
+        href: 'settings/teams',
+    },
 ];
 
 const currentPath = typeof window !== undefined ? window.location.pathname : '';
