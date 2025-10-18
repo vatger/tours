@@ -67,7 +67,9 @@ class ConnectController extends Controller
             throw new Exception('missing data');
         }
 
-        $user = User::firstOrCreate(['id' => $resourceOwner->id]);
+        $user = User::first($resourceOwner->id);
+        if(!$user) $user = new User();
+        $user->id = $resourceOwner->id;
         $user->firstname = $resourceOwner->firstname;
         $user->lastname = $resourceOwner->lastname;
         $user->save();
