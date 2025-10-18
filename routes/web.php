@@ -9,7 +9,7 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
 
-Route::get('tours', [ToursDashboardController::class, 'index'])->middleware('auth')->name('tours');
+Route::get('tours/{id?}', [ToursDashboardController::class, 'index'])->middleware('auth')->name('tours');
 
 Route::get('login', [ConnectController::class, 'login'])->name('login');
 

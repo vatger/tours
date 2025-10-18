@@ -37,9 +37,16 @@ defineProps<{
 
                 <!-- Status indicator -->
                 <div class="flex items-center gap-2">
-                    <template v-if="leg.status && leg.status.completed_at">
+                    <template v-if="leg.status && leg.status.completed_at && leg.status.fight_data_id">
                         <CheckCircle2Icon class="w-4 h-4 text-green-500" />
                         <span class="text-sm text-green-600 dark:text-green-400">Completed</span>
+                        <span class="text-sm text-muted">{{ leg.status.completed_at }}</span>
+                        <span class="text-sm text-muted">#{{ leg.status.fight_data_id }}</span>
+                    </template>
+                    <template v-else-if="leg.status && leg.status.completed_at">
+                        <CheckCircle2Icon class="w-4 h-4 text-green-500" />
+                        <span class="text-sm text-green-600 dark:text-green-400">Completed</span>
+                        <span class="text-sm text-muted">{{ leg.status.completed_at }}</span>
                     </template>
                     <template v-else-if="leg.status">
                         <ClockIcon class="w-4 h-4 text-muted-foreground" />
