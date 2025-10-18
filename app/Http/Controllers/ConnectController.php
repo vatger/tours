@@ -39,7 +39,6 @@ class ConnectController extends Controller
         try {
             $response = $this->processCallback($request);
         } catch (\Throwable $exception) {
-            dd($exception);
             return redirect()
                 ->route('home')
                 ->withErrors('Error processing login');
@@ -67,7 +66,7 @@ class ConnectController extends Controller
             throw new Exception('missing data');
         }
 
-        $user = User::first($resourceOwner->id);
+        $user = User::where('id', $resourceOwner->id)->first();
         if(!$user) $user = new User();
         $user->id = $resourceOwner->id;
         $user->firstname = $resourceOwner->firstname;
