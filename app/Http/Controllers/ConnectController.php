@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Session;
 
 class ConnectController extends Controller
 {
-    private string $state_session_key = 'vatsim.authentication.connect.state';
+    private string $state_session_key = 'connect.state';
 
     private ConnectProvider $provider;
     public function __construct()
@@ -35,7 +35,7 @@ class ConnectController extends Controller
         if ($request->input('state') != session()->pull($this->state_session_key)) {
             $request->session()->invalidate();
 
-            return redirect()->route('home');
+            return redirect()->route('home')->withErrors('Invalid state');
         }
         try {
             $response = $this->processCallback($request);
