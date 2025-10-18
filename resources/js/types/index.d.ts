@@ -37,3 +37,33 @@ export interface User {
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;
+
+export interface Tour {
+    id: number;
+    name: string;
+    description: string;
+    img_url?: string;
+    link?: string;
+    begins_at: string;
+    ends_at: string;
+    aircraft: string|null;
+    flight_rules: string;
+    require_order: boolean;
+    legs?: Leg[];
+}
+
+export interface Leg {
+    id: number;
+    tour_id: number;
+    departure_icao: string;
+    arrival_icao: string;
+    status: Status|null
+}
+
+export interface Status {
+    id: number;
+    user_id: number;
+    tour_leg_id: number;
+    fight_data_id: number|null;
+    completed_at:string|null
+}
