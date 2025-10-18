@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class
+AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
@@ -19,6 +21,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Force HTTPS
+        if (config('app.forcehttps')) {
+            URL::forceScheme('https');
+        }
+
+        // Set default timezone to UTC
+        date_default_timezone_set(config('app.timezone', 'UTC'));
     }
 }
