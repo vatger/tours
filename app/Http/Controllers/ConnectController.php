@@ -34,12 +34,12 @@ class ConnectController extends Controller
     {
         if ($request->input('state') != session()->pull($this->state_session_key)) {
             $request->session()->invalidate();
-
             return redirect()->route('home')->withErrors('Invalid state');
         }
         try {
             $response = $this->processCallback($request);
         } catch (\Throwable $exception) {
+            dd($exception);
             return redirect()
                 ->route('home')
                 ->withErrors('Error processing login');
