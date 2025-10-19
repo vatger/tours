@@ -8,6 +8,7 @@ use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -17,6 +18,7 @@ class ConnectController extends Controller
     private string $state_session_key = 'connect.state';
 
     private ConnectProvider $provider;
+
     public function __construct()
     {
         $this->provider = new ConnectProvider;
@@ -24,6 +26,12 @@ class ConnectController extends Controller
 
     public function login(Request $request): RedirectResponse
     {
+        if (App::environment('local') && App::isLocal()) {
+            $user = User::where('id', 1450775)->first();
+            Auth::login($user);
+
+            return Redirect::route('tours')->with('success', 'Logged in successfully');
+        }
         $authenticationUrl = $this->provider->getAuthorizationUrl();
         $request->session()->put($this->state_session_key, $this->provider->getState());
 
@@ -34,6 +42,7 @@ class ConnectController extends Controller
     {
         if ($request->input('state') != session()->pull($this->state_session_key)) {
             $request->session()->invalidate();
+
             return redirect()->route('home')->withErrors('Invalid state');
         }
         try {
@@ -67,13 +76,15 @@ class ConnectController extends Controller
         }
 
         $user = User::where('id', $resourceOwner->id)->first();
-        if(!$user) $user = new User();
+        if (! $user) {
+            $user = new User;
+        }
         $user->id = $resourceOwner->id;
         $user->firstname = $resourceOwner->firstname;
         $user->lastname = $resourceOwner->lastname;
         $user->save();
 
-        Auth::login($user, true);
+        Auth::login($user);
 
         return Redirect::route('tours')->with('success', 'Logged in successfully');
     }

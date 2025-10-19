@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Tour;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
@@ -18,6 +19,19 @@ class CheckTour implements ShouldQueue
 
     public function handle(): void
     {
-        //
+        $tour = Tour::with('legs')->find($this->tour_id);
+        if (! $tour) {
+            return;
+        }
+        $fist_leg = $tour->legs->first();
+        if (! $fist_leg) {
+            return;
+        }
+        $fist_leg->loadMissing('users');
+        $users = $fist_leg->users;
+        foreach ($users as $user) {
+            dispatch(new CheckTourUser($user, $tour));
+        }
+
     }
 }
