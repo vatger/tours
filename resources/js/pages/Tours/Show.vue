@@ -26,7 +26,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 const sidebarItems = computed(() =>
     allTours.value.map((tour: any) => ({
         title: tour.name,
-        href: tours(tour.id).url, // assumes route helper takes an id
+        href: tours({id: tour.id}).url,
         icon: PointerIcon,
     })),
 );

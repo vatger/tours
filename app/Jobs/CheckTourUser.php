@@ -74,7 +74,8 @@ class CheckTourUser implements ShouldQueue
                 // the leg has been completed
                 $last_leg_completed = true;
                 if ($status->completed_at && $status->completed_at->isBefore($arrived)) {
-                    Log::info("$leg_string: already found flight");
+                    Log::info("$leg_string: already found earlier flight");
+                    //todo time set
                     break;
                 }
                 if ($this->tour->require_order) {
@@ -86,6 +87,13 @@ class CheckTourUser implements ShouldQueue
                 Log::info("$leg_string: found flight $flight_id");
                 break;
             }
+
+            if ($status->completed_at && !$last_leg_completed) {
+                $last_leg_completed = true;
+                //todo time set
+                Log::info("$leg_string: already found flight");
+            }
+
             if ($this->tour->require_order && !$last_leg_completed) {
                 Log::info("$leg_string: no flight found skipping rest");
                 return;

@@ -7,14 +7,13 @@ use Inertia\Inertia;
 
 class ToursDashboardController extends Controller
 {
-    public function index(?int $id = null)
+    public function index(int $id = 0)
     {
         $tours_list = Tour::all();
-        $current_tour = Tour::with(['legs', 'legs.status']);
-        if ($id) {
-            $current_tour->where('id', $id);
-        }
-        $current_tour->first();
+        $current_tour = Tour::with(['legs', 'legs.status'])
+            ->where('id','>=', $id)
+            ->orderBy('id', 'asc')
+            ->first();
 
         return Inertia::render('Tours/Show', [
             'tours_list' => $tours_list,
