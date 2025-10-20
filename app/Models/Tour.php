@@ -10,8 +10,8 @@ class Tour extends Model
     protected function casts(): array
     {
         return [
-            'begins_at' => 'datetime ',
-            'ends_at' => 'datetime ',
+            'begins_at' => 'datetime',
+            'ends_at' => 'datetime',
         ];
     }
 

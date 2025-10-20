@@ -5,6 +5,8 @@ namespace App\Jobs;
 use App\Models\Tour;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class CheckTour implements ShouldQueue
 {
@@ -12,9 +14,21 @@ class CheckTour implements ShouldQueue
 
     public int $tour_id;
 
-    public function __construct(int $tour_id)
+    public function __construct(?int $tour_id = null)
     {
-        $this->tour_id = $tour_id;
+        if ($tour_id) {
+            $this->tour_id = $tour_id;
+
+            return;
+        }
+        $id = Cache::get('CheckTour_last_checked_id', 0);
+        $next_tour = Tour::where('id', '>', $id)->first();
+        if (! $next_tour) {
+            $this->tour_id = Tour::first()->id;
+        } else {
+            $this->tour_id = $next_tour->id;
+        }
+        Cache::put('CheckTour_last_checked_id', $this->tour_id);
     }
 
     public function handle(): void
@@ -29,8 +43,10 @@ class CheckTour implements ShouldQueue
         }
         $fist_leg->loadMissing('users');
         $users = $fist_leg->users;
+        $user_count = count($users);
+        Log::info("Checking Tour $tour->id ($tour->name) for $user_count users");
         foreach ($users as $user) {
-            dispatch(new CheckTourUser($user, $tour));
+            (new CheckTourUser($user, $tour))->handle();
         }
 
     }
