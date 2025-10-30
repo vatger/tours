@@ -43,7 +43,7 @@ import { Head, Link } from '@inertiajs/vue3';
                     class="flex-1 rounded-br-lg rounded-bl-lg bg-white p-6 pb-12 text-[13px] leading-[20px] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] lg:rounded-tl-lg lg:rounded-br-none lg:p-20 dark:bg-[#161615] dark:text-[#EDEDEC] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]"
                 >
                     <h1 class="mb-1 font-medium">VATSIM Germany Tours</h1>
-
+                    <p>Das Tourensystem wird grade überarbeitet. Die angezeigten Daten müssen nicht stimmen. Bitte keine Fehlermeldungen an den Support.</p>
                 </div>
                 <div
                     class="relative -mb-px aspect-335/376 w-full shrink-0 overflow-hidden rounded-t-lg bg-[#fff2f2] lg:mb-0 lg:-ml-px lg:aspect-auto lg:w-[438px] lg:rounded-t-none lg:rounded-r-lg dark:bg-[#1D0002]"

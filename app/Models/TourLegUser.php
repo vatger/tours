@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TourLegUser extends Model
 {
+    public $timestamps = false;
     protected function casts(): array
     {
         return [

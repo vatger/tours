@@ -1,3 +1,5 @@
 <?php
 
-//Schedule::job(new \App\Jobs\CheckTour)->everyFifteenMinutes();
+use App\Jobs\CheckTour;
+
+Schedule::job(new CheckTour)->everyFifteenMinutes();

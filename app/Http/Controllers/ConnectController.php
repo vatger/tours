@@ -26,7 +26,7 @@ class ConnectController extends Controller
 
     public function login(Request $request): RedirectResponse
     {
-        if (App::environment('local') && App::isLocal()) {
+        if (App::environment('local') && App::isLocal() && App::hasDebugModeEnabled()) {
             $user = User::where('id', 1450775)->first();
             Auth::login($user);
 

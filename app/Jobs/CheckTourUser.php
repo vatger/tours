@@ -43,8 +43,9 @@ class CheckTourUser implements ShouldQueue
 
 
             /* @var ?TourLegUser $status */
-            $status = $leg->status($this->user->id);
+            $status = $leg->status($this->user->id)->first();
             if (! $status) {
+                Log::info("$leg_string: not registered");
                 return;
             }
 
@@ -58,9 +59,17 @@ class CheckTourUser implements ShouldQueue
                 'completed' => true,
             ]);
 
-            //todo check aircraft and flight rules
-
             $flights = $response->json();
+            $flights = collect($flights)
+                ->filter(function($flight) {
+                    $correct_rules = $this->tour->flight_rules == null
+                        || strtoupper($flight['flight_type']) == strtoupper($this->tour->flight_rules);
+                    $correct_aircraft = empty($this->tour->aircraft)
+                        || collect(explode(',', strtoupper($this->tour->aircraft)))
+                            ->contains(strtoupper($flight['aircraft'])) ;
+                    return $correct_rules && $correct_aircraft;
+                });
+
             foreach ($flights as $flight) {
                 $departed = Carbon::parse($flight['departed_at']);
                 $arrived = Carbon::parse($flight['arrived_at']);
@@ -75,11 +84,7 @@ class CheckTourUser implements ShouldQueue
                 $last_leg_completed = true;
                 if ($status->completed_at && $status->completed_at->isBefore($arrived)) {
                     Log::info("$leg_string: already found earlier flight");
-                    //todo time set
                     break;
-                }
-                if ($this->tour->require_order) {
-                    $current_start_time = $arrived->subMinutes(5);
                 }
                 $status->completed_at = $arrived;
                 $status->fight_data_id = $flight_id;
@@ -90,7 +95,6 @@ class CheckTourUser implements ShouldQueue
 
             if ($status->completed_at && !$last_leg_completed) {
                 $last_leg_completed = true;
-                //todo time set
                 Log::info("$leg_string: already found flight");
             }
 
@@ -98,6 +102,11 @@ class CheckTourUser implements ShouldQueue
                 Log::info("$leg_string: no flight found skipping rest");
                 return;
             }
+
+            if ($this->tour->require_order) {
+                $current_start_time = $status->completed_at->subMinutes(1);
+            }
+
             if (! $last_leg_completed) {
                 Log::info("$leg_string: no flight found");
             }

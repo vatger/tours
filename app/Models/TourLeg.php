@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class TourLeg extends Model
 {
-    public function status(?int $user_id = null): HasOne
+    public function status(?int $user_id = null): HasOne|null
     {
         if (! $user_id) {
             $user_id = Auth::check() ? Auth::user()->id : null;
