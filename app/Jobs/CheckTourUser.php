@@ -40,12 +40,11 @@ class CheckTourUser implements ShouldQueue
 
             $leg_string = "Checking Tour {$this->tour->id}, Leg $leg->id ($leg->departure_icao-$leg->arrival_icao) of user {$this->user->id}";
 
-
-
             /* @var ?TourLegUser $status */
             $status = $leg->status($this->user->id)->first();
             if (! $status) {
                 Log::info("$leg_string: not registered");
+
                 return;
             }
 
@@ -61,12 +60,13 @@ class CheckTourUser implements ShouldQueue
 
             $flights = $response->json();
             $flights = collect($flights)
-                ->filter(function($flight) {
+                ->filter(function ($flight) {
                     $correct_rules = $this->tour->flight_rules == null
                         || strtoupper($flight['flight_type']) == strtoupper($this->tour->flight_rules);
                     $correct_aircraft = empty($this->tour->aircraft)
                         || collect(explode(',', strtoupper($this->tour->aircraft)))
-                            ->contains(strtoupper($flight['aircraft'])) ;
+                            ->contains(strtoupper($flight['aircraft']));
+
                     return $correct_rules && $correct_aircraft;
                 });
 
@@ -93,13 +93,14 @@ class CheckTourUser implements ShouldQueue
                 break;
             }
 
-            if ($status->completed_at && !$last_leg_completed) {
+            if ($status->completed_at && ! $last_leg_completed) {
                 $last_leg_completed = true;
                 Log::info("$leg_string: already found flight");
             }
 
-            if ($this->tour->require_order && !$last_leg_completed) {
+            if ($this->tour->require_order && ! $last_leg_completed) {
                 Log::info("$leg_string: no flight found skipping rest");
+
                 return;
             }
 

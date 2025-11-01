@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
-import NavUser from '@/components/NavUser.vue';
 import {
     Sidebar,
     SidebarContent,
@@ -11,10 +10,10 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { tours } from '@/routes';
+import { logout, tours } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder } from 'lucide-vue-next';
+import { BookOpen, Folder, LogOut } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 interface Props {
@@ -44,6 +43,11 @@ const footerNavItems: NavItem[] = [
         href: 'https://vatger.de/imprint',
         icon: BookOpen,
     },
+    {
+        title: 'Logout',
+        href: logout(),
+        icon: LogOut,
+    },
 ];
 </script>
 
@@ -67,7 +71,6 @@ const footerNavItems: NavItem[] = [
 
         <SidebarFooter>
             <NavFooter :items="footerNavItems" />
-            <NavUser />
         </SidebarFooter>
     </Sidebar>
     <slot />

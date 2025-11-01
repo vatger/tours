@@ -18,6 +18,8 @@ const allTours = computed(() => page.props.tours_list as Array<Tour>);
 // Current selected route
 const currentTour = computed(() => page.props.current_tour as Tour);
 
+const signedUp = computed(() => page.props.signed_up as boolean);
+
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Tours', href: tours().url },
     { title: currentTour?.value?.name, href: '#' },
@@ -37,7 +39,7 @@ const sidebarItems = computed(() =>
 
     <AppLayout :breadcrumbs="breadcrumbs" :sidebarItems="sidebarItems">
         <div v-if="currentTour" class="flex flex-col gap-6 p-4">
-            <TourHeader :tour="currentTour" />
+            <TourHeader :tour="currentTour" :signedUp="signedUp" />
             <TourDetails
                 :aircraft="currentTour.aircraft"
                 :flightRules="currentTour.flight_rules"

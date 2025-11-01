@@ -1,9 +1,14 @@
 <script setup lang="ts">
-defineProps<{
-    aircraft: string|null,
-    flightRules: string,
-    requireOrder: boolean,
-}>();
+import { computed } from 'vue';
+
+const props = defineProps<{
+    aircraft: string | null
+    flightRules: string
+    requireOrder: boolean
+}>()
+
+const aircraftNice = computed(() => props.aircraft ? props.aircraft.replace(/,/g, ', ') : '');
+
 </script>
 
 <template>
@@ -11,7 +16,7 @@ defineProps<{
         <h2 class="text-xl font-semibold mb-3">Further tour details</h2>
         <p v-if="aircraft" class="mb-2">
             <strong class="font-semibold">Allowed aircraft: </strong>
-            {{ aircraft }}
+            {{ aircraftNice }}
         </p>
         <p v-else class="mb-2">
             <strong class="font-semibold">Allowed aircraft: </strong>
