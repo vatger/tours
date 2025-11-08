@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ConnectController;
 use App\Http\Controllers\ToursDashboardController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -20,3 +21,5 @@ Route::get('callback', [ConnectController::class, 'callback'])->name('callback')
 Route::middleware('auth')->group(function () {
     Route::get('/logout', [ConnectController::class, 'logout'])->name('logout');
 });
+
+Route::get('api/delete/{user_id}', [UserController::class, 'delete']);

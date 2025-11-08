@@ -3,6 +3,7 @@ import { Tour } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import { signup, cancel } from '@/routes/tours';
 import { Button } from '@/components/ui/button';
+import { tours } from '@/routes';
 
 defineProps<{
     tour: Tour
@@ -23,8 +24,8 @@ defineProps<{
             </div>
 
             <div class="flex gap-4 text-sm text-muted-foreground mt-2">
-            <Button v-if="!signedUp" :href="signup(tour.id)">Sign up for this tour</Button>
-            <Button v-else :href="cancel(tour.id)">Sign out of this tour</Button>
+            <Button v-if="!signedUp" :href="signup({id: tour.id}).url">Sign up for this tour</Button>
+            <Button v-else :href="cancel({id: tour.id}).url">Sign out of this tour</Button>
             </div>
         </div>
 
