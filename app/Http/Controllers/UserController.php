@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TourLegUser;
 use App\Models\User;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
