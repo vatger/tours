@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { PlaneTakeoffIcon, PlaneLandingIcon, MapIcon, CheckCircle2Icon, ClockIcon, BanIcon } from 'lucide-vue-next';
 import type { Leg } from '@/types';
+import LegMissing from '@/pages/Tours/components/LegMissing.vue';
 
 defineProps<{
     legs?: Array<Leg>;
 }>();
+
+
 </script>
 
 <template>
@@ -51,6 +54,7 @@ defineProps<{
                     <template v-else-if="leg.status">
                         <ClockIcon class="w-4 h-4 text-muted-foreground" />
                         <span class="text-sm text-muted-foreground">Pending</span>
+                        <LegMissing :leg-id="leg.id"></LegMissing>
                     </template>
                     <template v-else>
                         <BanIcon class="w-4 h-4 text-muted-foreground" />
