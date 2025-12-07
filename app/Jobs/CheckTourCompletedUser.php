@@ -26,7 +26,9 @@ class CheckTourCompletedUser implements ShouldQueue
         }
         $user_legs = TourLegUser::with('leg')
             ->where('user_id', $this->user->id)
-            ->where('tour_id', $this->tour->id)
+            ->whereHas('leg', function ($q) {
+                $q->where('tour_id', $this->tour->id);
+            })
             ->get();
         $not_completed = $user_legs->contains(
             fn (TourLegUser $tour_leg_user) =>  $tour_leg_user->completed_at == null

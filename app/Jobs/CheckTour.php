@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Tour;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -45,8 +46,10 @@ class CheckTour implements ShouldQueue
         $user_count = count($users);
         Log::info("Checking Tour $tour->id ($tour->name) for $user_count users");
         foreach ($users as $user) {
-            new CheckTourUser($user, $tour)->handle();
-            new CheckTourCompletedUser($user, $tour)->handle();
+            Bus::chain([
+                new CheckTourUser($user, $tour),
+                new CheckTourCompletedUser($user, $tour),
+            ])->dispatch();
         }
 
 
