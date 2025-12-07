@@ -18,7 +18,6 @@ class CheckTour implements ShouldQueue
     {
         if ($tour_id) {
             $this->tour_id = $tour_id;
-
             return;
         }
         $id = Cache::get('CheckTour_last_checked_id', 0);
@@ -46,8 +45,10 @@ class CheckTour implements ShouldQueue
         $user_count = count($users);
         Log::info("Checking Tour $tour->id ($tour->name) for $user_count users");
         foreach ($users as $user) {
-            (new CheckTourUser($user, $tour))->handle();
+            new CheckTourUser($user, $tour)->handle();
+            new CheckTourCompletedUser($user, $tour)->handle();
         }
+
 
     }
 }

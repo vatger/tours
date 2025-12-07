@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Tour;
 use App\Models\TourLeg;
 use App\Models\TourLegUser;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -53,14 +54,18 @@ class LegController extends Controller
             'from' => $from,
             'to' => $to,
         ]);
-        $url = "{$apiUrl}?{$query}";
-        $response = Http::acceptJson()->get($url);
-        $code = $response->getStatusCode();
+        $url = "$apiUrl?$query";
+        try {
+            $response = Http::acceptJson()->get($url);
+        } catch (ConnectionException) {
+            $response = null;
+        }
+        $code = $response?->getStatusCode();
         if ($code != 200 && $code != 404) {
             abort(501, "Something went wrong: $code");
         }
         $flights = [];
-        if ($response->successful()) {
+        if ($response?->successful()) {
             $flights = $response->json();
         }
         $leg = TourLeg::findOrFail($validated['leg']);
@@ -96,7 +101,8 @@ class LegController extends Controller
         if($flights->count() == 0)
             return response("No flights found");
 
-        $leg_user->completed_at = Carbon::parse($flights->first->departed);
+        $first_flight = (object) $flights->first();
+        $leg_user->completed_at = Carbon::parse($first_flight->departed);
         $leg_user->save();
         return response("Found");
     }

@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Tour;
 use App\Models\TourLegUser;
+use App\Models\TourUser;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,26 +13,23 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class CheckTourUser implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public User $user;
+    public function __construct(public User $user, public Tour $tour)
+    {}
 
-    public Tour $tour;
-
-    public function __construct(User $user, Tour $tour)
-    {
-        $this->user = $user;
-        $this->tour = $tour;
-    }
-
-    /**
-     * @throws ConnectionException
-     */
     public function handle(): void
     {
+        $current_tour_completion = TourUser::where('user_id', $this->user->id)
+            ->where('tour_id', $this->tour->id)->first();
+        if ($current_tour_completion && $current_tour_completion->completed) {
+            Log::info("Checking Tour {$this->tour->id} of user {$this->user->id}: Tour is already completed.");
+        }
+
         $current_start_time = $this->tour->begins_at;
         $current_end_time = $this->tour->ends_at;
         $legs = $this->tour->legs;
@@ -50,13 +48,18 @@ class CheckTourUser implements ShouldQueue
 
             $url = 'http://stats.vatsim-germany.org/api/flights/from/'.$leg->departure_icao.'/to/'.$leg->arrival_icao;
 
-            $response = Http::get($url, [
-                'start_date' => $current_start_time->format('Y-m-d'),
-                'end_date' => $current_end_time->format('Y-m-d'),
-                'cid' => $this->user->id,
-                'ascending' => true,
-                'completed' => true,
-            ]);
+            try {
+                $response = Http::get($url, [
+                    'start_date' => $current_start_time->format('Y-m-d'),
+                    'end_date' => $current_end_time->format('Y-m-d'),
+                    'cid' => $this->user->id,
+                    'ascending' => true,
+                    'completed' => true,
+                ]);
+            } catch (Throwable $e) {
+                Log::warning("$leg_string: could not connect to stats.");
+                return;
+            }
 
             $flights = $response->json();
             $flights = collect($flights)

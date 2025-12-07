@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TourLegUser;
+use App\Models\TourUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -17,6 +18,7 @@ class UserController extends Controller
         if (!$user) return response(null, 200);
         try {
             TourLegUser::where('user_id', $user_id)->delete();
+            TourUser::where('user_id', $user_id)->delete();
             User::where('id', $user_id)->delete();
             return response(null, 200);
         } catch (\Exception $e) {}
