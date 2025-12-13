@@ -37,6 +37,7 @@ class AwardBadges implements ShouldQueue
     {
         $tour_completions = TourUser::with('tour')
             ->where('completed', '=', 1)
+            ->where('tour_id', '=', $this->tour_id)
             ->get();
 
         foreach ($tour_completions as $tour_completion) {
