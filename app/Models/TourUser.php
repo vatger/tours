@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TourUser extends Model
 {
@@ -21,4 +22,10 @@ class TourUser extends Model
             'badge_given' => 'boolean',
         ];
     }
+
+    public function tour(): BelongsTo
+    {
+        return $this->belongsTo(Tour::class);
+    }
+
 }

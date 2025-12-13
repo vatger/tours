@@ -21,14 +21,15 @@ class CheckTour implements ShouldQueue
             $this->tour_id = $tour_id;
             return;
         }
-        $id = Cache::get('CheckTour_last_checked_id', 0);
+        $cache_key = 'CheckTour_last_checked_id';
+        $id = Cache::get($cache_key, 0);
         $next_tour = Tour::where('id', '>', $id)->first();
         if (! $next_tour) {
             $this->tour_id = Tour::first()->id;
         } else {
             $this->tour_id = $next_tour->id;
         }
-        Cache::put('CheckTour_last_checked_id', $this->tour_id);
+        Cache::put($cache_key, $this->tour_id);
     }
 
     public function handle(): void
@@ -51,7 +52,5 @@ class CheckTour implements ShouldQueue
                 new CheckTourCompletedUser($user, $tour),
             ])->dispatch();
         }
-
-
     }
 }
