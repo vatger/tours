@@ -41,7 +41,7 @@ class AwardBadges implements ShouldQueue
 
         foreach ($tour_completions as $tour_completion) {
             $user_id = $tour_completion->user_id;
-            $badge_id = $tour_completion->tour->badge_id;
+            $badge_id = $tour_completion->tour->forum_badge_id;
 
             $url = "http://hp.vatsim-germany.org/api/board/user/badge";
             $response = Http::withHeaders([
@@ -56,7 +56,7 @@ class AwardBadges implements ShouldQueue
             if ($response->successful()) {
                 $str = $response->body();
                 Log::info("Giving Badge to $user_id answer={$str}");
-                $has_badge = (bool)$response->json();
+                $has_badge = $response->json() == "1";
                 if ($has_badge) {
                     $tour_completion->badge_given = true;
                     $tour_completion->save();
