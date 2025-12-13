@@ -73,7 +73,7 @@ class LegController extends Controller
         $leg_user = TourLegUser::where('tour_leg_id', $leg->id)->where('user_id', Auth::user()->id)->firstOrFail();
         if ($leg_user->completed_at !== null)
             abort(400, "Leg already complete");
-        $flights = collect($flights);
+        $flights = collect($flights)->map(fn ($flight) => (object) $flight);
 
 
         $current_start_time = $tour->begins_at;
@@ -88,6 +88,7 @@ class LegController extends Controller
         }
 
         $flights = $flights->filter(function ($flight) use ($tour, $leg, $current_end_time, $current_start_time) {
+
             if(strtoupper($flight->departure) != strtoupper($leg->departure_icao)) return false;
             if(strtoupper($flight->arrival) != strtoupper($leg->arrival_icao)) return false;
             if(!empty($tour->aircraft) && !str_contains($tour->aircraft, $flight->aircraft)) return false;
