@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class AwardBadges implements ShouldQueue
 {
@@ -51,13 +52,19 @@ class AwardBadges implements ShouldQueue
                 'badge_id' => $badge_id,
                 ]);
 
+
             if ($response->successful()) {
+                $str = $response->body();
+                Log::info("Giving Badge to $user_id answer={$str}");
                 $has_badge = (bool)$response->json();
                 if ($has_badge) {
                     $tour_completion->badge_given = true;
                     $tour_completion->save();
                 }
+            } else {
+                Log::error($response->json());
             }
+
         }
     }
 }
