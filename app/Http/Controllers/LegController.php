@@ -90,7 +90,7 @@ class LegController extends Controller
         $flights = $flights->filter(function ($flight) use ($tour, $leg, $current_end_time, $current_start_time) {
 
             if(strtoupper($flight->departure) != strtoupper($leg->departure_icao)) return false;
-            if(strtoupper($flight->arrival) != strtoupper($leg->arrival_icao)) return false;
+            if (strtoupper($flight->destination) !== strtoupper($leg->arrival_icao)) return false;
             if(!empty($tour->aircraft) && !str_contains($tour->aircraft, $flight->aircraft)) return false;
             if(empty($flight->departed)) return false;
             $departed = Carbon::parse($flight->departed);
