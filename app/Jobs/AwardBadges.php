@@ -39,7 +39,9 @@ class AwardBadges implements ShouldQueue
             ->where('completed', '=', 1)
             ->where('badge_given', '=', 0)
             ->where('tour_id', '=', $this->tour_id)
-            ->limit(20);
+            ->inRandomOrder()
+            ->limit(20)
+            ->get();
 
         foreach ($tour_completions as $tour_completion) {
             $user_id = $tour_completion->user_id;
