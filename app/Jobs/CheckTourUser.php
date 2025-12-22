@@ -77,10 +77,10 @@ class CheckTourUser implements ShouldQueue
                 $departed = Carbon::parse($flight['departed_at']);
                 $arrived = Carbon::parse($flight['arrived_at']);
                 $flight_id = $flight['id'];
-                if ($departed->isBefore($current_start_time)) {
+                if ($departed->isBefore($current_start_time->addSecond())) {
                     continue;
                 }
-                if ($arrived->isAfter($current_end_time)) {
+                if ($arrived->isAfter($current_end_time->subSecond())) {
                     continue;
                 }
                 // the leg has been completed
@@ -108,7 +108,7 @@ class CheckTourUser implements ShouldQueue
             }
 
             if ($this->tour->require_order) {
-                $current_start_time = $status->completed_at->subMinutes(1);
+                $current_start_time = $status->completed_at->subSeconds(0.5);
             }
 
             if (! $last_leg_completed) {
