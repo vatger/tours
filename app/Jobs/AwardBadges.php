@@ -58,12 +58,13 @@ class AwardBadges implements ShouldQueue
 
 
             if ($response->successful()) {
-                $str = $response->body();
-                Log::info("Giving Badge to $user_id answer={$str}");
                 $has_badge = $response->json() == "1";
                 if ($has_badge) {
+                    Log::info("Giving Badge to $user_id answer=true");
                     $tour_completion->badge_given = true;
                     $tour_completion->save();
+                } else {
+                    Log::info("Giving Badge to $user_id answer=false");
                 }
             } else {
                 Log::error($response->json());
