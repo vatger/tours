@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 defineProps<{
     tour: Tour
     signedUp: boolean
+    signedUpFirst: boolean
 }>();
 </script>
 
@@ -15,7 +16,7 @@ defineProps<{
         <div class="col-span-2 flex flex-col gap-2">
             <h1 class="text-3xl font-semibold">{{ tour.name }}</h1>
             <p class="text-muted-foreground">{{ tour.description }}</p>
-            <Link class="text-muted-foreground underline hover:text-muted-foreground/80 mt-2" :href="tour.link" target="_blank">further Information</Link>
+            <a class="text-muted-foreground underline hover:text-muted-foreground/80 mt-2" :href="tour.link" target="_blank">further Information</a>
 
             <div class="flex gap-4 text-sm text-muted-foreground mt-2">
                 <div><strong>Begins:</strong> {{ new Date(tour.begins_at).toUTCString() }}</div>
@@ -23,10 +24,14 @@ defineProps<{
             </div>
 
             <div class="flex gap-4 text-sm text-muted-foreground mt-2">
-                <Link v-if="!signedUp" :href="signup({id: tour.id}).url">
+                <div v-if="signedUpFirst">
+                    <p>You are signed up!</p>
+                </div>
+
+                <Link v-if="!signedUp && !signedUpFirst" :href="signup({id: tour.id}).url">
                     <Button>Sign up for this tour</Button>
                 </Link>
-                <Link v-else :href="cancel({id: tour.id}).url">
+                <Link v-if="signedUp" :href="cancel({id: tour.id}).url">
                     <Button>Sign out of this tour</Button>
                 </Link>
 
