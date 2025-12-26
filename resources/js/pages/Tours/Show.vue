@@ -4,7 +4,11 @@ import { tours } from '@/routes';
 import { type BreadcrumbItem, Tour } from '@/types';
 import { Head, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { PointerIcon } from 'lucide-vue-next';
+import {
+    Circle,
+    CircleCheckBig,
+    CirclePause,
+} from 'lucide-vue-next';
 
 // Components
 import TourHeader from './components/TourHeader.vue';
@@ -18,18 +22,21 @@ const allTours = computed(() => page.props.tours_list as Array<Tour>);
 // Current selected route
 const currentTour = computed(() => page.props.current_tour as Tour);
 
-const signedUp = computed(() => page.props.signed_up as boolean);
-
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Tours', href: tours().url },
     { title: currentTour?.value?.name, href: '#' },
 ];
 
 const sidebarItems = computed(() =>
-    allTours.value.map((tour: any) => ({
+    allTours.value.map((tour: Tour) => ({
         title: tour.name,
-        href: tours({id: tour.id}).url,
-        icon: PointerIcon,
+        href: tours({ id: tour.id }).url,
+        icon:
+            tour.status != null
+                ? tour.status.completed
+                    ? CircleCheckBig
+                    : CirclePause
+                : Circle,
     })),
 );
 </script>
@@ -39,7 +46,10 @@ const sidebarItems = computed(() =>
 
     <AppLayout :breadcrumbs="breadcrumbs" :sidebarItems="sidebarItems">
         <div v-if="currentTour" class="flex flex-col gap-6 p-4">
-            <TourHeader :tour="currentTour" :signedUp="signedUp" />
+            <TourHeader
+                :tour="currentTour"
+                :signedUp="currentTour.status != null"
+            />
             <TourDetails
                 :aircraft="currentTour.aircraft"
                 :flightRules="currentTour.flight_rules"

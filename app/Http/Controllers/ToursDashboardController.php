@@ -11,17 +11,15 @@ class ToursDashboardController extends Controller
 {
     public function index(int $id = 0)
     {
-        $tours_list = Tour::all();
-        $current_tour = Tour::with(['legs', 'legs.status'])
+        $tours_list = Tour::with(['status'])->get();
+        $current_tour = Tour::with(['status', 'legs', 'legs.status'])
             ->where('id', '>=', $id)
             ->orderBy('id', 'asc')
             ->first();
-        $signed_up = $current_tour->legs->first()?->status ? true : false;
-
         return Inertia::render('Tours/Show', [
             'tours_list' => $tours_list,
             'current_tour' => $current_tour,
-            'signed_up' => $signed_up,
+
         ]);
     }
 

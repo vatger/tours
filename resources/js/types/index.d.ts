@@ -50,6 +50,15 @@ export interface Tour {
     flight_rules: string;
     require_order: boolean;
     legs?: Leg[];
+    status?: TourUser;
+}
+
+export interface TourUser {
+    id: number;
+    user_id: number;
+    tour_id: number;
+    completed: boolean;
+    badge_given: boolean;
 }
 
 export interface Leg {
