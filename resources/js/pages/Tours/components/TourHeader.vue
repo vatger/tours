@@ -1,19 +1,32 @@
 <script setup lang="ts">
 import { Tour } from '@/types';
-import { Link } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3'
 import { signup, cancel } from '@/routes/tours';
 import { Button } from '@/components/ui/button';
+import { ref } from 'vue'
 
-defineProps<{
+const { tour, signedUp } = defineProps<{
     tour: Tour
     signedUp: boolean
-    signedUpFirst: boolean
-}>();
+}>()
+
+const loading = ref(false)
+
+const signUpF = () => {
+    loading.value = true
+    router.visit(signup({ id: tour.id }).url)
+}
+
+const signOutF = () => {
+    loading.value = true
+    router.visit(cancel({ id: tour.id }).url)
+}
+
 </script>
 
 <template>
-    <div class="grid md:grid-cols-3 gap-4">
-        <div class="col-span-2 flex flex-col gap-2">
+    <div class="grid lg:grid-cols-3 gap-4">
+        <div class="flex flex-col gap-2">
             <h1 class="text-3xl font-semibold">{{ tour.name }}</h1>
             <p class="text-muted-foreground">{{ tour.description }}</p>
             <a class="text-muted-foreground underline hover:text-muted-foreground/80 mt-2" :href="tour.link" target="_blank">further Information</a>
@@ -24,26 +37,40 @@ defineProps<{
             </div>
 
             <div class="flex gap-4 text-sm text-muted-foreground mt-2">
-                <div v-if="signedUpFirst">
-                    <p>You are signed up!</p>
+                <div class="flex gap-4 text-sm text-muted-foreground mt-2">
+                    <div v-if="signedUp">
+                        <p>You are signed up!</p>
+                    </div>
+
+                    <Button
+                        v-if="!signedUp"
+                        :disabled="loading"
+                        @click="signUpF"
+                        class="flex items-center gap-2"
+                    >
+                        <span v-if="loading">Signing up…</span>
+                        <span v-else>Sign up for this tour</span>
+                    </Button>
+
+                    <Button
+                        v-if="signedUp"
+                        :disabled="loading"
+                        @click="signOutF"
+                        class="flex items-center gap-2"
+                    >
+                        <span v-if="loading">Signing out…</span>
+                        <span v-else>Sign out of this tour</span>
+                    </Button>
                 </div>
-
-                <Link v-if="!signedUp && !signedUpFirst" :href="signup({id: tour.id}).url">
-                    <Button>Sign up for this tour</Button>
-                </Link>
-                <Link v-if="signedUp" :href="cancel({id: tour.id}).url">
-                    <Button>Sign out of this tour</Button>
-                </Link>
-
             </div>
         </div>
 
-        <div class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70">
+        <div class="col-span-2 rounded-xl border border-sidebar-border/70 overflow-hidden">
             <img
                 v-if="tour.img_url"
                 :src="tour.img_url"
-                class="object-cover w-full h-full"
                 alt="Event route image"
+                class="w-full h-auto object-contain"
             />
         </div>
     </div>

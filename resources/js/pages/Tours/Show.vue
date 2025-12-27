@@ -49,7 +49,6 @@ const sidebarItems = computed(() =>
             <TourHeader
                 :tour="currentTour"
                 :signedUp="currentTour.status != null"
-                :signedUpFirst="currentTour?.legs?.at(0) != null"
             />
             <TourDetails
                 :aircraft="currentTour.aircraft"

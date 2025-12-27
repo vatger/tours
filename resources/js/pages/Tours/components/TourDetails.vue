@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 const props = defineProps<{
     aircraft: string | null
-    flightRules: string
+    flightRules: string | null
     requireOrder: boolean
 }>()
 

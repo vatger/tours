@@ -47,7 +47,7 @@ export interface Tour {
     begins_at: string;
     ends_at: string;
     aircraft: string|null;
-    flight_rules: string;
+    flight_rules: string|null;
     require_order: boolean;
     legs?: Leg[];
     status?: TourUser;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tour;
 use App\Models\TourLegUser;
+use App\Models\TourUser;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -31,6 +32,8 @@ class ToursDashboardController extends Controller
         foreach ($legs as $leg) {
             TourLegUser::firstOrNew(['tour_leg_id' => $leg->id, 'user_id' => $user->id])->save();
         }
+        sleep(1);
+        TourUser::firstOrNew(['tour_id' => $id, 'user_id' => $user->id])->save();
 
         return to_route('tours', ['id' => $id]);
     }
@@ -43,6 +46,8 @@ class ToursDashboardController extends Controller
         foreach ($legs as $leg) {
             TourLegUser::where('tour_leg_id', $leg->id)->where('user_id', $user->id)->delete();
         }
+        sleep(1);
+        TourUser::where('tour_id',$id)->where('user_id', $user->id)->delete();
 
         return to_route('tours', ['id' => $id]);
     }
