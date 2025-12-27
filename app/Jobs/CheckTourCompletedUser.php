@@ -8,6 +8,7 @@ use App\Models\TourUser;
 use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
 
 class CheckTourCompletedUser implements ShouldQueue
 {
@@ -33,10 +34,11 @@ class CheckTourCompletedUser implements ShouldQueue
             fn (TourLegUser $tour_leg_user) =>  $tour_leg_user->completed_at == null
         );
         if ($not_completed) {
+            Log::info("Checking Tour $current_tour_completion->id of user $current_tour_completion->user_id: tour was not completed");
             return;
         }
         $current_tour_completion->completed = true;
         $current_tour_completion->save();
-
+        Log::info("Checking Tour $current_tour_completion->id of user $current_tour_completion->user_id: tour completed");
     }
 }
