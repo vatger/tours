@@ -50,18 +50,22 @@ class CheckTourUser implements ShouldQueue
             try {
                 $response = Http::get($url, [
                     'start_date' => $current_start_time->format('Y-m-d'),
-                    'start_time' => $current_start_time->format('H:I:S'),
+                    'start_time' => $current_start_time->format('H:i:s'),
                     'end_date' => $current_end_time->format('Y-m-d'),
-                    'end_time' => $current_end_time->format('H:I:S'),
+                    'end_time' => $current_end_time->format('H:i:s'),
                     'cid' => $this->user->id,
                     'ascending' => true,
                     'completed' => true,
                 ]);
+                if (!$response->successful()) {
+                    $response_string = $response->body() ?? 'no';
+                    Log::warning("$leg_string: stats said: $response_string");
+                    return;
+                }
             } catch (Throwable $e) {
                 Log::warning("$leg_string: could not connect to stats.");
                 return;
             }
-
             $flights = $response->json();
             $flights = collect($flights)
                 ->filter(function ($flight) {

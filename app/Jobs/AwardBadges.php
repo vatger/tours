@@ -67,7 +67,7 @@ class AwardBadges implements ShouldQueue
                     Log::info("Giving Badge to $user_id answer=false");
                 }
             } else {
-                Log::error($response->json());
+                Log::info("Giving Badge to $user_id answer=not found");
             }
 
         }
