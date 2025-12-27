@@ -16,8 +16,7 @@ class CheckTourCompletedUser implements ShouldQueue
     {}
     public function handle(): void
     {
-        $current_tour_completion = TourUser::where('user_id', $this->user->id)
-            ->where('tour_id', $this->tour->id)->first();
+        $current_tour_completion = TourUser::where('user_id', $this->user->id)->where('tour_id', $this->tour->id)->first();
         if (!$current_tour_completion) {
             $current_tour_completion = new TourUser();
             $current_tour_completion->user_id = $this->user->id;

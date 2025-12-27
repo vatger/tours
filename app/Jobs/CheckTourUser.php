@@ -9,7 +9,6 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -51,7 +50,9 @@ class CheckTourUser implements ShouldQueue
             try {
                 $response = Http::get($url, [
                     'start_date' => $current_start_time->format('Y-m-d'),
+                    'start_time' => $current_start_time->format('H:I:S'),
                     'end_date' => $current_end_time->format('Y-m-d'),
+                    'end_time' => $current_end_time->format('H:I:S'),
                     'cid' => $this->user->id,
                     'ascending' => true,
                     'completed' => true,
@@ -77,10 +78,10 @@ class CheckTourUser implements ShouldQueue
                 $departed = Carbon::parse($flight['departed_at']);
                 $arrived = Carbon::parse($flight['arrived_at']);
                 $flight_id = $flight['id'];
-                if ($departed->isBefore($current_start_time->addSecond())) {
+                if ($departed->isBefore($current_start_time)) {
                     continue;
                 }
-                if ($arrived->isAfter($current_end_time->subSecond())) {
+                if ($arrived->isAfter($current_end_time)) {
                     continue;
                 }
                 // the leg has been completed
@@ -89,7 +90,7 @@ class CheckTourUser implements ShouldQueue
                     Log::info("$leg_string: already found earlier flight");
                     break;
                 }
-                $status->completed_at = $arrived;
+                $status->completed_at = $arrived->subSecond();
                 $status->fight_data_id = $flight_id;
                 $status->save();
                 Log::info("$leg_string: found flight $flight_id");
@@ -108,7 +109,7 @@ class CheckTourUser implements ShouldQueue
             }
 
             if ($this->tour->require_order) {
-                $current_start_time = $status->completed_at->subSeconds(0.5);
+                $current_start_time = $status->completed_at;
             }
 
             if (! $last_leg_completed) {
