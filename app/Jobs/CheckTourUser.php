@@ -32,10 +32,11 @@ class CheckTourUser implements ShouldQueue
         $current_start_time = $this->tour->begins_at;
         $current_end_time = $this->tour->ends_at;
         $legs = $this->tour->legs;
-        foreach ($legs as $leg) {
+        foreach ($legs as $leg_idx=>$leg) {
+            $leg_idx_ = $leg_idx + 1;
             $last_leg_completed = false;
 
-            $leg_string = "Checking Tour {$this->tour->id}, Leg $leg->id ($leg->departure_icao-$leg->arrival_icao) of user {$this->user->id}";
+            $leg_string = "Checking Tour {$this->tour->id}, Leg #$leg_idx_ ($leg->id) ($leg->departure_icao-$leg->arrival_icao) of user {$this->user->id}";
 
             /* @var ?TourLegUser $status */
             $status = $leg->status($this->user->id)->first();
