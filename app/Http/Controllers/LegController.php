@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use Inertia\Inertia;
 
 class LegController extends Controller
 {
@@ -43,7 +44,7 @@ class LegController extends Controller
 
         // Format the “from” and “to” query parameters
         // For example, here we could do from midnight of that day until “end” of day (or some time)
-        $from = $date->startOfDay()->format('Y-m-d H:i');
+        $from = $date->copy()->subHours(24)->startOfDay()->format('Y-m-d H:i');
         $to   = $date->copy()->endOfDay()->format('Y-m-d H:i');
 
         // Build the API URL
@@ -58,23 +59,28 @@ class LegController extends Controller
         try {
             $response = Http::acceptJson()->get($url);
         } catch (ConnectionException) {
-            $response = null;
+            return Inertia::flash('checkResult', [
+                    'status' => 'error',
+                    'message' => 'Unable to connect to flight service.',
+                ])->back();
         }
-        $code = $response?->getStatusCode();
-        if ($code != 200 && $code != 404) {
-            abort(501, "Something went wrong: $code");
+        if (!in_array($response->status(), [200, 404])) {
+            return Inertia::flash('checkResult', [
+                    'status' => 'error',
+                    'message' => 'Flight service returned an unexpected error.',
+                ])->back();
         }
-        $flights = [];
-        if ($response?->successful()) {
-            $flights = $response->json();
-        }
+
         $leg = TourLeg::findOrFail($validated['leg']);
         $tour = Tour::findOrFail($leg->tour_id);
         $leg_user = TourLegUser::where('tour_leg_id', $leg->id)->where('user_id', Auth::user()->id)->firstOrFail();
-        if ($leg_user->completed_at !== null)
-            abort(400, "Leg already complete");
-        $flights = collect($flights)->map(fn ($flight) => (object) $flight);
 
+        if ($leg_user->completed_at !== null) {
+            return Inertia::flash('checkResult', [
+                    'status' => 'error',
+                    'message' => 'This leg is already completed.',
+                ])->back();
+        }
 
         $current_start_time = $tour->begins_at;
         $current_end_time = $tour->ends_at;
@@ -87,10 +93,14 @@ class LegController extends Controller
             }
         }
 
-        $flights = $flights->filter(function ($flight) use ($tour, $leg, $current_end_time, $current_start_time) {
 
+        $flights = collect(!empty($response->json()) ? $response->json() : [])
+            ->map(fn ($flight) => (object) $flight);
+
+        $allFlights = $flights;
+        $filteredFlights = $flights->filter(function ($flight) use ($tour, $leg, $current_end_time, $current_start_time) {
             if(strtoupper($flight->departure) != strtoupper($leg->departure_icao)) return false;
-            if (strtoupper($flight->destination) !== strtoupper($leg->arrival_icao)) return false;
+            if (strtoupper($flight->destination) != strtoupper($leg->arrival_icao)) return false;
             if(!empty($tour->aircraft) && !str_contains($tour->aircraft, $flight->aircraft)) return false;
             if(empty($flight->departed)) return false;
             $departed = Carbon::parse($flight->departed);
@@ -99,12 +109,25 @@ class LegController extends Controller
             return true;
         });
 
-        if($flights->count() == 0)
-            return response("No flights found");
+        if ($filteredFlights->isEmpty()) {
+            return Inertia::flash('checkResult', [
+                'status' => 'no_flights_found',
+                'all_flights' => $allFlights->values(),
+                'filtered_flights' => [],
+            ])->back();
+        }
 
-        $first_flight = (object) $flights->first();
-        $leg_user->completed_at = Carbon::parse($first_flight->departed);
+        $firstFlight = (object) $filteredFlights->first();
+
+        $leg_user->completed_at = Carbon::parse($firstFlight->departed);
         $leg_user->save();
-        return response("Found");
+
+        return Inertia::flash('checkResult', [
+            'status' => 'found',
+            'completed_at' => $leg_user->completed_at,
+            'selected_flight' => $firstFlight,
+            'all_flights' => $allFlights->values(),
+            'filtered_flights' => $filteredFlights->values(),
+        ])->back();
     }
 }
