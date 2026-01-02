@@ -2,13 +2,13 @@
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { logout, tours } from '@/routes';
 import { type NavItem } from '@/types';
@@ -17,11 +17,11 @@ import { BookOpen, Folder, LogOut } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 interface Props {
-    mainNavItems?: NavItem[];
+  mainNavItems?: NavItem[];
 }
 
 withDefaults(defineProps<Props>(), {
-    mainNavItems: () => [],
+  mainNavItems: () => [],
 });
 
 /*const mainNavItems: NavItem[] = [
@@ -33,45 +33,45 @@ withDefaults(defineProps<Props>(), {
 ];*/
 
 const footerNavItems: NavItem[] = [
-    {
-        title: 'GDPR',
-        href: 'https://vatger.de/gdpr',
-        icon: Folder,
-    },
-    {
-        title: 'Imprint',
-        href: 'https://vatger.de/imprint',
-        icon: BookOpen,
-    },
-    {
-        title: 'Logout',
-        href: logout(),
-        icon: LogOut,
-    },
+  {
+    title: 'GDPR',
+    href: 'https://vatger.de/gdpr',
+    icon: Folder,
+  },
+  {
+    title: 'Imprint',
+    href: 'https://vatger.de/imprint',
+    icon: BookOpen,
+  },
+  {
+    title: 'Logout',
+    href: logout(),
+    icon: LogOut,
+  },
 ];
 </script>
 
 <template>
-    <Sidebar collapsible="icon" variant="inset">
-        <SidebarHeader>
-            <SidebarMenu>
-                <SidebarMenuItem>
-                    <SidebarMenuButton size="lg" as-child>
-                        <Link :href="tours()">
-                            <AppLogo />
-                        </Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-            </SidebarMenu>
-        </SidebarHeader>
+  <Sidebar collapsible="icon" variant="inset">
+    <SidebarHeader>
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton size="lg" as-child>
+            <Link :href="tours()">
+              <AppLogo />
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    </SidebarHeader>
 
-        <SidebarContent>
-            <NavMain :items="mainNavItems" />
-        </SidebarContent>
+    <SidebarContent>
+      <NavMain :items="mainNavItems" />
+    </SidebarContent>
 
-        <SidebarFooter>
-            <NavFooter :items="footerNavItems" />
-        </SidebarFooter>
-    </Sidebar>
-    <slot />
+    <SidebarFooter>
+      <NavFooter :items="footerNavItems" />
+    </SidebarFooter>
+  </Sidebar>
+  <slot />
 </template>

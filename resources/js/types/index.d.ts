@@ -17,9 +17,7 @@ export interface NavItem {
     isActive?: boolean;
 }
 
-export type AppPageProps<
-    T extends Record<string, unknown> = Record<string, unknown>,
-> = T & {
+export type AppPageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     name: string;
     quote: { message: string; author: string };
     auth: Auth;
@@ -46,8 +44,8 @@ export interface Tour {
     link?: string;
     begins_at: string;
     ends_at: string;
-    aircraft: string|null;
-    flight_rules: string|null;
+    aircraft: string | null;
+    flight_rules: string | null;
     require_order: boolean;
     legs?: Leg[];
     status?: TourUser;
@@ -66,13 +64,13 @@ export interface Leg {
     tour_id: number;
     departure_icao: string;
     arrival_icao: string;
-    status: Status|null
+    status: Status | null;
 }
 
 export interface Status {
     id: number;
     user_id: number;
     tour_leg_id: number;
-    fight_data_id: number|null;
-    completed_at:string|null
+    fight_data_id: number | null;
+    completed_at: string | null;
 }

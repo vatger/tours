@@ -1,26 +1,33 @@
-export type Flight = {
-    callsign: string;
-    departure: string;
-    destination: string;
-    aircraft: string;
-    departed: string;
-    [key: string]: any; // in case the API returns extra fields
+export type FlightCheck = {
+    check: string;
+    expected: string | number | null;
+    actual: string | number | null;
+    valid: boolean;
+};
+
+export type EvaluatedFlight = {
+    flight_id: number | null;
+    results: FlightCheck[];
+    all_valid: boolean;
+    time_to_enter: string | null;
 };
 
 export type CheckResult =
     | {
-    status: 'error';
-    message: string;
-}
+          leg_id: number;
+          status: 'error';
+          message: string;
+      }
     | {
-    status: 'no_flights_found';
-    all_flights: Flight[];
-    filtered_flights: Flight[];
-}
+          leg_id: number;
+          status: 'no_flights_found';
+          all_flights: EvaluatedFlight[];
+          filtered_flights: EvaluatedFlight[];
+      }
     | {
-    status: 'found';
-    completed_at: string;
-    selected_flight: Flight;
-    all_flights: Flight[];
-    filtered_flights: Flight[];
-};
+          leg_id: number;
+          status: 'found';
+          completed_at: string | null;
+          selected_flight: EvaluatedFlight | null;
+          all_flights: EvaluatedFlight[];
+      };
