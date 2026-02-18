@@ -52,9 +52,12 @@ class LegController extends Controller
             'to' => $to,
         ]);
         $url = "$apiUrl?$query";
+        $key = config('myconfig.statsim_api_key');
 
         try {
-            $response = Http::acceptJson()->get($url);
+            $response = Http::withHeaders([
+                'X-API-Key' => $key,
+            ])->acceptJson()->get($url);
         } catch (ConnectionException) {
             return Inertia::flash('checkResult', [
                 'leg_id' => $validated['leg'],
