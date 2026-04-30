@@ -53,7 +53,7 @@ const signOutF = () => {
           <div v-if="completed && !badge_given">
             <p>You are completed the tour. A badge will be awarded soon.</p>
           </div>
-          <div v-if="completed && !badge_given">
+          <div v-if="completed && badge_given">
             <p>You are completed the tour. A badge was awarded.</p>
           </div>
 
