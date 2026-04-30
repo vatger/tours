@@ -18,8 +18,7 @@ class CheckTourUser implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public User $user, public Tour $tour)
-    {}
+    public function __construct(public User $user, public Tour $tour) {}
 
     public function handle(): void
     {
@@ -32,7 +31,7 @@ class CheckTourUser implements ShouldQueue
         $current_start_time = $this->tour->begins_at;
         $current_end_time = $this->tour->ends_at;
         $legs = $this->tour->legs;
-        foreach ($legs as $leg_idx=>$leg) {
+        foreach ($legs as $leg_idx => $leg) {
             $leg_idx_ = $leg_idx + 1;
             $last_leg_completed = false;
 
@@ -58,13 +57,15 @@ class CheckTourUser implements ShouldQueue
                     'ascending' => true,
                     'completed' => true,
                 ]);
-                if (!$response->successful()) {
+                if (! $response->successful()) {
                     $response_string = $response->body() ?? 'no';
                     Log::warning("$leg_string: stats said: $response_string");
+
                     return;
                 }
             } catch (Throwable $e) {
                 Log::warning("$leg_string: could not connect to stats.");
+
                 return;
             }
             $flights = $response->json();

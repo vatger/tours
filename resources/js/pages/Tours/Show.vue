@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { tours } from '@/routes';
 import { type BreadcrumbItem, Tour } from '@/types';
 import { Head, usePage } from '@inertiajs/vue3';
-import { Circle, CircleCheckBig, CirclePause } from 'lucide-vue-next';
+import { Circle, CircleCheck, CircleCheckBig, CirclePause } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 // Components
@@ -27,7 +27,7 @@ const sidebarItems = computed(() =>
   allTours.value.map((tour: Tour) => ({
     title: tour.name,
     href: tours({ id: tour.id }).url,
-    icon: tour.status != null ? (tour.status.completed ? CircleCheckBig : CirclePause) : Circle,
+    icon: tour.status != null ? (tour.status.completed ? (tour.status.badge_given ? CircleCheckBig : CircleCheck) : CirclePause) : Circle,
   })),
 );
 </script>
