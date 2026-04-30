@@ -27,7 +27,14 @@ const sidebarItems = computed(() =>
   allTours.value.map((tour: Tour) => ({
     title: tour.name,
     href: tours({ id: tour.id }).url,
-    icon: tour.status != null ? (tour.status.completed ? (tour.status.badge_given ? CircleCheckBig : CircleCheck) : CirclePause) : Circle,
+    icon:
+      tour.status != null
+        ? tour.status.completed
+          ? tour.status.badge_given
+            ? CircleCheckBig
+            : CircleCheck
+          : CirclePause
+        : Circle,
   })),
 );
 </script>
@@ -37,7 +44,12 @@ const sidebarItems = computed(() =>
 
   <AppLayout :breadcrumbs="breadcrumbs" :sidebarItems="sidebarItems">
     <div v-if="currentTour" class="flex flex-col gap-6 p-4">
-      <TourHeader :tour="currentTour" :signedUp="currentTour.status != null" />
+      <TourHeader
+        :tour="currentTour"
+        :signedUp="currentTour.status != null"
+        :completed="currentTour.status != null && currentTour.status.completed"
+        :badge_given="currentTour.status != null && currentTour.status.badge_given"
+      />
       <TourDetails
         :aircraft="currentTour.aircraft"
         :flightRules="currentTour.flight_rules"

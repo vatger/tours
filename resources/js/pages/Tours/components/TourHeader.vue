@@ -5,9 +5,11 @@ import { Tour } from '@/types';
 import { router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
-const { tour, signedUp } = defineProps<{
+const { tour, signedUp, completed, badge_given } = defineProps<{
   tour: Tour;
   signedUp: boolean;
+  completed: boolean;
+  badge_given: boolean;
 }>();
 
 const loading = ref(false);
@@ -45,16 +47,22 @@ const signOutF = () => {
 
       <div class="mt-2 flex gap-4 text-sm text-muted-foreground">
         <div class="mt-2 flex gap-4 text-sm text-muted-foreground">
-          <div v-if="signedUp">
+          <div v-if="!completed && signedUp">
             <p>You are signed up!</p>
           </div>
+          <div v-if="completed && !badge_given">
+            <p>You are completed the tour. A badge will be awarded soon.</p>
+          </div>
+          <div v-if="completed && !badge_given">
+            <p>You are completed the tour. A badge was awarded.</p>
+          </div>
 
-          <Button v-if="!signedUp" :disabled="loading" @click="signUpF" class="flex items-center gap-2">
+          <Button v-if="!completed && !signedUp" :disabled="loading" @click="signUpF" class="flex items-center gap-2">
             <span v-if="loading">Signing up…</span>
             <span v-else>Sign up for this tour</span>
           </Button>
 
-          <Button v-if="signedUp" :disabled="loading" @click="signOutF" class="flex items-center gap-2">
+          <Button v-if="!completed && signedUp" :disabled="loading" @click="signOutF" class="flex items-center gap-2">
             <span v-if="loading">Signing out…</span>
             <span v-else>Sign out of this tour</span>
           </Button>
