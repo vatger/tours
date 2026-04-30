@@ -41,7 +41,7 @@ class AwardBadges implements ShouldQueue
             ->where('badge_given', '=', 0)
             ->where('tour_id', '=', $this->tour_id)
             ->inRandomOrder()
-            ->limit(20)
+            ->limit(200)
             ->get();
 
         foreach ($tour_completions as $tour_completion) {
