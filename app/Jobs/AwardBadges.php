@@ -20,6 +20,7 @@ class AwardBadges implements ShouldQueue
     {
         if ($tour_id) {
             $this->tour_id = $tour_id;
+
             return;
         }
         $cache_key = 'AwardBadges_last_checked_id';
@@ -47,18 +48,17 @@ class AwardBadges implements ShouldQueue
             $user_id = $tour_completion->user_id;
             $badge_id = $tour_completion->tour->forum_badge_id;
 
-            $url = "http://hp.vatsim-germany.org/api/board/user/badge";
+            $url = 'http://hp.vatsim-germany.org/api/board/user/badge';
             $response = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . config('myconfig.homepage_api_key'),
-                    'Accept' => 'application/json',
-                ])->post($url, [
+                'Authorization' => 'Bearer '.config('myconfig.homepage_api_key'),
+                'Accept' => 'application/json',
+            ])->post($url, [
                 'user_id' => $user_id,
                 'badge_id' => $badge_id,
-                ]);
-
+            ]);
 
             if ($response->successful()) {
-                $has_badge = $response->json() == "1";
+                $has_badge = $response->json() == '1';
                 if ($has_badge) {
                     Log::info("Giving Badge to $user_id answer=true");
                     $tour_completion->badge_given = true;
