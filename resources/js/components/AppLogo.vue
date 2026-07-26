@@ -3,12 +3,7 @@ import AppLogoIcon from '@/components/AppLogoIcon.vue';
 </script>
 
 <template>
-  <div
-    class="flex aspect-square size-8 items-center justify-center rounded-md bg-gray-800 text-sidebar-primary-foreground"
-  >
-    <AppLogoIcon class="size-5" />
-  </div>
-  <div class="ml-1 grid flex-1 text-left text-sm">
-    <span class="mb-0.5 truncate leading-tight font-semibold">VATSIM Germany Tours</span>
+  <div class="flex h-9 w-full items-center overflow-hidden">
+    <AppLogoIcon class="h-9 w-full group-data-[collapsible=icon]:w-5" />
   </div>
 </template>
