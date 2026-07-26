@@ -5,22 +5,32 @@ namespace App\Http\Controllers;
 use App\Models\Tour;
 use App\Models\TourLegUser;
 use App\Models\TourUser;
+use App\Services\AirportCoordinateService;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ToursDashboardController extends Controller
 {
-    public function index(int $id = 0)
+    public function index(AirportCoordinateService $airports, int $id = 0)
     {
         $tours_list = Tour::with(['status'])->get();
         $current_tour = Tour::with(['status', 'legs', 'legs.status'])
             ->where('id', '>=', $id)
             ->orderBy('id', 'asc')
             ->first();
+
+        $airport_coordinates = $current_tour
+            ? $airports->find(
+                $current_tour->legs
+                    ->flatMap(fn ($leg) => [$leg->departure_icao, $leg->arrival_icao])
+                    ->all(),
+            )
+            : [];
+
         return Inertia::render('Tours/Show', [
             'tours_list' => $tours_list,
             'current_tour' => $current_tour,
-
+            'airport_coordinates' => $airport_coordinates,
         ]);
     }
 
@@ -47,7 +57,7 @@ class ToursDashboardController extends Controller
             TourLegUser::where('tour_leg_id', $leg->id)->where('user_id', $user->id)->delete();
         }
         sleep(1);
-        TourUser::where('tour_id',$id)->where('user_id', $user->id)->delete();
+        TourUser::where('tour_id', $id)->where('user_id', $user->id)->delete();
 
         return to_route('tours', ['id' => $id]);
     }

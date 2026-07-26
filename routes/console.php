@@ -3,5 +3,12 @@
 use App\Jobs\AwardBadges;
 use App\Jobs\CheckTour;
 
-Schedule::job(new CheckTour)->everyFifteenMinutes();
-Schedule::job(new AwardBadges)->everyFifteenMinutes();
+Schedule::call(fn () => CheckTour::dispatch())
+    ->name('check-tours')
+    ->withoutOverlapping()
+    ->everyFifteenMinutes();
+
+Schedule::call(fn () => AwardBadges::dispatch())
+    ->name('award-tour-badges')
+    ->withoutOverlapping()
+    ->everyFifteenMinutes();

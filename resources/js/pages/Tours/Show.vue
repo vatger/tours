@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { tours } from '@/routes';
-import { type BreadcrumbItem, Tour } from '@/types';
+import { type AirportCoordinate, type BreadcrumbItem, Tour } from '@/types';
 import { Head, usePage } from '@inertiajs/vue3';
 import { Circle, CircleCheck, CircleCheckBig, CirclePause } from 'lucide-vue-next';
 import { computed } from 'vue';
@@ -10,6 +10,7 @@ import { computed } from 'vue';
 import TourDetails from './components/TourDetails.vue';
 import TourHeader from './components/TourHeader.vue';
 import TourLegs from './components/TourLegs.vue';
+import TourMap from './components/TourMap.vue';
 
 const page = usePage();
 
@@ -17,6 +18,7 @@ const page = usePage();
 const allTours = computed(() => page.props.tours_list as Array<Tour>);
 // Current selected route
 const currentTour = computed(() => page.props.current_tour as Tour);
+const airportCoordinates = computed(() => (page.props.airport_coordinates ?? {}) as Record<string, AirportCoordinate>);
 
 const breadcrumbs: BreadcrumbItem[] = [
   { title: 'Tours', href: tours().url },
@@ -55,6 +57,7 @@ const sidebarItems = computed(() =>
         :flightRules="currentTour.flight_rules"
         :requireOrder="currentTour.require_order"
       />
+      <TourMap :legs="currentTour.legs" :airports="airportCoordinates" />
       <TourLegs :legs="currentTour.legs" />
     </div>
   </AppLayout>

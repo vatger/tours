@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AirportController;
 use App\Http\Controllers\ConnectController;
 use App\Http\Controllers\LegController;
 use App\Http\Controllers\ToursDashboardController;
@@ -10,6 +11,10 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
+
+Route::get('api/airports/coordinates', [AirportController::class, 'index'])
+    ->middleware('throttle:60,1')
+    ->name('airports.index');
 
 Route::get('tours/{id?}', [ToursDashboardController::class, 'index'])->middleware('auth')->name('tours');
 Route::get('tours/{id?}/signup', [ToursDashboardController::class, 'signup'])->middleware('auth')->name('tours.signup');

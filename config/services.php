@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'airports' => [
+        'url' => env('AIRPORT_DATA_URL', 'https://davidmegginson.github.io/ourairports-data/airports.csv'),
+        'cache_ttl' => env('AIRPORT_DATA_CACHE_TTL', 604800),
+    ],
+
 ];

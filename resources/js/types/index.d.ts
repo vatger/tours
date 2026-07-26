@@ -67,6 +67,13 @@ export interface Leg {
     status: Status | null;
 }
 
+export interface AirportCoordinate {
+    icao: string;
+    name: string;
+    latitude: number;
+    longitude: number;
+}
+
 export interface Status {
     id: number;
     user_id: number;
