@@ -51,14 +51,14 @@ const steps = [
         Open tours
         <ArrowRight class="size-4" />
       </Link>
-      <Link
+      <a
         v-else
-        :href="login()"
+        :href="login.url()"
         class="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
       >
         Log in
         <ArrowRight class="size-4" />
-      </Link>
+      </a>
     </header>
 
     <main>
@@ -94,14 +94,14 @@ const steps = [
               Browse tours
               <ArrowRight class="size-4" />
             </Link>
-            <Link
+            <a
               v-else
-              :href="login()"
+              :href="login.url()"
               class="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
               Continue with VATSIM
               <ArrowRight class="size-4" />
-            </Link>
+            </a>
             <a
               href="#how-it-works"
               class="inline-flex h-12 items-center justify-center rounded-md border border-border bg-card px-6 text-sm font-medium transition-colors hover:bg-accent"

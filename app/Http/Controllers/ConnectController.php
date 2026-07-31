@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\Response;
 
 class ConnectController extends Controller
 {
@@ -24,7 +26,7 @@ class ConnectController extends Controller
         $this->provider = new ConnectProvider;
     }
 
-    public function login(Request $request): RedirectResponse
+    public function login(Request $request): Response
     {
         if (App::environment('local') && App::isLocal() && App::hasDebugModeEnabled()) {
             $user = User::where('id', 1450775)->first();
@@ -35,7 +37,7 @@ class ConnectController extends Controller
         $authenticationUrl = $this->provider->getAuthorizationUrl();
         $request->session()->put($this->state_session_key, $this->provider->getState());
 
-        return redirect()->away($authenticationUrl);
+        return Inertia::location($authenticationUrl);
     }
 
     public function callback(Request $request): RedirectResponse
