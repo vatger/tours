@@ -16,6 +16,7 @@ Route::get('api/airports/coordinates', [AirportController::class, 'index'])
     ->middleware('throttle:60,1')
     ->name('airports.index');
 
+Route::get('tours', [ToursDashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 Route::get('tours/{id?}', [ToursDashboardController::class, 'index'])->middleware('auth')->name('tours');
 Route::get('tours/{id?}/signup', [ToursDashboardController::class, 'signup'])->middleware('auth')->name('tours.signup');
 Route::get('tours/{id?}/cancel', [ToursDashboardController::class, 'cancel'])->middleware('auth')->name('tours.cancel');
