@@ -45,7 +45,8 @@ class CheckTourUser implements ShouldQueue
                 return;
             }
 
-            $url = 'http://stats.vatsim-germany.org/api/flights/from/'.$leg->departure_icao.'/to/'.$leg->arrival_icao;
+            $url = rtrim(config('services.quick_stats.url'), '/')
+                .'/flights/from/'.$leg->departure_icao.'/to/'.$leg->arrival_icao;
 
             try {
                 $response = Http::get($url, [

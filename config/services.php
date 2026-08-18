@@ -40,4 +40,8 @@ return [
         'cache_ttl' => env('AIRPORT_DATA_CACHE_TTL', 604800),
     ],
 
+    'quick_stats' => [
+        'url' => env('QUICK_STATS_URL', 'https://stats.vatsim-germany.org/api'),
+    ],
+
 ];

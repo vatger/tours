@@ -25,7 +25,13 @@ const page = usePage();
         <SidebarMenuButton as-child :is-active="urlIsActive(item.href, page.url)" :tooltip="item.title">
           <Link :href="item.href">
             <component :is="item.icon" />
-            <span>{{ item.title }}</span>
+            <span class="flex items-center gap-2">
+              {{ item.title }}
+              <span v-if="item.isLive" class="relative flex size-2" aria-label="Live flight active" role="status">
+                <span class="absolute inline-flex size-full animate-ping rounded-full bg-green-500 opacity-75"></span>
+                <span class="relative inline-flex size-2 rounded-full bg-green-500"></span>
+              </span>
+            </span>
           </Link>
         </SidebarMenuButton>
       </SidebarMenuItem>

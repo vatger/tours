@@ -29,7 +29,11 @@ class ConnectController extends Controller
     public function login(Request $request): Response
     {
         if (App::environment('local') && App::isLocal() && App::hasDebugModeEnabled()) {
-            $user = User::where('id', 1450775)->first();
+            $testVatsimId = (int) (config('connect.test_vatsim_id') ?: 1450775);
+            $user = User::firstOrCreate(
+                ['id' => $testVatsimId],
+                ['firstname' => 'Test', 'lastname' => 'Pilot'],
+            );
             Auth::login($user);
 
             return Redirect::route('tours')->with('success', 'Logged in successfully');

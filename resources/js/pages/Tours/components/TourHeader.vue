@@ -1,16 +1,21 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { cancel, signup } from '@/routes/tours';
-import { Tour } from '@/types';
+import { LiveFlight, Tour } from '@/types';
 import { router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
-const { tour, signedUp, completed, badge_given } = defineProps<{
+const { tour, liveFlight, signedUp, completed, badge_given } = defineProps<{
   tour: Tour;
+  liveFlight: LiveFlight | null;
   signedUp: boolean;
   completed: boolean;
   badge_given: boolean;
 }>();
+
+const flightMatchesTour = () => tour.legs?.some(
+  (leg) => leg.departure_icao === liveFlight?.departure_airport && leg.arrival_icao === liveFlight?.arrival_airport,
+);
 
 const loading = ref(false);
 
@@ -29,6 +34,9 @@ const signOutF = () => {
   <div class="grid gap-4 lg:grid-cols-3">
     <div class="flex flex-col gap-2">
       <h1 class="text-3xl font-semibold">{{ tour.name }}</h1>
+      <p v-if="liveFlight && flightMatchesTour()" class="flex items-center gap-2 font-medium text-primary">
+        You are currently flying this tour: {{ liveFlight.departure_airport }} → {{ liveFlight.arrival_airport }}
+      </p>
       <p class="text-muted-foreground">{{ tour.description }}</p>
       <a class="mt-2 text-muted-foreground underline hover:text-muted-foreground/80" :href="tour.link" target="_blank"
         >further Information</a

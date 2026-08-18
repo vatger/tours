@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import CheckLeg from '@/pages/Tours/components/CheckLeg.vue';
 import CheckLegResults from '@/pages/Tours/components/CheckLegResults.vue';
-import type { Leg } from '@/types';
-import { BanIcon, CheckCircle2Icon, ClockIcon, MapIcon, PlaneLandingIcon, PlaneTakeoffIcon } from 'lucide-vue-next';
+import type { Leg, LiveFlight } from '@/types';
+import { BanIcon, CheckCircle2Icon, ClockIcon, MapIcon, PlaneLandingIcon, PlaneTakeoffIcon, RadioTowerIcon } from 'lucide-vue-next';
 
 defineProps<{
   legs?: Array<Leg>;
+  liveFlight?: LiveFlight | null;
 }>();
 </script>
 
@@ -20,7 +21,13 @@ defineProps<{
     <div v-if="legs && legs.length > 0" class="divide-y divide-muted/30">
       <div v-for="(leg, index) in legs" :key="leg.id" class="flex items-center justify-between py-3">
         <div class="flex flex-col gap-1">
-          <div class="text-sm text-muted-foreground">Leg {{ index + 1 }}</div>
+          <div class="flex items-center gap-2 text-sm text-muted-foreground">
+            Leg {{ index + 1 }}
+            <span v-if="liveFlight && leg.departure_icao === liveFlight.departure_airport && leg.arrival_icao === liveFlight.arrival_airport" class="relative flex size-2" aria-label="Live flight active" role="status">
+              <span class="absolute inline-flex size-full animate-ping rounded-full bg-green-500 opacity-75"></span>
+              <span class="relative inline-flex size-2 rounded-full bg-green-500"></span>
+            </span>
+          </div>
           <div class="flex items-center gap-3">
             <div class="flex items-center gap-1">
               <PlaneTakeoffIcon class="h-4 w-4 text-primary" />
@@ -31,6 +38,10 @@ defineProps<{
               <PlaneLandingIcon class="h-4 w-4 text-primary" />
               <span class="font-medium">{{ leg.arrival_icao }}</span>
             </div>
+          </div>
+          <div v-if="liveFlight && leg.departure_icao === liveFlight.departure_airport && leg.arrival_icao === liveFlight.arrival_airport" class="flex items-center gap-1 text-sm font-medium text-primary">
+            <RadioTowerIcon class="h-4 w-4" />
+            Live: {{ liveFlight.callsign }} · {{ liveFlight.current_altitude?.toLocaleString() ?? '—' }} ft
           </div>
         </div>
 

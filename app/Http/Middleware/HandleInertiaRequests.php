@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\LiveFlightService;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -45,6 +46,12 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'liveFlight' => fn () => $request->user()
+                ? app(LiveFlightService::class)->forPilot($request->user()->id)
+                : null,
+            'quickStatsDown' => fn () => $request->user()
+                ? app(LiveFlightService::class)->isDown($request->user()->id)
+                : false,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

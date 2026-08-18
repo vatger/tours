@@ -13,7 +13,7 @@ class ToursDashboardController extends Controller
 {
     public function index(AirportCoordinateService $airports, int $id = 0)
     {
-        $tours_list = Tour::with(['status'])->get();
+        $tours_list = Tour::with(['status', 'legs'])->get();
         $current_tour = Tour::with(['status', 'legs', 'legs.status'])
             ->where('id', '>=', $id)
             ->orderBy('id', 'asc')

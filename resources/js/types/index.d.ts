@@ -15,12 +15,15 @@ export interface NavItem {
     href: NonNullable<InertiaLinkProps['href']>;
     icon?: LucideIcon;
     isActive?: boolean;
+    isLive?: boolean;
 }
 
 export type AppPageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     name: string;
     quote: { message: string; author: string };
     auth: Auth;
+    liveFlight: LiveFlight | null;
+    quickStatsDown: boolean;
     sidebarOpen: boolean;
 };
 
@@ -32,6 +35,28 @@ export interface User {
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
+}
+
+export interface LiveFlight {
+    id: number;
+    account_id: number;
+    callsign: string;
+    departure_airport: string;
+    arrival_airport: string;
+    alternative_airport?: string | null;
+    aircraft: string;
+    flight_type: string;
+    cruise_altitude?: string | null;
+    cruise_tas?: string | null;
+    route?: string | null;
+    current_latitude?: number | null;
+    current_longitude?: number | null;
+    current_altitude?: number | null;
+    current_groundspeed?: number | null;
+    current_heading?: number | null;
+    connected_at: string | null;
+    departed_at: string | null;
+    arrived_at: string | null;
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;
