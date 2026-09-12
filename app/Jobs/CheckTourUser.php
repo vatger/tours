@@ -6,6 +6,7 @@ use App\Models\Tour;
 use App\Models\TourLegUser;
 use App\Models\TourUser;
 use App\Models\User;
+use App\Services\QuickStatsFlightService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -20,7 +21,7 @@ class CheckTourUser implements ShouldQueue
 
     public function __construct(public User $user, public Tour $tour) {}
 
-    public function handle(): void
+    public function handle(QuickStatsFlightService $quickStats): void
     {
         $current_tour_completion = TourUser::where('user_id', $this->user->id)
             ->where('tour_id', $this->tour->id)->first();
@@ -98,7 +99,13 @@ class CheckTourUser implements ShouldQueue
                     break;
                 }
                 $status->completed_at = $arrived->subSecond();
-                $status->fight_data_id = $flight_id;
+                $status->statsim_flight_id = $flight_id;
+                $status->fight_data_id = $quickStats->findMatchingStatsimFlight(
+                    $this->user->id,
+                    $flight,
+                    $current_start_time,
+                    $current_end_time,
+                );
                 $status->save();
                 Log::info("$leg_string: found flight $flight_id");
                 break;

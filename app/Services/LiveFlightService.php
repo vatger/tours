@@ -40,7 +40,10 @@ class LiveFlightService
                 return ['flight' => null, 'down' => true];
             }
 
-            return ['flight' => $response->json(), 'down' => false];
+            return [
+                'flight' => $response->json(),
+                'down' => $response->json('tracking_status') === 'down',
+            ];
         });
     }
 

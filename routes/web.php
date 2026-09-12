@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AirportController;
+use App\Http\Controllers\AdminTourController;
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\ConnectController;
 use App\Http\Controllers\LegController;
 use App\Http\Controllers\ToursDashboardController;
@@ -18,6 +20,18 @@ Route::get('api/airports/coordinates', [AirportController::class, 'index'])
 
 Route::get('tours', [ToursDashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 Route::get('tours/{id?}', [ToursDashboardController::class, 'index'])->middleware('auth')->name('tours');
+
+Route::middleware(['auth', 'admin.role'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('tours', [AdminTourController::class, 'index'])->name('tours.index');
+    Route::get('tours/create', [AdminTourController::class, 'create'])->name('tours.create');
+    Route::post('tours', [AdminTourController::class, 'store'])->name('tours.store');
+    Route::get('tours/{tour}/edit', [AdminTourController::class, 'edit'])->name('tours.edit');
+    Route::put('tours/{tour}', [AdminTourController::class, 'update'])->name('tours.update');
+    Route::delete('tours/{tour}', [AdminTourController::class, 'destroy'])->name('tours.destroy');
+    Route::get('users', [AdminUserController::class, 'index'])->name('users.index');
+    Route::get('users/{user}/tours', [AdminUserController::class, 'tours'])->name('users.tours');
+    Route::get('users/{user}/tours/{tour}/legs/{leg}/flight', [AdminUserController::class, 'flight'])->name('users.flight');
+});
 Route::get('tours/{id?}/signup', [ToursDashboardController::class, 'signup'])->middleware('auth')->name('tours.signup');
 Route::get('tours/{id?}/cancel', [ToursDashboardController::class, 'cancel'])->middleware('auth')->name('tours.cancel');
 

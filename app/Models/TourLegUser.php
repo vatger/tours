@@ -11,6 +11,8 @@ class TourLegUser extends Model
     protected $fillable = [
         'tour_leg_id',
         'user_id',
+        'fight_data_id',
+        'statsim_flight_id',
     ];
 
     public $timestamps = false;

@@ -32,9 +32,13 @@ class ConnectController extends Controller
             $testVatsimId = (int) (config('connect.test_vatsim_id') ?: 1450775);
             $user = User::firstOrCreate(
                 ['id' => $testVatsimId],
-                ['firstname' => 'Test', 'lastname' => 'Pilot'],
+                [
+                    'firstname' => 'Test',
+                    'lastname' => 'Pilot',
+                ],
             );
             Auth::login($user);
+            $request->session()->put('sso_teams', config('connect.admin_allowed_roles', []));
 
             return Redirect::route('tours')->with('success', 'Logged in successfully');
         }
@@ -91,8 +95,39 @@ class ConnectController extends Controller
         $user->save();
 
         Auth::login($user);
+        $request->session()->put('sso_teams', $this->extractTeams($resourceOwner));
 
         return Redirect::route('tours')->with('success', 'Logged in successfully');
+    }
+
+    private function extractTeams(object $resourceOwner): array
+    {
+        // VATSIM Connect documents teams as a top-level array and requires the teams scope.
+        $teams = $resourceOwner->teams ?? [];
+
+        if (! is_array($teams)) {
+            return [];
+        }
+
+        return collect($teams)
+            ->map(function ($team) {
+                if (is_string($team) || is_numeric($team)) {
+                    return (string) $team;
+                }
+
+                if (is_object($team)) {
+                    return $team->name ?? $team->role ?? $team->slug ?? null;
+                }
+
+                if (is_array($team)) {
+                    return $team['name'] ?? $team['role'] ?? $team['slug'] ?? null;
+                }
+
+                return null;
+            })
+            ->filter()
+            ->values()
+            ->all();
     }
 
     public function logout()

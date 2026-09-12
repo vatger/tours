@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Tour;
 use App\Models\TourLeg;
 use App\Models\TourLegUser;
+use App\Services\QuickStatsFlightService;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -16,7 +17,7 @@ use Inertia\Inertia;
 
 class LegController extends Controller
 {
-    public function check(Request $request)
+    public function check(Request $request, QuickStatsFlightService $quickStats)
     {
         $validator = Validator::make($request->all(), [
             'leg' => ['required', 'exists:tour_legs,id'],
@@ -95,6 +96,15 @@ class LegController extends Controller
         $chosenFlight = $flight_results->first(fn ($flight) => $flight->all_valid);
         if ($chosenFlight) {
             $leg_user->completed_at = $chosenFlight->time_to_enter;
+            $leg_user->statsim_flight_id = $chosenFlight->flight_id;
+            $leg_user->fight_data_id = $quickStats->findMatchingFlight(
+                Auth::user()->id,
+                $leg->departure_icao,
+                $leg->arrival_icao,
+                $tour->begins_at,
+                $tour->ends_at,
+                $chosenFlight->time_to_enter ? Carbon::parse($chosenFlight->time_to_enter) : null,
+            );
             $leg_user->save();
         }
 

@@ -7,6 +7,7 @@ export type FlightCheck = {
 
 export type EvaluatedFlight = {
     flight_id: number | null;
+    statsim_flight_id?: number | null;
     results: FlightCheck[];
     all_valid: boolean;
     time_to_enter: string | null;

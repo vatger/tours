@@ -18,7 +18,7 @@ class ConnectProvider extends GenericProvider
             'urlAuthorize' => config('connect.autorize'),
             'urlAccessToken' => config('connect.token'),
             'urlResourceOwnerDetails' => config('connect.user'),
-            'scopes' => str_replace(',', ' ', 'name'),
+            'scopes' => implode(' ', config('connect.scopes', ['name', 'teams'])),
             'scopeSeparator' => ' ',
         ]);
     }

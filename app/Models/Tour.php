@@ -9,6 +9,20 @@ use Illuminate\Support\Facades\Auth;
 
 class Tour extends Model
 {
+    protected $fillable = [
+        'name',
+        'description',
+        'link',
+        'img_url',
+        'badge_img_url',
+        'require_order',
+        'flight_rules',
+        'aircraft',
+        'begins_at',
+        'ends_at',
+        'forum_badge_id',
+    ];
+
     protected function casts(): array
     {
         return [

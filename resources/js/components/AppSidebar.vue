@@ -13,7 +13,7 @@ import {
 import { logout, tours } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LogOut } from 'lucide-vue-next';
+import { BookOpen, Folder, LogOut, Settings2, Users } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 interface Props {
@@ -33,6 +33,16 @@ withDefaults(defineProps<Props>(), {
 ];*/
 
 const footerNavItems: NavItem[] = [
+  {
+    title: 'Manage tours',
+    href: '/admin/tours',
+    icon: Settings2,
+  },
+  {
+    title: 'Users & progress',
+    href: '/admin/users',
+    icon: Users,
+  },
   {
     title: 'GDPR',
     href: 'https://vatger.de/gdpr',

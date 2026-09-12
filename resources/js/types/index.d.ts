@@ -66,12 +66,14 @@ export interface Tour {
     name: string;
     description: string;
     img_url?: string;
+    badge_img_url?: string | null;
     link?: string;
     begins_at: string;
     ends_at: string;
     aircraft: string | null;
     flight_rules: string | null;
     require_order: boolean;
+    forum_badge_id?: number | null;
     legs?: Leg[];
     status?: TourUser;
 }
@@ -90,6 +92,7 @@ export interface Leg {
     departure_icao: string;
     arrival_icao: string;
     status: Status | null;
+    completed_users_count?: number;
 }
 
 export interface AirportCoordinate {
@@ -104,5 +107,6 @@ export interface Status {
     user_id: number;
     tour_leg_id: number;
     fight_data_id: number | null;
+    statsim_flight_id: number | null;
     completed_at: string | null;
 }

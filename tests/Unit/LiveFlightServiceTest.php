@@ -18,6 +18,7 @@ class LiveFlightServiceTest extends TestCase
                 'callsign' => 'DLH123',
                 'departure_airport' => 'EDDF',
                 'arrival_airport' => 'EDDM',
+                'tracking_status' => 'up',
             ]),
         ]);
 
@@ -44,6 +45,18 @@ class LiveFlightServiceTest extends TestCase
             'message' => 'No live flight found.',
             'tracking_status' => 'down',
         ], 404)]);
+
+        $this->assertTrue(app(LiveFlightService::class)->isDown(1450775));
+    }
+
+    public function test_it_reads_tracking_status_from_a_successful_live_flight_response(): void
+    {
+        config()->set('services.quick_stats.url', 'https://quick-stats.test/api');
+        Cache::flush();
+        Http::fake(['https://quick-stats.test/*' => Http::response([
+            'callsign' => 'DLH123',
+            'tracking_status' => 'down',
+        ])]);
 
         $this->assertTrue(app(LiveFlightService::class)->isDown(1450775));
     }

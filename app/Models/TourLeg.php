@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Auth;
 
 class TourLeg extends Model
 {
+    protected $fillable = [
+        'tour_id',
+        'departure_icao',
+        'arrival_icao',
+    ];
+
     public function status(?int $user_id = null): ?HasOne
     {
         if (! $user_id) {
@@ -23,6 +29,11 @@ class TourLeg extends Model
     public function statuses(): HasMany
     {
         return $this->hasMany(TourLegUser::class, 'tour_leg_id', 'id');
+    }
+
+    public function completedUsers(): HasMany
+    {
+        return $this->statuses()->whereNotNull('completed_at');
     }
 
     public function users(): BelongsToMany
