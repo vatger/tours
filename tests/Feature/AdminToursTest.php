@@ -138,4 +138,55 @@ class AdminToursTest extends TestCase
                 ->where('flight.callsign', 'VAT123'));
 
     }
+
+    public function test_admin_can_manually_complete_a_leg_and_a_legless_tour(): void
+    {
+        $user = User::create(['firstname' => 'Pilot', 'lastname' => 'Tester']);
+        $tour = Tour::create([
+            'name' => 'Manual Progress Tour',
+            'description' => 'Manual completion test.',
+            'link' => 'https://example.test/tour',
+            'img_url' => '/storage/tours/images/test.png',
+            'badge_img_url' => '/storage/tours/badges/test.png',
+            'aircraft' => 'A320',
+            'begins_at' => Carbon::now()->subDay(),
+            'ends_at' => Carbon::now()->addDay(),
+        ]);
+        $leg = TourLeg::create(['tour_id' => $tour->id, 'departure_icao' => 'EDDF', 'arrival_icao' => 'LOWW']);
+        TourUser::create(['tour_id' => $tour->id, 'user_id' => $user->id]);
+        $admin = User::create(['firstname' => 'Admin', 'lastname' => 'Tester']);
+
+        $this->withSession(['sso_teams' => ['tour-admin']])
+            ->actingAs($admin)
+            ->post(route('admin.users.leg-completion', [$user, $tour, $leg]), [
+                'completed' => true,
+                'completed_at' => Carbon::now()->subHour()->format('Y-m-d H:i:s'),
+            ])
+            ->assertRedirect(route('admin.users.tours', $user));
+
+        $this->assertDatabaseHas('tour_leg_users', [
+            'user_id' => $user->id,
+            'tour_leg_id' => $leg->id,
+        ]);
+        $this->assertDatabaseHas('tour_users', ['user_id' => $user->id, 'tour_id' => $tour->id, 'completed' => true]);
+
+        $leglessTour = Tour::create([
+            'name' => 'Manual Empty Tour',
+            'description' => 'Manual empty tour test.',
+            'link' => 'https://example.test/tour',
+            'img_url' => '/storage/tours/images/test.png',
+            'badge_img_url' => '/storage/tours/badges/test.png',
+            'aircraft' => 'A320',
+            'begins_at' => Carbon::now()->subDay(),
+            'ends_at' => Carbon::now()->addDay(),
+        ]);
+        TourUser::create(['tour_id' => $leglessTour->id, 'user_id' => $user->id]);
+
+        $this->withSession(['sso_teams' => ['tour-admin']])
+            ->actingAs($admin)
+            ->post(route('admin.users.tour-completion', [$user, $leglessTour]), ['completed' => true])
+            ->assertRedirect(route('admin.users.tours', $user));
+
+        $this->assertDatabaseHas('tour_users', ['user_id' => $user->id, 'tour_id' => $leglessTour->id, 'completed' => true]);
+    }
 }

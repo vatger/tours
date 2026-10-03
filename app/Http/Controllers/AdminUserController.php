@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TourLegUser;
 use App\Models\Tour;
 use App\Models\TourLeg;
+use App\Models\TourLegUser;
+use App\Models\TourUser;
 use App\Models\User;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -137,5 +140,78 @@ class AdminUserController extends Controller
             'flightStatus' => $flightStatus,
             'flightSource' => $flightSource,
         ]);
+    }
+
+    public function setLegCompletion(Request $request, User $user, Tour $tour, TourLeg $leg): RedirectResponse
+    {
+        abort_unless($leg->tour_id === $tour->id, 404);
+
+        $validated = $request->validate([
+            'completed' => ['required', 'boolean'],
+            'completed_at' => ['nullable', 'date', 'before_or_equal:now'],
+        ]);
+        $completed = $validated['completed'];
+
+        if ($completed && blank($validated['completed_at'] ?? null)) {
+            throw ValidationException::withMessages([
+                'completed_at' => 'A completion date and time is required when completing a leg manually.',
+            ]);
+        }
+
+        TourUser::where('user_id', $user->id)
+            ->where('tour_id', $tour->id)
+            ->firstOrFail();
+
+        DB::transaction(function () use ($user, $tour, $leg, $completed, $validated) {
+            $status = TourLegUser::firstOrNew([
+                'user_id' => $user->id,
+                'tour_leg_id' => $leg->id,
+            ]);
+            $status->completed_at = $completed ? $validated['completed_at'] : null;
+            if (! $completed) {
+                $status->fight_data_id = null;
+                $status->statsim_flight_id = null;
+            }
+            $status->save();
+
+            $this->syncTourCompletion($user, $tour);
+        });
+
+        return to_route('admin.users.tours', $user)->with('success', $completed
+            ? 'Leg manually marked complete.'
+            : 'Leg completion was removed.');
+    }
+
+    public function setTourCompletion(Request $request, User $user, Tour $tour): RedirectResponse
+    {
+        $completed = $request->validate([
+            'completed' => ['required', 'boolean'],
+        ])['completed'];
+
+        abort_if($tour->legs()->exists(), 422, 'Tours with legs are completed from their leg progress.');
+
+        $signup = TourUser::where('user_id', $user->id)
+            ->where('tour_id', $tour->id)
+            ->firstOrFail();
+        $signup->completed = $completed;
+        $signup->save();
+
+        return to_route('admin.users.tours', $user)->with('success', $completed
+            ? 'Tour manually marked complete.'
+            : 'Tour completion was removed.');
+    }
+
+    private function syncTourCompletion(User $user, Tour $tour): void
+    {
+        $signup = TourUser::where('user_id', $user->id)
+            ->where('tour_id', $tour->id)
+            ->firstOrFail();
+
+        $signup->completed = ! $tour->legs()
+            ->whereDoesntHave('statuses', fn ($query) => $query
+                ->where('user_id', $user->id)
+                ->whereNotNull('completed_at'))
+            ->exists();
+        $signup->save();
     }
 }

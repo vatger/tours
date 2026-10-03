@@ -22,6 +22,7 @@ export type AppPageProps<T extends Record<string, unknown> = Record<string, unkn
     name: string;
     quote: { message: string; author: string };
     auth: Auth;
+    canAdmin: boolean;
     liveFlight: LiveFlight | null;
     quickStatsDown: boolean;
     sidebarOpen: boolean;
@@ -109,4 +110,20 @@ export interface Status {
     fight_data_id: number | null;
     statsim_flight_id: number | null;
     completed_at: string | null;
+}
+
+export interface TourFlight {
+    leg_id: number;
+    leg_number: number;
+    departure_icao: string;
+    arrival_icao: string;
+    completed_at: string | null;
+    quick_stats_flight_id: number | null;
+    statsim_flight_id: number | null;
+    source: 'quick_stats' | 'statsim' | null;
+    callsign: string | null;
+    aircraft: string | null;
+    flight_plan: string | null;
+    departed_at: string | null;
+    arrived_at: string | null;
 }

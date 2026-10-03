@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EnsureAdminRole
 {
-    public function handle(Request $request, Closure $next): Response
+    public static function userCanAccess(Request $request): bool
     {
         $allowedRoles = collect(config('connect.admin_allowed_roles', []))
             ->map(fn ($role) => strtolower(trim((string) $role)))
@@ -25,7 +25,12 @@ class EnsureAdminRole
             ->map(fn ($role) => strtolower(trim((string) $role)))
             ->filter();
 
-        abort_unless($allowedRoles->intersect($userRoles)->isNotEmpty(), 403);
+        return $allowedRoles->intersect($userRoles)->isNotEmpty();
+    }
+
+    public function handle(Request $request, Closure $next): Response
+    {
+        abort_unless(self::userCanAccess($request), 403);
 
         return $next($request);
     }

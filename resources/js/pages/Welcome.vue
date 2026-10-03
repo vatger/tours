@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
-import { login, tours } from '@/routes';
+import { dashboard, login } from '@/routes';
 import { Head, Link } from '@inertiajs/vue3';
 import { ArrowRight, Award, CheckCircle2, MapPinned, PlaneTakeoff, Route as RouteIcon } from 'lucide-vue-next';
 
@@ -45,7 +45,7 @@ const steps = [
 
       <Link
         v-if="$page.props.auth.user"
-        :href="tours()"
+        :href="dashboard()"
         class="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
       >
         Open tours
@@ -88,7 +88,7 @@ const steps = [
           <div class="mt-9 flex flex-col gap-3 sm:flex-row">
             <Link
               v-if="$page.props.auth.user"
-              :href="tours()"
+              :href="dashboard()"
               class="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
               Browse tours

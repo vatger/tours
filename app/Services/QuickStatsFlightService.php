@@ -3,11 +3,96 @@
 namespace App\Services;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Throwable;
 
 class QuickStatsFlightService
 {
+    /** @return array<int, array<string, mixed>> */
+    public function recentForPilot(int $vatsimId, int $limit = 5): array
+    {
+        return Cache::remember("recent-network-flights:{$vatsimId}", now()->addMinutes(5), function () use ($vatsimId, $limit) {
+            try {
+                $response = Http::acceptJson()->connectTimeout(2)->timeout(5)->get(
+                    rtrim(config('services.quick_stats.url'), '/')."/flights/{$vatsimId}/sessions",
+                    ['limit' => $limit],
+                );
+            } catch (Throwable) {
+                return [];
+            }
+
+            if (! $response->successful()) {
+                return [];
+            }
+
+            $flights = $response->json('data', $response->json()) ?? [];
+
+            return collect($flights)
+                ->sortByDesc(fn (array $flight) => $flight['arrived_at'] ?? $flight['departed_at'] ?? '')
+                ->take($limit)
+                ->values()
+                ->map(fn (array $flight) => [
+                    'id' => $flight['id'] ?? null,
+                    'callsign' => $flight['callsign'] ?? null,
+                    'departureIcao' => $flight['departure_airport'] ?? null,
+                    'arrivalIcao' => $flight['arrival_airport'] ?? null,
+                    'aircraft' => $flight['aircraft'] ?? null,
+                    'flightType' => match (strtoupper((string) ($flight['flight_type'] ?? ''))) {
+                        'I' => 'IFR',
+                        'V' => 'VFR',
+                        default => $flight['flight_type'] ?? null,
+                    },
+                    'departedAt' => $flight['departed_at'] ?? null,
+                    'arrivedAt' => $flight['arrived_at'] ?? null,
+                ])
+                ->all();
+        });
+    }
+
+    /**
+     * Retrieve the detailed record saved for a completed tour leg.
+     *
+     * Quick Stats is preferred because it contains the submitted route. Statsim
+     * remains a fallback for older completions which predate the Quick Stats ID.
+     *
+     * @return array{flight: array<string, mixed>|null, source: 'quick_stats'|'statsim'|null}
+     */
+    public function details(?int $quickStatsFlightId, ?int $statsimFlightId): array
+    {
+        if ($quickStatsFlightId) {
+            try {
+                $response = Http::acceptJson()->connectTimeout(2)->timeout(5)->get(
+                    rtrim(config('services.quick_stats.url'), '/')."/flights/id/{$quickStatsFlightId}",
+                );
+
+                if ($response->successful()) {
+                    return ['flight' => $response->json(), 'source' => 'quick_stats'];
+                }
+            } catch (Throwable) {
+                // A historical record may no longer be available. Try Statsim below.
+            }
+        }
+
+        if ($statsimFlightId) {
+            try {
+                $response = Http::withHeaders([
+                    'X-API-Key' => config('myconfig.statsim_api_key'),
+                ])->acceptJson()->connectTimeout(2)->timeout(5)->get(
+                    "https://api.statsim.net/api/Flights/Id/{$statsimFlightId}",
+                );
+
+                if ($response->successful()) {
+                    return ['flight' => $response->json(), 'source' => 'statsim'];
+                }
+            } catch (Throwable) {
+                // Keep the locally recorded completion visible even when providers are down.
+            }
+        }
+
+        return ['flight' => null, 'source' => null];
+    }
+
     public function findMatchingStatsimFlight(
         int $vatsimId,
         array|object $flight,

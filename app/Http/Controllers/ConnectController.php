@@ -40,7 +40,7 @@ class ConnectController extends Controller
             Auth::login($user);
             $request->session()->put('sso_teams', config('connect.admin_allowed_roles', []));
 
-            return Redirect::route('tours')->with('success', 'Logged in successfully');
+            return Redirect::route('dashboard')->with('success', 'Logged in successfully');
         }
         $authenticationUrl = $this->provider->getAuthorizationUrl();
         $request->session()->put($this->state_session_key, $this->provider->getState());
@@ -97,7 +97,7 @@ class ConnectController extends Controller
         Auth::login($user);
         $request->session()->put('sso_teams', $this->extractTeams($resourceOwner));
 
-        return Redirect::route('tours')->with('success', 'Logged in successfully');
+        return Redirect::route('dashboard')->with('success', 'Logged in successfully');
     }
 
     private function extractTeams(object $resourceOwner): array

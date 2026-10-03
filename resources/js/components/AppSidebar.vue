@@ -10,10 +10,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { logout, tours } from '@/routes';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
+import { dashboard, logout } from '@/routes';
+import { type AppPageProps, type NavItem } from '@/types';
+import { Link, usePage } from '@inertiajs/vue3';
 import { BookOpen, Folder, LogOut, Settings2, Users } from 'lucide-vue-next';
+import { computed } from 'vue';
 import AppLogo from './AppLogo.vue';
 
 interface Props {
@@ -32,7 +33,9 @@ withDefaults(defineProps<Props>(), {
     },
 ];*/
 
-const footerNavItems: NavItem[] = [
+const page = usePage<AppPageProps>();
+
+const allFooterNavItems: NavItem[] = [
   {
     title: 'Manage tours',
     href: '/admin/tours',
@@ -59,6 +62,12 @@ const footerNavItems: NavItem[] = [
     icon: LogOut,
   },
 ];
+
+const footerNavItems = computed(() =>
+  page.props.canAdmin
+    ? allFooterNavItems
+    : allFooterNavItems.filter((item) => !item.href.toString().startsWith('/admin')),
+);
 </script>
 
 <template>
@@ -67,7 +76,7 @@ const footerNavItems: NavItem[] = [
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton size="lg" as-child>
-            <Link :href="tours()">
+            <Link :href="dashboard()">
               <AppLogo />
             </Link>
           </SidebarMenuButton>

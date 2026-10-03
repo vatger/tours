@@ -46,6 +46,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'canAdmin' => fn () => EnsureAdminRole::userCanAccess($request),
             'liveFlight' => fn () => $request->user()
                 ? app(LiveFlightService::class)->forPilot($request->user()->id)
                 : null,

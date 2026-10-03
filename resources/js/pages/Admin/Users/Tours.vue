@@ -2,8 +2,9 @@
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { ArrowLeft, BadgeCheck, Check, Circle } from 'lucide-vue-next';
+import { reactive } from 'vue';
 
 interface UserTourLeg {
   id: number;
@@ -41,6 +42,27 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 const date = (value: string) => new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(new Date(value));
 const completedLegs = (tour: UserTour) => tour.legs.filter((leg) => leg.completed_at).length;
+const manualDates = reactive<Record<number, string>>({});
+const localDateTime = () => {
+  const value = new Date();
+  const pad = (part: number) => String(part).padStart(2, '0');
+  return `${value.getFullYear()}-${pad(value.getMonth() + 1)}-${pad(value.getDate())}T${pad(value.getHours())}:${pad(value.getMinutes())}`;
+};
+const setLegCompletion = (tour: UserTour, leg: UserTourLeg) => {
+  const completed = !leg.completed_at;
+  if (!window.confirm(`${completed ? 'Mark' : 'Remove'} this leg as manually completed?`)) return;
+  if (completed && !manualDates[leg.id]) manualDates[leg.id] = localDateTime();
+  router.post(
+    `/admin/users/${props.user.id}/tours/${tour.id}/legs/${leg.id}/completion`,
+    { completed, completed_at: completed ? manualDates[leg.id] : null },
+    { preserveScroll: true },
+  );
+};
+const setTourCompletion = (tour: UserTour) => {
+  const completed = !tour.completed;
+  if (!window.confirm(`${completed ? 'Mark' : 'Remove'} this legless tour as manually completed?`)) return;
+  router.post(`/admin/users/${props.user.id}/tours/${tour.id}/completion`, { completed }, { preserveScroll: true });
+};
 </script>
 
 <template>
@@ -79,6 +101,9 @@ const completedLegs = (tour: UserTour) => tour.legs.filter((leg) => leg.complete
                 class="inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-amber-800"
                 ><BadgeCheck class="size-3.5" />Badge given</span
               >
+              <Button v-if="tour.legs.length === 0" variant="outline" size="sm" @click="setTourCompletion(tour)">
+                {{ tour.completed ? 'Undo completion' : 'Mark complete' }}
+              </Button>
             </div>
           </div>
 
@@ -116,6 +141,14 @@ const completedLegs = (tour: UserTour) => tour.legs.filter((leg) => leg.complete
                 date(leg.completed_at)
               }}</span>
               <span v-else class="ml-auto text-xs text-muted-foreground">Not completed</span>
+              <input
+                v-if="!leg.completed_at"
+                v-model="manualDates[leg.id]"
+                type="datetime-local"
+                :max="localDateTime()"
+                class="h-8 rounded-md border bg-background px-2 text-xs"
+                aria-label="Manual completion date and time"
+              />
               <a
                 v-if="leg.completed_at && (leg.quick_stats_flight_id || leg.statsim_flight_id)"
                 :href="`/admin/users/${props.user.id}/tours/${tour.id}/legs/${leg.id}/flight`"
@@ -126,6 +159,9 @@ const completedLegs = (tour: UserTour) => tour.legs.filter((leg) => leg.complete
                   leg.statsim_flight_id ?? '—'
                 }})</a
               >
+              <Button variant="ghost" size="sm" class="ml-2 text-xs" @click="setLegCompletion(tour, leg)">
+                {{ leg.completed_at ? 'Undo completion' : 'Mark complete' }}
+              </Button>
             </div>
           </div>
           <p v-else class="mt-5 border-t pt-4 text-sm text-muted-foreground">This tour has no legs.</p>
