@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\CheckTourCompletedUser;
+use App\Jobs\CheckTourUser;
 use App\Models\Tour;
 use App\Models\TourLeg;
 use App\Models\TourLegUser;
@@ -10,9 +12,10 @@ use App\Models\User;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -71,9 +74,9 @@ class AdminUserController extends Controller
                         'id' => $leg->id,
                         'departure_icao' => $leg->departure_icao,
                         'arrival_icao' => $leg->arrival_icao,
-                    'completed_at' => $legProgress?->completed_at,
-                    'quick_stats_flight_id' => $legProgress?->fight_data_id,
-                    'statsim_flight_id' => $legProgress?->statsim_flight_id,
+                        'completed_at' => $legProgress?->completed_at,
+                        'quick_stats_flight_id' => $legProgress?->fight_data_id,
+                        'statsim_flight_id' => $legProgress?->statsim_flight_id,
                     ];
                 })->values(),
             ];
@@ -199,6 +202,21 @@ class AdminUserController extends Controller
         return to_route('admin.users.tours', $user)->with('success', $completed
             ? 'Tour manually marked complete.'
             : 'Tour completion was removed.');
+    }
+
+    public function rescan(User $user, Tour $tour): RedirectResponse
+    {
+        TourUser::where('user_id', $user->id)
+            ->where('tour_id', $tour->id)
+            ->firstOrFail();
+
+        Bus::chain([
+            new CheckTourUser($user, $tour),
+            new CheckTourCompletedUser($user, $tour),
+        ])->dispatch();
+
+        return to_route('admin.users.tours', $user)
+            ->with('success', 'Tour rescan started. The user’s completed legs will update shortly.');
     }
 
     private function syncTourCompletion(User $user, Tour $tour): void

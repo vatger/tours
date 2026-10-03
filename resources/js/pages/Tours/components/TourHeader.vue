@@ -28,6 +28,12 @@ const signOutF = () => {
   loading.value = true;
   router.visit(cancel({ id: tour.id }).url);
 };
+
+const rescan = () => {
+  if (!window.confirm('Start a rescan of this tour? Completed legs will update shortly.')) return;
+  loading.value = true;
+  router.post(`/tours/${tour.id}/rescan`, {}, { onFinish: () => (loading.value = false) });
+};
 </script>
 
 <template>
@@ -73,6 +79,11 @@ const signOutF = () => {
           <Button v-if="!completed && signedUp" :disabled="loading" @click="signOutF" class="flex items-center gap-2">
             <span v-if="loading">Signing out…</span>
             <span v-else>Sign out of this tour</span>
+          </Button>
+
+          <Button v-if="signedUp" variant="outline" :disabled="loading" @click="rescan">
+            <span v-if="loading">Starting rescan…</span>
+            <span v-else>Rescan tour</span>
           </Button>
         </div>
       </div>

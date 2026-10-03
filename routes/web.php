@@ -20,6 +20,7 @@ Route::get('api/airports/coordinates', [AirportController::class, 'index'])
 
 Route::get('tours', [ToursDashboardController::class, 'dashboard'])->middleware('auth')->name('dashboard');
 Route::get('tours/{id}', [ToursDashboardController::class, 'show'])->middleware('auth')->name('tours');
+Route::post('tours/{tour}/rescan', [ToursDashboardController::class, 'rescan'])->middleware('auth')->name('tours.rescan');
 
 Route::middleware(['auth', 'admin.role'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('tours', [AdminTourController::class, 'index'])->name('tours.index');
@@ -30,6 +31,7 @@ Route::middleware(['auth', 'admin.role'])->prefix('admin')->name('admin.')->grou
     Route::delete('tours/{tour}', [AdminTourController::class, 'destroy'])->name('tours.destroy');
     Route::get('users', [AdminUserController::class, 'index'])->name('users.index');
     Route::get('users/{user}/tours', [AdminUserController::class, 'tours'])->name('users.tours');
+    Route::post('users/{user}/tours/{tour}/rescan', [AdminUserController::class, 'rescan'])->name('users.tour-rescan');
     Route::post('users/{user}/tours/{tour}/completion', [AdminUserController::class, 'setTourCompletion'])->name('users.tour-completion');
     Route::post('users/{user}/tours/{tour}/legs/{leg}/completion', [AdminUserController::class, 'setLegCompletion'])->name('users.leg-completion');
     Route::get('users/{user}/tours/{tour}/legs/{leg}/flight', [AdminUserController::class, 'flight'])->name('users.flight');

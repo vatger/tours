@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\CheckTourCompletedUser;
+use App\Jobs\CheckTourUser;
 use App\Models\Tour;
 use App\Models\TourLeg;
 use App\Models\TourLegUser;
@@ -9,6 +11,7 @@ use App\Models\TourUser;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
@@ -37,6 +40,52 @@ class DashboardTest extends TestCase
 
         $response = $this->get(route('dashboard'));
         $response->assertStatus(200);
+    }
+
+    public function test_enrolled_pilot_can_start_a_rescan_for_their_tour(): void
+    {
+        Bus::fake();
+
+        $pilot = User::create(['firstname' => 'Test', 'lastname' => 'Pilot']);
+        $tour = Tour::create([
+            'name' => 'Rescan Tour',
+            'description' => 'A tour.',
+            'link' => 'https://example.test/tour',
+            'img_url' => 'https://example.test/tour.png',
+            'aircraft' => 'A320',
+            'begins_at' => Carbon::now()->subDay(),
+            'ends_at' => Carbon::now()->addDay(),
+        ]);
+        TourUser::create(['tour_id' => $tour->id, 'user_id' => $pilot->id]);
+
+        $this->actingAs($pilot)
+            ->post(route('tours.rescan', $tour))
+            ->assertRedirect(route('tours', $tour))
+            ->assertSessionHas('success', 'Tour rescan started. Your completed legs will update shortly.');
+
+        Bus::assertChained([
+            fn (CheckTourUser $job) => $job->user->is($pilot) && $job->tour->is($tour),
+            fn (CheckTourCompletedUser $job) => $job->user->is($pilot) && $job->tour->is($tour),
+        ]);
+    }
+
+    public function test_pilot_cannot_rescan_a_tour_they_have_not_joined(): void
+    {
+        Bus::fake();
+
+        $pilot = User::create(['firstname' => 'Test', 'lastname' => 'Pilot']);
+        $tour = Tour::create([
+            'name' => 'Unjoined Tour',
+            'description' => 'A tour.',
+            'link' => 'https://example.test/tour',
+            'img_url' => 'https://example.test/tour.png',
+            'aircraft' => 'A320',
+            'begins_at' => Carbon::now()->subDay(),
+            'ends_at' => Carbon::now()->addDay(),
+        ]);
+
+        $this->actingAs($pilot)->post(route('tours.rescan', $tour))->assertNotFound();
+        Bus::assertNothingDispatched();
     }
 
     public function test_dashboard_shows_community_and_personal_tour_activity(): void

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\CheckTourCompletedUser;
+use App\Jobs\CheckTourUser;
 use App\Models\Tour;
 use App\Models\TourLegUser;
 use App\Models\TourUser;
@@ -9,6 +11,7 @@ use App\Services\AirportCoordinateService;
 use App\Services\QuickStatsFlightService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
@@ -163,5 +166,22 @@ class ToursDashboardController extends Controller
         TourUser::where('tour_id', $id)->where('user_id', $user->id)->delete();
 
         return to_route('tours', ['id' => $id]);
+    }
+
+    public function rescan(Tour $tour)
+    {
+        $user = Auth::user();
+
+        TourUser::where('tour_id', $tour->id)
+            ->where('user_id', $user->id)
+            ->firstOrFail();
+
+        Bus::chain([
+            new CheckTourUser($user, $tour),
+            new CheckTourCompletedUser($user, $tour),
+        ])->dispatch();
+
+        return to_route('tours', ['id' => $tour->id])
+            ->with('success', 'Tour rescan started. Your completed legs will update shortly.');
     }
 }

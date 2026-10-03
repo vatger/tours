@@ -63,6 +63,10 @@ const setTourCompletion = (tour: UserTour) => {
   if (!window.confirm(`${completed ? 'Mark' : 'Remove'} this legless tour as manually completed?`)) return;
   router.post(`/admin/users/${props.user.id}/tours/${tour.id}/completion`, { completed }, { preserveScroll: true });
 };
+const rescan = (tour: UserTour) => {
+  if (!window.confirm(`Start a rescan of ${tour.name} for this user? Completed legs will update shortly.`)) return;
+  router.post(`/admin/users/${props.user.id}/tours/${tour.id}/rescan`, {}, { preserveScroll: true });
+};
 </script>
 
 <template>
@@ -104,6 +108,7 @@ const setTourCompletion = (tour: UserTour) => {
               <Button v-if="tour.legs.length === 0" variant="outline" size="sm" @click="setTourCompletion(tour)">
                 {{ tour.completed ? 'Undo completion' : 'Mark complete' }}
               </Button>
+              <Button variant="outline" size="sm" @click="rescan(tour)">Rescan tour</Button>
             </div>
           </div>
 

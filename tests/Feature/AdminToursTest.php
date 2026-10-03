@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\CheckTourCompletedUser;
+use App\Jobs\CheckTourUser;
 use App\Models\Tour;
 use App\Models\TourLeg;
 use App\Models\TourLegUser;
@@ -10,6 +12,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -188,5 +191,34 @@ class AdminToursTest extends TestCase
             ->assertRedirect(route('admin.users.tours', $user));
 
         $this->assertDatabaseHas('tour_users', ['user_id' => $user->id, 'tour_id' => $leglessTour->id, 'completed' => true]);
+    }
+
+    public function test_admin_can_start_a_rescan_for_a_users_tour(): void
+    {
+        Bus::fake();
+
+        $user = User::create(['firstname' => 'Pilot', 'lastname' => 'Tester']);
+        $tour = Tour::create([
+            'name' => 'Admin Rescan Tour',
+            'description' => 'A rescan test.',
+            'link' => 'https://example.test/tour',
+            'img_url' => '/storage/tours/images/test.png',
+            'aircraft' => 'A320',
+            'begins_at' => Carbon::now()->subDay(),
+            'ends_at' => Carbon::now()->addDay(),
+        ]);
+        TourUser::create(['tour_id' => $tour->id, 'user_id' => $user->id]);
+        $admin = User::create(['firstname' => 'Admin', 'lastname' => 'Tester']);
+
+        $this->withSession(['sso_teams' => ['tour-admin']])
+            ->actingAs($admin)
+            ->post(route('admin.users.tour-rescan', [$user, $tour]))
+            ->assertRedirect(route('admin.users.tours', $user))
+            ->assertSessionHas('success', 'Tour rescan started. The user’s completed legs will update shortly.');
+
+        Bus::assertChained([
+            fn (CheckTourUser $job) => $job->user->is($user) && $job->tour->is($tour),
+            fn (CheckTourCompletedUser $job) => $job->user->is($user) && $job->tour->is($tour),
+        ]);
     }
 }
